@@ -44,7 +44,7 @@ def withinCheckPeriod():
 if __name__ == '__main__':
     print(getTime(), "Program Start!")
 
-    send_channel("Program Start!")
+    # send_channel("Program Start!")
 
     starttime = time.time()
 
