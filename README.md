@@ -12,5 +12,5 @@ The checking period is limited to be `once per min` between 6pm and 11pm to redu
 2. Start the container with the following command:
 
 ```sh
-docker-compose up
+docker-compose up -d
 ```

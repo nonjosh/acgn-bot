@@ -3,3 +3,6 @@ services:
   app:
     build: .
     restart: always
+    volumes: 
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
