@@ -4,11 +4,11 @@ from tg.bot import send_channel
 import wutuxs.check_chapter as wutuxs
 import time
 
-loop_switch = True
 current_chapter_title = None
+start_hour = 18
+end_hour = 22
 
 def check_wutuxs():
-    # global loop_switch
     global current_chapter_title
 
     latest_chapter_url, latest_chapter_title = wutuxs.getLatestChapter()
@@ -24,7 +24,6 @@ def check_wutuxs():
         # send_channel(content)
         send_channel(latest_chapter_url)
 
-        # loop_switch = False
         current_chapter_title = latest_chapter_title
     else:
         print(getTime(), "No update found")
@@ -35,14 +34,14 @@ def getTime():
     return current_time
 
 def withinCheckPeriod():
-    start_hour = 18
-    end_hour = 23
     t = time.localtime()
     current_hour = time.strftime("%H", t)
     return start_hour <= int(current_hour) <= end_hour
 
 if __name__ == '__main__':
+    
     print(getTime(), "Program Start!")
+    print("Check hour range: %s:00:00 - %s:00:00" % (start_hour, end_hour))
 
     # send_channel("Program Start!")
 
@@ -51,14 +50,9 @@ if __name__ == '__main__':
     current_chapter_url, current_chapter_title = wutuxs.getLatestChapter()
     print(getTime(), "Current chapter: ", current_chapter_title)
 
-    while loop_switch:
+    while True:
 
         if withinCheckPeriod():
-            print(getTime(), "checking")
             check_wutuxs()
         
-        # sleep for 1min
-        if loop_switch:
-            time.sleep(60.0 - ((time.time() - starttime) % 60.0))
-        
-    print(getTime(), "Program end")
+        time.sleep(60.0 - ((time.time() - starttime) % 60.0))
