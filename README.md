@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This bot scans novel websites (e.g. http://www.wutuxs.com), and send telegram message upon release of latest chapter.
+This bot scans novel websites (e.g. <http://www.wutuxs.com>), and send telegram message upon release of latest chapter.
 
 The checking period is limited to be `once per min` between 6pm and 11pm to reduce traffic.
 
