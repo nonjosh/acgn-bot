@@ -13,40 +13,44 @@ def check_wutuxs():
 
     if latest_chapter_title != current_chapter_title:
 
-        print("Update found!")
+        printT('Update found! {}'.format(latest_chapter_title))
 
         latest_chapter_content = wutuxs.getContent(url=latest_chapter_url)
 
-        content = "<u><b>%s</b></u>\n\n%s" % (latest_chapter_title, latest_chapter_content)
+        content = '<u><b>{}</b></u>\n\n{}'.format(latest_chapter_title, latest_chapter_content)
 
         # send_channel(content)
         send_channel(latest_chapter_url)
 
         current_chapter_title = latest_chapter_title
     else:
-        print(getTime(), "No update found")
+        printT('No update found')
 
 def getTime():
     t = time.localtime()
-    current_time = time.strftime("%H:%M:%S", t)
+    current_time = time.strftime('%H:%M:%S', t)
     return current_time
+
+def printT(msg):
+    print('[{}] {}'.format(getTime(), msg))
+
 
 def withinCheckPeriod():
     t = time.localtime()
-    current_hour = time.strftime("%H", t)
+    current_hour = time.strftime('%H', t)
     return start_hour <= int(current_hour) <= end_hour
 
 if __name__ == '__main__':
     
-    print(getTime(), "Program Start!")
-    print("Check hour range: %s:00:00 - %s:00:00" % (start_hour, end_hour))
+    printT('Program Start!')
+    printT('Check hour range: %s:00:00 - %s:00:00' % (start_hour, end_hour))
 
     # send_channel("Program Start!")
 
     starttime = time.time()
 
     current_chapter_url, current_chapter_title = wutuxs.getLatestChapter()
-    print(getTime(), "Current chapter: ", current_chapter_title)
+    printT('Current chapter: {}'.format(current_chapter_title))
 
     while True:
 
