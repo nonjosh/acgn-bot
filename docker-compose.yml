@@ -1,5 +1,9 @@
 version: "3"
 services:
   app:
+    container_name: update_notifying_bot
     build: .
+    environment:
+      - TOKEN=<your token>
+      - CHAT_ID=<your chat_id>
     restart: always

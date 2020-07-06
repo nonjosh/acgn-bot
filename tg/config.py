@@ -1,9 +1,9 @@
 import os
 
 class BotConfig:
-    # botA
-    token = os.environ.get("TOKEN", '<your token>')
+    # bot
+    token = os.environ.get('TOKEN', '<your token>')
 
 class ChannelConfig:
-    # channelA
-    chat_id = "<your chat_id>"
+    # channel
+    chat_id = os.environ.get('CHAT_ID', '<your chat_id>')
