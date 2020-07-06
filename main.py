@@ -1,7 +1,5 @@
-import wutuxs.check_chapter
-# import ohmanhua.check_chapter
-from tg.bot import send_channel
-import wutuxs.check_chapter as wutuxs
+from helpers.tg.bot import send_channel
+import helpers.wutuxs.check_chapter as wutuxs
 import time
 
 current_chapter_title = None

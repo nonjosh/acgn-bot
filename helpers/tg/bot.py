@@ -1,5 +1,5 @@
 import telegram
-from tg.config import BotConfig, ChannelConfig
+from helpers.tg.config import BotConfig, ChannelConfig
 
 TOKEN = BotConfig.token
 chat_id = ChannelConfig.chat_id
