@@ -1,5 +1,6 @@
 from helpers.tg.bot import send_channel
 import helpers.wutuxs.check_chapter as wutuxs
+from datetime import datetime
 import time
 
 current_chapter_title = None
@@ -26,24 +27,24 @@ def check_wutuxs():
     else:
         printT('No update found')
 
-def getTime():
-    t = time.localtime()
-    current_time = time.strftime('%H:%M:%S', t)
+def getDateTime():
+    now = datetime.now()
+    current_time = now.strftime('%Y/%m/%d %H:%M:%S')
     return current_time
 
 def printT(msg):
-    print('[{}] {}'.format(getTime(), msg))
+    print('[{}] {}'.format(getDateTime(), msg))
 
 
 def withinCheckPeriod():
-    t = time.localtime()
-    current_hour = time.strftime('%H', t)
+    now = datetime.now()
+    current_hour = now.strftime('%H')
     return start_hour <= int(current_hour) <= end_hour
 
 if __name__ == '__main__':
     
     printT('Program Start!')
-    printT('Check hour range: %s:00:00 - %s:00:00' % (start_hour, end_hour))
+    printT('Check hour range: {}:00:00 - {}:00:00'.format(start_hour, end_hour))
 
     # send_channel("Program Start!")
 
