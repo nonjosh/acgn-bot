@@ -44,6 +44,8 @@ def withinCheckPeriod():
 if __name__ == '__main__':
     
     printT('Program Start!')
+
+    # TODO multiprocess to handle different website checker
     printT('Check hour range: {}:00:00 - {}:00:00'.format(start_hour, end_hour))
 
     # send_channel("Program Start!")
