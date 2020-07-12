@@ -2,3 +2,8 @@
 **/.DS_Store
 **/node_modules
 **/.vscode
+README.md
+Dockerfile
+docker-compose.yml
+LICENSE
+deprecated/
