@@ -7,3 +7,4 @@ services:
       - TOKEN=<your token>
       - CHAT_ID=<your chat_id>
     restart: always
+    network_mode: bridge
