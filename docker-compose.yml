@@ -1,8 +1,9 @@
 version: "3"
 services:
   app:
-    container_name: update_notifying_bot
+    container_name: acgn-bot
     build: .
+    image: nonjosh/acgn-bot
     environment:
       - TOKEN=<your token>
       - CHAT_ID=<your chat_id>
