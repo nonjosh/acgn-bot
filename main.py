@@ -17,11 +17,11 @@ def check_wutuxs():
 
         printT("Update found! {}".format(latest_chapter_title))
 
-        latest_chapter_content = wutuxs.getContent(url=latest_chapter_url)
+        # latest_chapter_content = wutuxs.getContent(url=latest_chapter_url)
 
-        content = "<u><b>{}</b></u>\n\n{}".format(
-            latest_chapter_title, latest_chapter_content
-        )
+        # content = "<u><b>{}</b></u>\n\n{}".format(
+        #     latest_chapter_title, latest_chapter_content
+        # )
 
         # send_channel(content)
         send_channel(latest_chapter_url)
@@ -29,7 +29,6 @@ def check_wutuxs():
         current_chapter_title = latest_chapter_title
     else:
         printT('No update found')
-        return
 
 
 def getDateTime():
