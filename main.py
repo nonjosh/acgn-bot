@@ -27,8 +27,8 @@ def check_wutuxs():
         send_channel(latest_chapter_url)
 
         current_chapter_title = latest_chapter_title
-    else:
-        printT('No update found')
+    # else:
+    #     printT('No update found')
 
 
 def getDateTime():
