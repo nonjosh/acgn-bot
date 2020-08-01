@@ -15,6 +15,7 @@ url = config.main_url + '/html/7/7876/index.html'
 
 #     return soup
 
+# TODO rewrite to OOP
 def getLatestChapter():
     # Connect to the URL
     response = requests.get(url)
