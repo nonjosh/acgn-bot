@@ -24,7 +24,11 @@ def check_wutuxs():
         # )
 
         # send_channel(content)
-        send_channel(latest_chapter_url)
+        send_channel(
+            content="<<元尊>> updates:",
+            url_text=latest_chapter_title,
+            urlz=latest_chapter_url,
+        )
 
         current_chapter_title = latest_chapter_title
     # else:
@@ -55,6 +59,11 @@ if __name__ == "__main__":
     printT("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
 
     # send_channel("Program Start!")
+    # send_channel(
+    #     content="<<元尊>> updates:",
+    #     url_text="第一千三百一十四章 追逃",
+    #     url="http://www.wutuxs.com/html/7/7876/7787923.html",
+    # )
 
     starttime = time.time()
 
