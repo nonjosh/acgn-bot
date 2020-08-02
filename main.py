@@ -24,10 +24,10 @@ def check_wutuxs():
         # )
 
         # send_channel(content)
+        content = "novel updated!"
+        url_text = "<<{}>> {}".format("元尊", latest_chapter_title)
         send_channel(
-            content="<<元尊>> updates:",
-            url_text=latest_chapter_title,
-            urlz=latest_chapter_url,
+            content=content, url_text=url_text, url=latest_chapter_url,
         )
 
         current_chapter_title = latest_chapter_title
