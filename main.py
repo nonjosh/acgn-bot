@@ -24,15 +24,16 @@ def check_wutuxs():
         # )
 
         # send_channel(content)
-        content = "novel updated!"
-        url_text = "<<{}>> {}".format("元尊", latest_chapter_title)
+        novel_title = "元尊"
+        content = "novel <<{}>> updated!".format(novel_title)
+        url_text = "<<{}>> {}".format(novel_title, latest_chapter_title)
         send_channel(
             content=content, url_text=url_text, url=latest_chapter_url,
         )
 
         current_chapter_title = latest_chapter_title
     # else:
-    #     printT('No update found')
+    #     printT("No update found")
 
 
 def getDateTime():
