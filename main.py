@@ -7,33 +7,35 @@ current_chapter_title = None
 start_hour = 18
 end_hour = 22
 
+show_no_update_msg = False
 
 def check_wutuxs():
     global current_chapter_title
 
     latest_chapter_url, latest_chapter_title = wutuxs.getLatestChapter()
 
-    if latest_chapter_title != current_chapter_title:
+    if latest_chapter_title is not None:
+        if latest_chapter_title != current_chapter_title:
 
-        printT("Update found! {}".format(latest_chapter_title))
+            printT("Update found! {}".format(latest_chapter_title))
 
-        # latest_chapter_content = wutuxs.getContent(url=latest_chapter_url)
+            # latest_chapter_content = wutuxs.getContent(url=latest_chapter_url)
 
-        # content = "<u><b>{}</b></u>\n\n{}".format(
-        #     latest_chapter_title, latest_chapter_content
-        # )
+            # content = "<u><b>{}</b></u>\n\n{}".format(
+            #     latest_chapter_title, latest_chapter_content
+            # )
 
-        # send_channel(content)
-        novel_title = "元尊"
-        content = "novel <<{}>> updated!".format(novel_title)
-        url_text = "<<{}>> {}".format(novel_title, latest_chapter_title)
-        send_channel(
-            content=content, url_text=url_text, url=latest_chapter_url,
-        )
+            # send_channel(content)
+            novel_title = "元尊"
+            content = "novel <<{}>> updated!".format(novel_title)
+            url_text = "<<{}>> {}".format(novel_title, latest_chapter_title)
+            send_channel(
+                content=content, url_text=url_text, url=latest_chapter_url,
+            )
 
-        current_chapter_title = latest_chapter_title
-    # else:
-    #     printT("No update found")
+            current_chapter_title = latest_chapter_title
+        else:
+            if show_no_update_msg: printT("No update found")
 
 
 def getDateTime():
