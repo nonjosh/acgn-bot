@@ -1,8 +1,8 @@
-from helpers.tg.bot import send_channel
-import helpers.wutuxs.check_chapter as wutuxs
-from datetime import datetime
 import time
 from dotenv import load_dotenv
+from helpers.tg.bot import send_channel
+import helpers.wutuxs.check_chapter as wutuxs
+from helpers.functions import *
 load_dotenv()
 
 current_chapter_title = None
@@ -39,23 +39,6 @@ def check_wutuxs():
         else:
             if show_no_update_msg: printT("No update found")
 
-
-def getDateTime():
-    now = datetime.now()
-    current_time = now.strftime("%Y/%m/%d %H:%M:%S")
-    return current_time
-
-
-def printT(msg):
-    print("[{}] {}".format(getDateTime(), msg))
-
-
-def withinCheckPeriod():
-    now = datetime.now()
-    current_hour = now.strftime("%H")
-    return start_hour <= int(current_hour) <= end_hour
-
-
 if __name__ == "__main__":
 
     printT("Program Start!")
@@ -76,7 +59,7 @@ if __name__ == "__main__":
     printT("Current chapter: {}".format(current_chapter_title))
 
     while True:
-        if withinCheckPeriod():
+        if withinCheckPeriod(start_hour, end_hour):
             check_wutuxs()
 
         time.sleep(60.0 - ((time.time() - starttime) % 60.0))
