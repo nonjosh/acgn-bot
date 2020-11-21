@@ -37,12 +37,15 @@ def getLatestChapter():
                 chapter_list.append((link, chapter_title))
         except KeyError:
             pass
+    
+    try:
+        # Get latest content
+        latest_chapter_url, latest_chapter_title = chapter_list[-1]
+        latest_chapter_url = config.main_url + latest_chapter_url
 
-    # Get latest content
-    latest_chapter_url, latest_chapter_title = chapter_list[-1]
-    latest_chapter_url = config.main_url + latest_chapter_url
-
-    return latest_chapter_url, latest_chapter_title
+        return latest_chapter_url, latest_chapter_title
+    except:
+        return None, None
 
 # def getLatestChapter(soup):
 #     a_tags = soup.findAll('a')
