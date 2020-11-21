@@ -4,8 +4,5 @@ services:
     container_name: acgn-bot
     build: .
     image: nonjosh/acgn-bot
-    environment:
-      - TOKEN=<your token>
-      - CHAT_ID=<your chat_id>
     restart: always
     network_mode: bridge

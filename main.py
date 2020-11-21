@@ -2,6 +2,8 @@ from helpers.tg.bot import send_channel
 import helpers.wutuxs.check_chapter as wutuxs
 from datetime import datetime
 import time
+from dotenv import load_dotenv
+load_dotenv()
 
 current_chapter_title = None
 start_hour = 18
@@ -74,7 +76,6 @@ if __name__ == "__main__":
     printT("Current chapter: {}".format(current_chapter_title))
 
     while True:
-
         if withinCheckPeriod():
             check_wutuxs()
 
