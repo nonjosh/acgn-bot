@@ -9,18 +9,11 @@ The checking period is limited to be `once per min` between 6pm and 11pm to redu
 ### Screenshots
 
 ```sh
-[2020/07/06 10:00:00] Program Start!
-[2020/07/06 10:00:00] Check hour range: 18:00:00 - 22:00:00
-[2020/07/06 10:00:01] Current chapter:  第一千两百八十八章 三人组
-[2020/07/06 18:01:01] No update found
-[2020/07/06 18:02:01] No update found
-[2020/07/06 18:03:01] No update found
-.
-.
-.
-[2020/07/06 20:34:01 No update found
-[2020/07/06 20:35:01 No update found
-Update found!
+[2020/11/23 01:43:01] Program Start!
+[2020/11/23 01:43:01] Check hour range: 18:00:00 - 22:00:00
+[2020/11/23 01:43:02] Current chapter: 第一千四百二十八章 周元入圣
+[2020/11/23 20:38:02] Update found! 第一千四百二十九章 混元归位
+...
 ```
 
 ## How to use
@@ -32,17 +25,32 @@ choose either option below to run the application
 1. Set your `token` and `chat_id` in `/tg/config.py`
 2. Start the application with the following command:
 
-```sh
-cd app/
-pip install -r requirements.txt
-python main.py
-```
+    ```sh
+    pip install -r requirements.txt
+    python main.py
+    ```
 
 ### Option 2: Docker Compose
 
 1. Set your `token` and `chat_id` in `docker-compose.yml`
 2. Start the container with the following command:
 
-```sh
-docker-compose up -d
-```
+    ```sh
+    docker-compose up -d
+    ```
+
+### Option 3: Kubernetes
+
+1. Create your `secret/acgn-bot`
+
+    ```sh
+    # Examples in k8s/secrets/k8s-secrets.yaml, remember to change to your token/chat_id first
+    kubectl apply -k k8s/secrets
+    ```
+
+2. Build local image and create deployment
+
+    ```sh
+    docker build . -t nonjosh/acgn-bot
+    kubectl apply -k k8s/base
+    ```
