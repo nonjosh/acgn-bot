@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acgn-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: acgn-bot
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: acgn-bot
+    spec:
+      containers:
+        - image: nonjosh/acgn-bot
+          name: acgn-bot
+          imagePullPolicy: Never
+          resources: {}
+          env:
+            - name: TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: acgn-bot
+                  key: bot-token
+            - name: CHAT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: acgn-bot
+                  key: channel-id
+      restartPolicy: Always
