@@ -45,7 +45,7 @@ choose either option below to run the application
 
     ```sh
     # Examples in k8s/secrets/k8s-secrets.yaml, remember to change to your token/chat_id first
-    kubectl apply -k k8s/secrets
+    kubectl apply -f k8s/secrets/k8s-secrets.yaml
     ```
 
 2. Build local image and create deployment
