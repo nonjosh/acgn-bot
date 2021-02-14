@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def getDateTime():
     now = datetime.now()
     current_time = now.strftime("%Y/%m/%d %H:%M:%S")
@@ -7,7 +8,7 @@ def getDateTime():
 
 
 def printT(msg):
-    print("[{}] {}".format(getDateTime(), msg))
+    print(f"[{getDateTime()}] {msg}")
 
 
 def withinCheckPeriod(start_hour, end_hour):
