@@ -24,6 +24,11 @@ class CocomanhuaHelper:
         # Connect to the URL
         response = requests.get(self.url)
 
+        RETRY_INTERVAL = 60000
+        while response.status_code != 200:
+            time.sleep(RETRY_INTERVAL)
+            response = requests.get(self.url)
+
         soup = BeautifulSoup(response.text, "html.parser")
 
         a_tags = soup.findAll("a")
