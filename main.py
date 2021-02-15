@@ -2,61 +2,49 @@ import os
 import time
 from dotenv import load_dotenv
 import schedule
-import helpers.wutuxs.check_chapter as wutuxs
 from helpers.functions import *
 from helpers.TgHelper import TgHelper
 from helpers.CocomanhuaHelper import CocomanhuaHelper
+from helpers.WutuxsHelper import WutuxsHelper
 
 load_dotenv()
 token = os.environ.get("TOKEN", "<your token>")
 chat_id = os.environ.get("CHAT_ID", "<your chat_id>")
 
-current_chapter_title = None
-start_hour = 18
-end_hour = 22
+# start_hour = 18
+# end_hour = 22
 
 
-def check_wutuxs(token, chat_id, show_no_update_msg=False):
-    global current_chapter_title
-    tgHelper = TgHelper(token, chat_id)
+def wutuxsChecker(wutuxsHelper, show_no_update_msg=False):
+    novel_name = wutuxsHelper.name
+    if wutuxsHelper.checkUpdate():
+        printT(
+            f"Update found for {wutuxsHelper.name}: {wutuxsHelper.latest_chapter_title_cht} ({wutuxsHelper.latest_chapter_url})"
+        )
 
-    latest_chapter_url, latest_chapter_title = wutuxs.getLatestChapter()
-
-    if latest_chapter_title is not None:
-        novel_title = "元尊"
-        if latest_chapter_title != current_chapter_title:
-
-            printT(f"Update found for {latest_chapter_title}!")
-
-            # latest_chapter_content = wutuxs.getContent(url=latest_chapter_url)
-
-            # content = "<u><b>{}</b></u>\n\n{}".format(
-            #     latest_chapter_title, latest_chapter_content
-            # )
-
-            # send_channel(content)
-            content = f"novel <<{novel_title}>> updated!"
-            url_text = f"<<{novel_title}>> {latest_chapter_title}"
-            tgHelper.send_channel(
-                content=content,
-                url_text=url_text,
-                url=latest_chapter_url,
-            )
-
-            current_chapter_title = latest_chapter_title
-        else:
-            if show_no_update_msg:
-                printT(f"No update found for {novel_title}")
+        tgHelper = TgHelper(token, chat_id)
+        content = f"comic <<{novel_name}>> updated!"
+        url_text = f"<<{novel_name}>> {wutuxsHelper.latest_chapter_title_cht}"
+        tgHelper.send_channel(
+            content=content,
+            url_text=url_text,
+            url=wutuxsHelper.latest_chapter_url,
+        )
+    else:
+        if show_no_update_msg:
+            printT(f"No update found for {novel_name}")
 
 
 def cocomanhuaChecker(cocomanhuaHelper, show_no_update_msg=False):
-    comic_title = cocomanhuaHelper.name
+    comic_name = cocomanhuaHelper.name
     if cocomanhuaHelper.checkUpdate():
-        printT(f"Update found for {cocomanhuaHelper.latest_chapter_title}")
+        printT(
+            f"Update found for {cocomanhuaHelper.name}: {cocomanhuaHelper.latest_chapter_title_cht} ({cocomanhuaHelper.latest_chapter_url})"
+        )
 
         tgHelper = TgHelper(token, chat_id)
-        content = f"comic <<{comic_title}>> updated!"
-        url_text = f"<<{comic_title}>> {cocomanhuaHelper.latest_chapter_title}"
+        content = f"comic <<{comic_name}>> updated!"
+        url_text = f"<<{comic_name}>> {cocomanhuaHelper.latest_chapter_title_cht}"
         tgHelper.send_channel(
             content=content,
             url_text=url_text,
@@ -64,30 +52,16 @@ def cocomanhuaChecker(cocomanhuaHelper, show_no_update_msg=False):
         )
     else:
         if show_no_update_msg:
-            printT(f"No update found for {comic_title}")
+            printT(f"No update found for {comic_name}")
 
 
 if __name__ == "__main__":
 
     printT("Program Start!")
 
-    # TODO multiprocess to handle different website checker
-    printT("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
-
-    # send_channel("Program Start!")
-    # send_channel(
-    #     content="<<元尊>> updates:",
-    #     url_text="第一千三百一十四章 追逃",
-    #     url="http://www.wutuxs.com/html/7/7876/7787923.html",
-    # )
-
-    starttime = time.time()
-
-    current_chapter_url, current_chapter_title = wutuxs.getLatestChapter()
-    printT(f"Current chapter: {current_chapter_title}")
+    # printT("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
 
     cocomanhuaHelperList = []
-
     cocomanhuaHelperList.append(
         CocomanhuaHelper(name="萬古神王", url="https://www.cocomanhua.com/12970/")
     )
@@ -118,6 +92,9 @@ if __name__ == "__main__":
     cocomanhuaHelperList.append(
         CocomanhuaHelper(name="英雄？我早就不當了", url="https://www.cocomanhua.com/10291/")
     )
+    cocomanhuaHelperList.append(
+        CocomanhuaHelper(name="修真聊天群", url="https://www.cocomanhua.com/10268/")
+    )
 
     for cocomanhuaHelper in cocomanhuaHelperList:
         schedule.every(5).to(30).minutes.do(
@@ -125,14 +102,18 @@ if __name__ == "__main__":
             cocomanhuaHelper=cocomanhuaHelper,
             show_no_update_msg=False,
         )
-    # schedule.every(1).to(10).seconds.do(
-    #     check_wutuxs, token=token, chat_id=chat_id, show_no_update_msg=True
-    # )
+
+    wutuxsHelperList = []
+    wutuxsHelperList.append(
+        WutuxsHelper(name="元尊", url="http://www.wutuxs.com/html/7/7876/")
+    )
+    for wutuxsHelper in wutuxsHelperList:
+        schedule.every(5).to(30).minutes.do(
+            wutuxsChecker,
+            wutuxsHelper=wutuxsHelper,
+            show_no_update_msg=False,
+        )
 
     while True:
         schedule.run_pending()
         time.sleep(1)
-    #     # check once per minute
-    #     if withinCheckPeriod(start_hour, end_hour):
-    #         check_wutuxs(token, chat_id)
-    #     time.sleep(60.0 - ((time.time() - starttime) % 60.0))

@@ -4,22 +4,21 @@ from bs4 import BeautifulSoup
 from hanziconv import HanziConv
 from helpers.functions import *
 
-BASE_URL = "https://www.cocomanhua.com"
+BASE_URL = "http://www.wutuxs.com"
 
 
-class CocomanhuaHelper:
+class WutuxsHelper:
     def __init__(self, name, url) -> None:
         self.name = name
         self.url = url
-        self.code = url.rsplit("/")[-2]
-        self.a_link = f"/{self.code}/"
+        self.a_link = url.replace(BASE_URL, "")
         self.chapter_count = 0
         self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
             self.latest_chapter_title
         )
         printT(
-            f"Current chapter for comic {self.name}: {self.latest_chapter_title_cht} ({self.latest_chapter_url})"
+            f"Current chapter for novel {self.name}: {self.latest_chapter_title_cht} ({self.latest_chapter_url})"
         )
         pass
 
@@ -27,6 +26,7 @@ class CocomanhuaHelper:
 
         # Connect to the URL
         response = requests.get(self.url)
+        response.encoding = "gb18030"
 
         RETRY_INTERVAL = 60000
         while response.status_code != 200:
@@ -53,7 +53,7 @@ class CocomanhuaHelper:
 
         try:
             # Get latest content
-            latest_chapter_url, latest_chapter_title = chapter_list[0]
+            latest_chapter_url, latest_chapter_title = chapter_list[-1]
             latest_chapter_url = BASE_URL + latest_chapter_url
 
             return latest_chapter_url, latest_chapter_title
