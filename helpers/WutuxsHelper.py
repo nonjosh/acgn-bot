@@ -2,7 +2,6 @@ import requests
 import time
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
-from helpers.functions import *
 
 BASE_URL = "http://www.wutuxs.com"
 
@@ -16,9 +15,6 @@ class WutuxsHelper:
         self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
             self.latest_chapter_title
-        )
-        printT(
-            f"Current chapter for novel {self.name}: {self.latest_chapter_title_cht} ({self.latest_chapter_url})"
         )
         pass
 

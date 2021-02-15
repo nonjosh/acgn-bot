@@ -95,19 +95,29 @@ if __name__ == "__main__":
     cocomanhuaHelperList.append(
         CocomanhuaHelper(name="修真聊天群", url="https://www.cocomanhua.com/10268/")
     )
-
-    for cocomanhuaHelper in cocomanhuaHelperList:
-        schedule.every(5).to(30).minutes.do(
-            cocomanhuaChecker,
-            cocomanhuaHelper=cocomanhuaHelper,
-            show_no_update_msg=False,
-        )
+    cocomanhuaHelperList.append(
+        CocomanhuaHelper(name="石紀元", url="https://www.cocomanhua.com/14424/")
+    )    
 
     wutuxsHelperList = []
     wutuxsHelperList.append(
         WutuxsHelper(name="元尊", url="http://www.wutuxs.com/html/7/7876/")
     )
+
+
+    for cocomanhuaHelper in cocomanhuaHelperList:
+        printT(
+            f"Current chapter for comic {cocomanhuaHelper.name}: {cocomanhuaHelper.latest_chapter_title_cht} ({cocomanhuaHelper.latest_chapter_url})"
+        )
+        schedule.every(5).to(30).minutes.do(
+            cocomanhuaChecker,
+            cocomanhuaHelper=cocomanhuaHelper,
+            show_no_update_msg=False,
+        )
     for wutuxsHelper in wutuxsHelperList:
+        printT(
+            f"Current chapter for novel {wutuxsHelper.name}: {wutuxsHelper.latest_chapter_title_cht} ({wutuxsHelper.latest_chapter_url})"
+        )
         schedule.every(5).to(30).minutes.do(
             wutuxsChecker,
             wutuxsHelper=wutuxsHelper,

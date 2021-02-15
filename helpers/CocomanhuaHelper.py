@@ -2,7 +2,6 @@ import requests
 import time
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
-from helpers.functions import *
 
 BASE_URL = "https://www.cocomanhua.com"
 
@@ -17,9 +16,6 @@ class CocomanhuaHelper:
         self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
             self.latest_chapter_title
-        )
-        printT(
-            f"Current chapter for comic {self.name}: {self.latest_chapter_title_cht} ({self.latest_chapter_url})"
         )
         pass
 
