@@ -27,8 +27,6 @@ class CocomanhuaHelper:
                 # Connect to the URL
                 response = requests.get(self.url)
                 if response.status_code == 200:
-                    response.encoding = "gb18030"
-                    response = requests.get(self.url)
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
