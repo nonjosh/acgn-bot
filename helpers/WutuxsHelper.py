@@ -24,10 +24,13 @@ class WutuxsHelper:
         response = requests.get(self.url)
         response.encoding = "gb18030"
 
-        RETRY_INTERVAL = 60000
+        RETRY_INTERVAL = 60*30 # unit in second
         while response.status_code != 200:
             time.sleep(RETRY_INTERVAL)
-            response = requests.get(self.url)
+            try:
+                response = requests.get(self.url)
+            except Exception as e:
+                print(e)
 
         soup = BeautifulSoup(response.text, "html.parser")
 
