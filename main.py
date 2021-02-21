@@ -3,7 +3,7 @@ import time
 import schedule
 import json
 from dotenv import load_dotenv
-from helpers import printT, TgHelper, CocomanhuaHelper, WutuxsHelper
+from helpers import printT, TgHelper, CocomanhuaHelper, WutuxsHelper, ManhuaguiHelper
 
 load_dotenv()
 token = os.environ.get("TOKEN", "<your token>")
@@ -53,6 +53,26 @@ def cocomanhuaChecker(cocomanhuaHelper, show_no_update_msg=False):
             printT(f"No update found for {comic_name}")
 
 
+def manhuaguiChecker(manhuaguiHelper, show_no_update_msg=False):
+    comic_name = manhuaguiHelper.name
+    if manhuaguiHelper.checkUpdate():
+        printT(
+            f"Update found for {manhuaguiHelper.name}: {manhuaguiHelper.latest_chapter_title} ({manhuaguiHelper.latest_chapter_url})"
+        )
+
+        tgHelper = TgHelper(token, chat_id)
+        content = f"comic <<{comic_name}>> updated!"
+        url_text = f"<<{comic_name}>> {manhuaguiHelper.latest_chapter_title}"
+        tgHelper.send_channel(
+            content=content,
+            url_text=url_text,
+            url=manhuaguiHelper.latest_chapter_url,
+        )
+    else:
+        if show_no_update_msg:
+            printT(f"No update found for {comic_name}")
+
+
 if __name__ == "__main__":
 
     printT("Program Start!")
@@ -64,6 +84,7 @@ if __name__ == "__main__":
 
     cocomanhuaHelperList = []
     wutuxsHelperList = []
+    manhuaguiHelperList = []
     for item in data:
         if CocomanhuaHelper.match(item["url"]):
             cocomanhuaHelperList.append(
@@ -71,6 +92,10 @@ if __name__ == "__main__":
             )
         if WutuxsHelper.match(item["url"]):
             wutuxsHelperList.append(WutuxsHelper(name=item["name"], url=item["url"]))
+        if ManhuaguiHelper.match(item["url"]):
+            manhuaguiHelperList.append(
+                ManhuaguiHelper(name=item["name"], url=item["url"])
+            )
 
     for cocomanhuaHelper in cocomanhuaHelperList:
         printT(
@@ -88,6 +113,15 @@ if __name__ == "__main__":
         schedule.every(5).to(30).minutes.do(
             wutuxsChecker,
             wutuxsHelper=wutuxsHelper,
+            show_no_update_msg=False,
+        )
+    for manhuaguiHelper in manhuaguiHelperList:
+        printT(
+            f"Current chapter for comic {manhuaguiHelper.name}: {manhuaguiHelper.latest_chapter_title} ({manhuaguiHelper.latest_chapter_url})"
+        )
+        schedule.every(5).to(30).minutes.do(
+            manhuaguiChecker,
+            manhuaguiHelper=manhuaguiHelper,
             show_no_update_msg=False,
         )
 
