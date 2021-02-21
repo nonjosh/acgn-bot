@@ -78,3 +78,7 @@ class CocomanhuaHelper:
             return True
         else:
             return False
+
+    @staticmethod
+    def match(url):
+        return "https://www.cocomanhua.com" in url

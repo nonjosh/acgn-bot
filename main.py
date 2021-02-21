@@ -1,7 +1,8 @@
 import os
 import time
-from dotenv import load_dotenv
 import schedule
+import json
+from dotenv import load_dotenv
 from helpers import printT, TgHelper, CocomanhuaHelper, WutuxsHelper
 
 load_dotenv()
@@ -58,48 +59,18 @@ if __name__ == "__main__":
 
     # printT("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
 
-    cocomanhuaHelperList = []
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="萬古神王", url="https://www.cocomanhua.com/12970/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="放開那個女巫", url="https://www.cocomanhua.com/12394/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="撿個校花做老婆", url="https://www.cocomanhua.com/12457/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="總之就是非常可愛", url="https://www.cocomanhua.com/15006/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="我家大師兄腦子有坑", url="https://www.cocomanhua.com/10994/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="仙帝歸來", url="https://www.cocomanhua.com/12650/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="碧藍之海", url="https://www.cocomanhua.com/15010/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="失業魔王", url="https://www.cocomanhua.com/13657/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="英雄？我早就不當了", url="https://www.cocomanhua.com/10291/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="修真聊天群", url="https://www.cocomanhua.com/10268/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="石紀元", url="https://www.cocomanhua.com/14424/")
-    )
-    cocomanhuaHelperList.append(
-        CocomanhuaHelper(name="元尊", url="https://www.cocomanhua.com/10136/")
-    )
+    with open("list.json") as f:
+        data = json.load(f)
 
+    cocomanhuaHelperList = []
     wutuxsHelperList = []
-    wutuxsHelperList.append(
-        WutuxsHelper(name="元尊", url="http://www.wutuxs.com/html/7/7876/")
-    )
+    for item in data:
+        if CocomanhuaHelper.match(item["url"]):
+            cocomanhuaHelperList.append(
+                CocomanhuaHelper(name=item["name"], url=item["url"])
+            )
+        if WutuxsHelper.match(item["url"]):
+            wutuxsHelperList.append(WutuxsHelper(name=item["name"], url=item["url"]))
 
     for cocomanhuaHelper in cocomanhuaHelperList:
         printT(
