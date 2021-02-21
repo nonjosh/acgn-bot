@@ -51,7 +51,7 @@ class ManhuaguiHelper:
             try:
                 link = one_a_tag["href"]
                 if link.startswith(self.a_link):
-                    chapter_title = one_a_tag.string
+                    chapter_title = one_a_tag.text
                     chapter_list.append((link, chapter_title))
             except KeyError:
                 pass
@@ -81,4 +81,4 @@ class ManhuaguiHelper:
 
     @staticmethod
     def match(url):
-        return "https://www.manhuagui.com/" in url
+        return BASE_URL in url
