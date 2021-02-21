@@ -2,10 +2,7 @@ import os
 import time
 from dotenv import load_dotenv
 import schedule
-from helpers.functions import *
-from helpers.TgHelper import TgHelper
-from helpers.CocomanhuaHelper import CocomanhuaHelper
-from helpers.WutuxsHelper import WutuxsHelper
+from helpers import printT, TgHelper, CocomanhuaHelper, WutuxsHelper
 
 load_dotenv()
 token = os.environ.get("TOKEN", "<your token>")
