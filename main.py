@@ -95,6 +95,9 @@ if __name__ == "__main__":
     cocomanhuaHelperList.append(
         CocomanhuaHelper(name="石紀元", url="https://www.cocomanhua.com/14424/")
     )
+    cocomanhuaHelperList.append(
+        CocomanhuaHelper(name="元尊", url="https://www.cocomanhua.com/10136/")
+    )
 
     wutuxsHelperList = []
     wutuxsHelperList.append(
