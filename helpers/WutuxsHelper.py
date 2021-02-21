@@ -20,19 +20,24 @@ class WutuxsHelper:
 
     def getLatestChapter(self):
         request_sucess = False
-        RETRY_INTERVAL = 60 * 30  # unit in second
+        RETRY_INTERVAL = 60 * 5  # unit in second
+        MAX_RETRY_NUM = 5
+        RETRY_NUM = 0
+
         while not request_sucess:
             try:
                 # Connect to the URL
                 response = requests.get(self.url)
                 if response.status_code == 200:
-                    response.encoding = "gb18030"
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception as e:
-                print(e)
+            except Exception:
                 time.sleep(RETRY_INTERVAL)
+            RETRY_NUM += 1
+            # break and return current chapter if reach MAX_RETRY_NUM
+            if RETRY_NUM >= MAX_RETRY_NUM:
+                return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
 

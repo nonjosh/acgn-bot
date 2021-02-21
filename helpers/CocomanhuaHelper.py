@@ -21,7 +21,10 @@ class CocomanhuaHelper:
 
     def getLatestChapter(self):
         request_sucess = False
-        RETRY_INTERVAL = 60 * 30  # unit in second
+        RETRY_INTERVAL = 60 * 5  # unit in second
+        MAX_RETRY_NUM = 5
+        RETRY_NUM = 0
+
         while not request_sucess:
             try:
                 # Connect to the URL
@@ -30,9 +33,12 @@ class CocomanhuaHelper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception as e:
-                print(e)
+            except Exception:
                 time.sleep(RETRY_INTERVAL)
+            RETRY_NUM += 1
+            # break and return current chapter if reach MAX_RETRY_NUM
+            if RETRY_NUM >= MAX_RETRY_NUM:
+                return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -59,7 +65,7 @@ class CocomanhuaHelper:
 
             return latest_chapter_url, latest_chapter_title
         except:
-            return None, None
+            return self.latest_chapter_url, self.latest_chapter_title
 
     def checkUpdate(self):
         _, latest_chapter_title = self.getLatestChapter()
