@@ -29,6 +29,7 @@ class WutuxsHelper:
                 # Connect to the URL
                 response = requests.get(self.url)
                 if response.status_code == 200:
+                    response.encoding = "gb18030"
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
