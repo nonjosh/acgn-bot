@@ -1,26 +1,35 @@
-# Telegram bot: Check novel/comic websites update
+# Telegram bot: Check anime/comic/game/novel websites update
 
 ## Introduction
 
-This bot scans novel websites (e.g. <http://www.wutuxs.com>), and send telegram message upon release of latest chapter.
-
-The checking period is limited to be `once per min` between 6pm and 11pm to reduce traffic.
+This bot scans anime/comic/game/novel websites, and send telegram message to specific channel/group/chat upon new chapters releases.
 
 ### Screenshots
 
-```sh
-[2020/11/23 01:43:01] Program Start!
-[2020/11/23 01:43:01] Check hour range: 18:00:00 - 22:00:00
-[2020/11/23 01:43:02] Current chapter: 第一千四百二十八章 周元入圣
-[2020/11/23 20:38:02] Update found! 第一千四百二十九章 混元归位
-...
-```
+![alt text](img/terminal-output.png)
+![alt text](img/tg-output.png)
+
+### Default Settings
+
+Checking interval: ***5~30 per min***
+
+RETRY_INTERVAL: 5min
+
+MAX_RETRY_NUM: 5
+
+Current supported websites:
+
+- novel: <http://www.wutuxs.com>
+- comic: <https://www.cocomanhua.com>
+- comic: <https://m.manhuagui.com/>
 
 ## How to use
 
+### Setup
+
 choose either option below to run the application
 
-### Option 1: Python
+#### Option 1: Python
 
 1. Set your `token` and `chat_id` in `/tg/config.py`
 2. Start the application with the following command:
@@ -30,7 +39,7 @@ choose either option below to run the application
     python main.py
     ```
 
-### Option 2: Docker Compose
+#### Option 2: Docker Compose
 
 1. Set your `token` and `chat_id` in `docker-compose.yml`
 2. Start the container with the following command:
@@ -39,7 +48,7 @@ choose either option below to run the application
     docker-compose up -d
     ```
 
-### Option 3: Kubernetes
+#### Option 3: Kubernetes
 
 1. Create your `secret/acgn-bot`
 
@@ -54,3 +63,7 @@ choose either option below to run the application
     docker build . -t nonjosh/acgn-bot
     kubectl apply -k k8s/base
     ```
+
+### Edit your list
+
+edit your list in the file `list.json`
