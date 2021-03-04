@@ -47,7 +47,6 @@
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode",
 	"mounts": [
-		"source=${HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
-		"source=${HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind",
+		"source=${env:HOME}/.ssh,target=/home/vscode/.ssh,type=bind",
 	],
 }
