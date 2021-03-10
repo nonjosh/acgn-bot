@@ -22,6 +22,7 @@ Current supported websites:
 - novel: <http://www.wutuxs.com>
 - comic: <https://www.cocomanhua.com>
 - comic: <https://m.manhuagui.com/>
+- novel: <https://www.esjzone.cc/> (Only works for in-site links)
 
 ## How to use
 

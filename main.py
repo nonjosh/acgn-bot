@@ -3,7 +3,14 @@ import time
 import schedule
 import yaml
 from dotenv import load_dotenv
-from helpers import printT, TgHelper, CocomanhuaHelper, WutuxsHelper, ManhuaguiHelper
+from helpers import (
+    printT,
+    TgHelper,
+    CocomanhuaHelper,
+    WutuxsHelper,
+    ManhuaguiHelper,
+    EsjzoneHelper,
+)
 
 load_dotenv()
 token = os.environ.get("TOKEN", "<your token>")
@@ -73,6 +80,26 @@ def manhuaguiChecker(manhuaguiHelper, show_no_update_msg=False):
             printT(f"No update found for {comic_name}")
 
 
+def esjzoneChecker(esjzoneHelper, show_no_update_msg=False):
+    novel_name = esjzoneHelper.name
+    if esjzoneHelper.checkUpdate():
+        printT(
+            f"Update found for {esjzoneHelper.name}: {esjzoneHelper.latest_chapter_title} ({esjzoneHelper.latest_chapter_url})"
+        )
+
+        tgHelper = TgHelper(token, chat_id)
+        content = f"comic <<{novel_name}>> updated!"
+        url_text = f"<<{novel_name}>> {esjzoneHelper.latest_chapter_title}"
+        tgHelper.send_channel(
+            content=content,
+            url_text=url_text,
+            url=esjzoneHelper.latest_chapter_url,
+        )
+    else:
+        if show_no_update_msg:
+            printT(f"No update found for {novel_name}")
+
+
 if __name__ == "__main__":
 
     printT("Program Start!")
@@ -85,6 +112,7 @@ if __name__ == "__main__":
     cocomanhuaHelperList = []
     wutuxsHelperList = []
     manhuaguiHelperList = []
+    esjzoneHelperList = []
     for item in data:
         if CocomanhuaHelper.match(item["url"]):
             cocomanhuaHelperList.append(
@@ -96,6 +124,8 @@ if __name__ == "__main__":
             manhuaguiHelperList.append(
                 ManhuaguiHelper(name=item["name"], url=item["url"])
             )
+        if EsjzoneHelper.match(item["url"]):
+            esjzoneHelperList.append(EsjzoneHelper(name=item["name"], url=item["url"]))
 
     for cocomanhuaHelper in cocomanhuaHelperList:
         printT(
@@ -122,6 +152,15 @@ if __name__ == "__main__":
         schedule.every(5).to(30).minutes.do(
             manhuaguiChecker,
             manhuaguiHelper=manhuaguiHelper,
+            show_no_update_msg=False,
+        )
+    for esjzoneHelper in esjzoneHelperList:
+        printT(
+            f"Current chapter for novel {esjzoneHelper.name}: {esjzoneHelper.latest_chapter_title} ({esjzoneHelper.latest_chapter_url})"
+        )
+        schedule.every(5).to(30).minutes.do(
+            wutuxsChecker,
+            esjzoneHelper=esjzoneHelper,
             show_no_update_msg=False,
         )
 
