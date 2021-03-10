@@ -4,3 +4,4 @@ python-telegram-bot==12.7
 hanziconv==0.3.2
 python-dotenv==0.15.0
 schedule==1.0.0
+pyyaml==5.4.1

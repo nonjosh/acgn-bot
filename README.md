@@ -66,4 +66,4 @@ choose either option below to run the application
 
 ### Edit your list
 
-edit your list in the file `list.json`
+edit your list in the file `list.yaml`

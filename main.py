@@ -1,7 +1,7 @@
 import os
 import time
 import schedule
-import json
+import yaml
 from dotenv import load_dotenv
 from helpers import printT, TgHelper, CocomanhuaHelper, WutuxsHelper, ManhuaguiHelper
 
@@ -79,8 +79,8 @@ if __name__ == "__main__":
 
     # printT("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
 
-    with open("list.json") as f:
-        data = json.load(f)
+    with open("list.yaml") as f:
+        data = yaml.load(f, Loader=yaml.FullLoader)
 
     cocomanhuaHelperList = []
     wutuxsHelperList = []
