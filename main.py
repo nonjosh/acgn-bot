@@ -159,7 +159,7 @@ if __name__ == "__main__":
             f"Current chapter for novel {esjzoneHelper.name}: {esjzoneHelper.latest_chapter_title} ({esjzoneHelper.latest_chapter_url})"
         )
         schedule.every(5).to(30).minutes.do(
-            wutuxsChecker,
+            esjzoneChecker,
             esjzoneHelper=esjzoneHelper,
             show_no_update_msg=False,
         )
