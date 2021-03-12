@@ -88,7 +88,7 @@ def esjzoneChecker(esjzoneHelper, show_no_update_msg=False):
         )
 
         tgHelper = TgHelper(token, chat_id)
-        content = f"comic <<{novel_name}>> updated!"
+        content = f"novel <<{novel_name}>> updated!"
         url_text = f"<<{novel_name}>> {esjzoneHelper.latest_chapter_title}"
         tgHelper.send_channel(
             content=content,
