@@ -23,6 +23,7 @@ Current supported websites:
 - comic: <https://www.cocomanhua.com>
 - comic: <https://m.manhuagui.com/>
 - novel: <https://www.esjzone.cc/> (Only works for in-site links)
+- novel: <https://ncode.syosetu.com>
 
 ## How to use
 
@@ -68,3 +69,8 @@ choose either option below to run the application
 ### Edit your list
 
 edit your list in the file `list.yaml`
+
+## Features to add
+
+- [ ] ConfigMap for setting
+- [ ] Support other IM bot other than Telegram (e.g. Signal, Discord)
