@@ -4,3 +4,4 @@ from helpers.CocomanhuaHelper import CocomanhuaHelper
 from helpers.WutuxsHelper import WutuxsHelper
 from helpers.ManhuaguiHelper import ManhuaguiHelper
 from helpers.EsjzoneHelper import EsjzoneHelper
+from helpers.SyosetuHelper import SyosetuHelper

@@ -10,6 +10,7 @@ from helpers import (
     WutuxsHelper,
     ManhuaguiHelper,
     EsjzoneHelper,
+    SyosetuHelper,
 )
 
 load_dotenv()
@@ -18,6 +19,26 @@ chat_id = os.environ.get("CHAT_ID", "<your chat_id>")
 
 # start_hour = 18
 # end_hour = 22
+
+
+def syosetuChecker(syosetuHelper, show_no_update_msg=False):
+    novel_name = syosetuHelper.name
+    if syosetuHelper.checkUpdate():
+        printT(
+            f"Update found for {syosetuHelper.name}: {syosetuHelper.latest_chapter_title} ({syosetuHelper.latest_chapter_url})"
+        )
+
+        tgHelper = TgHelper(token, chat_id)
+        content = f"novel <<{novel_name}>> updated!"
+        url_text = f"<<{novel_name}>> {syosetuHelper.latest_chapter_title}"
+        tgHelper.send_channel(
+            content=content,
+            url_text=url_text,
+            url=syosetuHelper.latest_chapter_url,
+        )
+    else:
+        if show_no_update_msg:
+            printT(f"No update found for {novel_name}")
 
 
 def wutuxsChecker(wutuxsHelper, show_no_update_msg=False):
@@ -113,6 +134,7 @@ if __name__ == "__main__":
     wutuxsHelperList = []
     manhuaguiHelperList = []
     esjzoneHelperList = []
+    syosetuHelperList = []
     for item in data:
         if CocomanhuaHelper.match(item["url"]):
             cocomanhuaHelperList.append(
@@ -126,6 +148,8 @@ if __name__ == "__main__":
             )
         if EsjzoneHelper.match(item["url"]):
             esjzoneHelperList.append(EsjzoneHelper(name=item["name"], url=item["url"]))
+        if SyosetuHelper.match(item["url"]):
+            syosetuHelperList.append(SyosetuHelper(name=item["name"], url=item["url"]))
 
     for cocomanhuaHelper in cocomanhuaHelperList:
         printT(
@@ -161,6 +185,15 @@ if __name__ == "__main__":
         schedule.every(5).to(30).minutes.do(
             esjzoneChecker,
             esjzoneHelper=esjzoneHelper,
+            show_no_update_msg=False,
+        )
+    for syosetuHelper in syosetuHelperList:
+        printT(
+            f"Current chapter for novel {syosetuHelper.name}: {syosetuHelper.latest_chapter_title} ({syosetuHelper.latest_chapter_url})"
+        )
+        schedule.every(5).to(30).minutes.do(
+            syosetuChecker,
+            syosetuHelper=syosetuHelper,
             show_no_update_msg=False,
         )
 
