@@ -73,4 +73,6 @@ edit your list in the file `list.yaml`
 ## Features to add
 
 - [ ] ConfigMap for setting
+- [ ] Revamp main.py (add more re-usable functions/classes)
 - [ ] Support other IM bot other than Telegram (e.g. Signal, Discord)
+- [ ] Add back time range for checking
