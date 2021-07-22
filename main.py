@@ -21,7 +21,7 @@ def syosetuChecker(syosetuHelper, show_no_update_msg=False):
     novel_name = syosetuHelper.name
     if syosetuHelper.checkUpdate():
         printT(
-            f"Update found for {syosetuHelper.name}: {syosetuHelper.latest_chapter_title} ({syosetuHelper.latest_chapter_url})"
+            f"Update found for {syosetuHelper.name}: {syosetuHelper.latest_chapter_title} ({syosetuHelper.translateUrl})"
         )
 
         content = f"novel <<{novel_name}>> updated!"
@@ -186,7 +186,7 @@ if __name__ == "__main__":
         )
     for syosetuHelper in syosetuHelperList:
         printT(
-            f"Current chapter for novel {syosetuHelper.name}: {syosetuHelper.latest_chapter_title} ({syosetuHelper.latest_chapter_url})"
+            f"Current chapter for novel {syosetuHelper.name}: {syosetuHelper.latest_chapter_title} ({syosetuHelper.translateUrl})"
         )
         schedule.every(5).to(30).minutes.do(
             syosetuChecker,
