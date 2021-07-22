@@ -71,8 +71,6 @@ class EsjzoneHelper:
                 chapterListOrdered[-1].url,
                 chapterListOrdered[-1].title,
             )
-            latest_chapter_url = latest_chapter_url
-
             return latest_chapter_url, latest_chapter_title
         except:
             return self.latest_chapter_url, self.latest_chapter_title
