@@ -33,7 +33,11 @@ choose either option below to run the application
 
 #### Option 1: Python
 
-1. Set your `token` and `chat_id` in `/tg/config.py`
+1. Create `.env`
+    ```sh
+    TOKEN=<your token>
+    CHAT_ID=<your chat_id>
+    ```
 2. Start the application with the following command:
 
     ```sh
@@ -43,7 +47,11 @@ choose either option below to run the application
 
 #### Option 2: Docker Compose
 
-1. Set your `token` and `chat_id` in `docker-compose.yml`
+1. Create `.env`
+    ```sh
+    TOKEN=<your token>
+    CHAT_ID=<your chat_id>
+    ```
 2. Start the container with the following command:
 
     ```sh

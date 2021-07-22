@@ -2,7 +2,6 @@ import os
 import time
 import schedule
 import yaml
-from dotenv import load_dotenv
 from helpers import (
     printT,
     TgHelper,
@@ -13,12 +12,8 @@ from helpers import (
     SyosetuHelper,
 )
 
-load_dotenv()
-token = os.environ.get("TOKEN", "<your token>")
-chat_id = os.environ.get("CHAT_ID", "<your chat_id>")
 
-# start_hour = 18
-# end_hour = 22
+tgHelper = TgHelper()
 
 
 def syosetuChecker(syosetuHelper, show_no_update_msg=False):
@@ -28,7 +23,6 @@ def syosetuChecker(syosetuHelper, show_no_update_msg=False):
             f"Update found for {syosetuHelper.name}: {syosetuHelper.latest_chapter_title} ({syosetuHelper.latest_chapter_url})"
         )
 
-        tgHelper = TgHelper(token, chat_id)
         content = f"novel <<{novel_name}>> updated!"
         url_text = f"<<{novel_name}>> {syosetuHelper.latest_chapter_title}"
         tgHelper.send_channel(
@@ -48,7 +42,6 @@ def wutuxsChecker(wutuxsHelper, show_no_update_msg=False):
             f"Update found for {wutuxsHelper.name}: {wutuxsHelper.latest_chapter_title} ({wutuxsHelper.latest_chapter_url})"
         )
 
-        tgHelper = TgHelper(token, chat_id)
         content = f"comic <<{novel_name}>> updated!"
         url_text = f"<<{novel_name}>> {wutuxsHelper.latest_chapter_title}"
         tgHelper.send_channel(
@@ -68,7 +61,6 @@ def cocomanhuaChecker(cocomanhuaHelper, show_no_update_msg=False):
             f"Update found for {cocomanhuaHelper.name}: {cocomanhuaHelper.latest_chapter_title} ({cocomanhuaHelper.latest_chapter_url})"
         )
 
-        tgHelper = TgHelper(token, chat_id)
         content = f"comic <<{comic_name}>> updated!"
         url_text = f"<<{comic_name}>> {cocomanhuaHelper.latest_chapter_title}"
         tgHelper.send_channel(
@@ -88,7 +80,6 @@ def manhuaguiChecker(manhuaguiHelper, show_no_update_msg=False):
             f"Update found for {manhuaguiHelper.name}: {manhuaguiHelper.latest_chapter_title} ({manhuaguiHelper.latest_chapter_url})"
         )
 
-        tgHelper = TgHelper(token, chat_id)
         content = f"comic <<{comic_name}>> updated!"
         url_text = f"<<{comic_name}>> {manhuaguiHelper.latest_chapter_title}"
         tgHelper.send_channel(
@@ -108,7 +99,6 @@ def esjzoneChecker(esjzoneHelper, show_no_update_msg=False):
             f"Update found for {esjzoneHelper.name}: {esjzoneHelper.latest_chapter_title} ({esjzoneHelper.latest_chapter_url})"
         )
 
-        tgHelper = TgHelper(token, chat_id)
         content = f"novel <<{novel_name}>> updated!"
         url_text = f"<<{novel_name}>> {esjzoneHelper.latest_chapter_title}"
         tgHelper.send_channel(

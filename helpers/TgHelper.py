@@ -1,10 +1,15 @@
 import os
 import time
 import telegram
+from dotenv import load_dotenv
+
+load_dotenv()
+token = os.environ.get("TOKEN")
+chat_id = os.environ.get("CHAT_ID")
 
 
 class TgHelper:
-    def __init__(self, token, chat_id) -> None:
+    def __init__(self, token=token, chat_id=chat_id) -> None:
         self.token = token
         self.chat_id = chat_id
 
@@ -40,3 +45,8 @@ class TgHelper:
                 print(f"Waiting {wait} secs and re-trying...")
                 time.sleep(wait * 1000)
                 retries += 1
+
+
+if __name__ == "__main__":
+    tgHelper = TgHelper()
+    tgHelper.send_channel(content="Test")
