@@ -28,7 +28,7 @@ def syosetuChecker(syosetuHelper, show_no_update_msg=False):
         tgHelper.send_channel(
             content=content,
             url_text=url_text,
-            url=syosetuHelper.latest_chapter_url,
+            url=syosetuHelper.translateUrl,
         )
     else:
         if show_no_update_msg:
@@ -139,7 +139,13 @@ if __name__ == "__main__":
         if EsjzoneHelper.match(item["url"]):
             esjzoneHelperList.append(EsjzoneHelper(name=item["name"], url=item["url"]))
         if SyosetuHelper.match(item["url"]):
-            syosetuHelperList.append(SyosetuHelper(name=item["name"], url=item["url"]))
+            syosetuHelperList.append(
+                SyosetuHelper(
+                    name=item["name"],
+                    url=item["url"],
+                    translateUrl=item["translateUrl"],
+                )
+            )
 
     for cocomanhuaHelper in cocomanhuaHelperList:
         printT(

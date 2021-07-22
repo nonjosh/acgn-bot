@@ -21,11 +21,12 @@ class Chapter:
 
 
 class SyosetuHelper:
-    def __init__(self, name, url) -> None:
+    def __init__(self, name, url, translateUrl=None) -> None:
         self.name = name
         self.url = url
         self.code = url.rsplit("/")[-2]
         self.a_link = f"/comic/{self.code}/"
+        self.translateUrl = translateUrl
         self.chapter_count = 0
         self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
@@ -93,11 +94,13 @@ class SyosetuHelper:
 
 
 if __name__ == "__main__":
-    syosetuHelper = SyosetuHelper("舔狗生肉", url="https://ncode.syosetu.com/n6621fl")
+    syosetuHelper = SyosetuHelper(
+        "舔狗生肉",
+        url="https://ncode.syosetu.com/n6621fl",
+        translateUrl="https://masiro.me/admin/novelView?novel_id=212",
+    )
 
     print(syosetuHelper.getLatestChapter())
-    # TODO use 真白萌 instead?
-    # https://masiro.moe/forum.php?mod=viewthread&tid=38246&extra=page%3D1&page=1
 
     # request_sucess = False
     # RETRY_INTERVAL = 60 * 5  # unit in second
