@@ -38,5 +38,5 @@ class TgHelper:
                 wait = retries * 30
                 print(f"Error occurs for {content}: {e}")
                 print(f"Waiting {wait} secs and re-trying...")
-                time.sleep(wait)
+                time.sleep(wait * 1000)
                 retries += 1
