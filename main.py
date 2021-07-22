@@ -12,6 +12,7 @@ from helpers import (
     SyosetuHelper,
 )
 
+LIST_YAML_PATH = "list.yaml"
 
 tgHelper = TgHelper()
 
@@ -117,7 +118,7 @@ if __name__ == "__main__":
 
     # printT("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
 
-    with open("list.yaml") as f:
+    with open(LIST_YAML_PATH) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
 
     cocomanhuaHelperList = []
