@@ -33,6 +33,7 @@ class TgHelper:
                     parse_mode=parse_mode,
                     reply_markup=reply_markup,
                 )
+                success = True
             except Exception as e:
                 wait = retries * 30
                 print(f"Error occurs for {content}: {e}")
