@@ -1,5 +1,6 @@
-import telegram
 import os
+import time
+import telegram
 
 
 class TgHelper:
@@ -22,9 +23,19 @@ class TgHelper:
             )
             reply_markup = telegram.InlineKeyboardMarkup([[url_button]])
 
-        bot.sendMessage(
-            chat_id=self.chat_id,
-            text=content,
-            parse_mode=parse_mode,
-            reply_markup=reply_markup,
-        )
+        retries = 1
+        success = False
+        while not success:
+            try:
+                bot.sendMessage(
+                    chat_id=self.chat_id,
+                    text=content,
+                    parse_mode=parse_mode,
+                    reply_markup=reply_markup,
+                )
+            except Exception as e:
+                wait = retries * 30
+                print(f"Error occurs for {content}: {e}")
+                print(f"Waiting {wait} secs and re-trying...")
+                time.sleep(wait)
+                retries += 1
