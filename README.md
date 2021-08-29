@@ -80,6 +80,10 @@ edit your list in the file `list.yaml`
 
 ## Features to add
 
+- [ ] Show error for invalid pages (e.g. esjzone)
+- [ ] troubleshoot cocomanhua 403 response
+- [ ] add support for mangatoro.com
+- [ ] add support for masiro.me
 - [ ] ConfigMap for setting
 - [ ] Revamp main.py (add more re-usable functions/classes)
 - [ ] Support other IM bot other than Telegram (e.g. Signal, Discord)
