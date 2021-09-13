@@ -43,7 +43,7 @@ def wutuxsChecker(wutuxsHelper, show_no_update_msg=False):
             f"Update found for {wutuxsHelper.name}: {wutuxsHelper.latest_chapter_title} ({wutuxsHelper.latest_chapter_url})"
         )
 
-        content = f"comic <<{novel_name}>> updated!"
+        content = f"novel <<{novel_name}>> updated!"
         url_text = f"<<{novel_name}>> {wutuxsHelper.latest_chapter_title}"
         tgHelper.send_channel(
             content=content,
