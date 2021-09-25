@@ -5,7 +5,7 @@ import yaml
 from helpers import (
     printT,
     TgHelper,
-    CocomanhuaHelper,
+    # CocomanhuaHelper,
     WutuxsHelper,
     ManhuaguiHelper,
     EsjzoneHelper,
@@ -55,23 +55,23 @@ def wutuxsChecker(wutuxsHelper, show_no_update_msg=False):
             printT(f"No update found for {novel_name}")
 
 
-def cocomanhuaChecker(cocomanhuaHelper, show_no_update_msg=False):
-    comic_name = cocomanhuaHelper.name
-    if cocomanhuaHelper.checkUpdate():
-        printT(
-            f"Update found for {cocomanhuaHelper.name}: {cocomanhuaHelper.latest_chapter_title} ({cocomanhuaHelper.latest_chapter_url})"
-        )
+# def cocomanhuaChecker(cocomanhuaHelper, show_no_update_msg=False):
+#     comic_name = cocomanhuaHelper.name
+#     if cocomanhuaHelper.checkUpdate():
+#         printT(
+#             f"Update found for {cocomanhuaHelper.name}: {cocomanhuaHelper.latest_chapter_title} ({cocomanhuaHelper.latest_chapter_url})"
+#         )
 
-        content = f"comic <<{comic_name}>> updated!"
-        url_text = f"<<{comic_name}>> {cocomanhuaHelper.latest_chapter_title}"
-        tgHelper.send_channel(
-            content=content,
-            url_text=url_text,
-            url=cocomanhuaHelper.latest_chapter_url,
-        )
-    else:
-        if show_no_update_msg:
-            printT(f"No update found for {comic_name}")
+#         content = f"comic <<{comic_name}>> updated!"
+#         url_text = f"<<{comic_name}>> {cocomanhuaHelper.latest_chapter_title}"
+#         tgHelper.send_channel(
+#             content=content,
+#             url_text=url_text,
+#             url=cocomanhuaHelper.latest_chapter_url,
+#         )
+#     else:
+#         if show_no_update_msg:
+#             printT(f"No update found for {comic_name}")
 
 
 def manhuaguiChecker(manhuaguiHelper, show_no_update_msg=False):
@@ -121,16 +121,16 @@ if __name__ == "__main__":
     with open(LIST_YAML_PATH) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
 
-    cocomanhuaHelperList = []
+    # cocomanhuaHelperList = []
     wutuxsHelperList = []
     manhuaguiHelperList = []
     esjzoneHelperList = []
     syosetuHelperList = []
     for item in data:
-        if CocomanhuaHelper.match(item["url"]):
-            cocomanhuaHelperList.append(
-                CocomanhuaHelper(name=item["name"], url=item["url"])
-            )
+        # if CocomanhuaHelper.match(item["url"]):
+        #     cocomanhuaHelperList.append(
+        #         CocomanhuaHelper(name=item["name"], url=item["url"])
+        #     )
         if WutuxsHelper.match(item["url"]):
             wutuxsHelperList.append(WutuxsHelper(name=item["name"], url=item["url"]))
         if ManhuaguiHelper.match(item["url"]):
@@ -148,15 +148,15 @@ if __name__ == "__main__":
                 )
             )
 
-    for cocomanhuaHelper in cocomanhuaHelperList:
-        printT(
-            f"Current chapter for comic {cocomanhuaHelper.name}: {cocomanhuaHelper.latest_chapter_title} ({cocomanhuaHelper.latest_chapter_url})"
-        )
-        schedule.every(5).to(30).minutes.do(
-            cocomanhuaChecker,
-            cocomanhuaHelper=cocomanhuaHelper,
-            show_no_update_msg=False,
-        )
+    # for cocomanhuaHelper in cocomanhuaHelperList:
+    #     printT(
+    #         f"Current chapter for comic {cocomanhuaHelper.name}: {cocomanhuaHelper.latest_chapter_title} ({cocomanhuaHelper.latest_chapter_url})"
+    #     )
+    #     schedule.every(5).to(30).minutes.do(
+    #         cocomanhuaChecker,
+    #         cocomanhuaHelper=cocomanhuaHelper,
+    #         show_no_update_msg=False,
+    #     )
     for wutuxsHelper in wutuxsHelperList:
         printT(
             f"Current chapter for novel {wutuxsHelper.name}: {wutuxsHelper.latest_chapter_title} ({wutuxsHelper.latest_chapter_url})"
