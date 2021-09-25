@@ -10,6 +10,7 @@ from helpers import (
     ManhuaguiHelper,
     EsjzoneHelper,
     SyosetuHelper,
+    Qiman6Helper,
 )
 
 LIST_YAML_PATH = "list.yaml"
@@ -53,6 +54,25 @@ def wutuxsChecker(wutuxsHelper, show_no_update_msg=False):
     else:
         if show_no_update_msg:
             printT(f"No update found for {novel_name}")
+
+
+def qiman6Checker(qiman6Helper, show_no_update_msg=False):
+    comic_name = qiman6Helper.name
+    if qiman6Helper.checkUpdate():
+        printT(
+            f"Update found for {qiman6Helper.name}: {qiman6Helper.latest_chapter_title} ({wutuxsHelper.latest_chapter_url})"
+        )
+
+        content = f"novel <<{comic_name}>> updated!"
+        url_text = f"<<{comic_name}>> {qiman6Helper.latest_chapter_title}"
+        tgHelper.send_channel(
+            content=content,
+            url_text=url_text,
+            url=qiman6Helper.latest_chapter_url,
+        )
+    else:
+        if show_no_update_msg:
+            printT(f"No update found for {comic_name}")
 
 
 # def cocomanhuaChecker(cocomanhuaHelper, show_no_update_msg=False):
@@ -126,6 +146,7 @@ if __name__ == "__main__":
     manhuaguiHelperList = []
     esjzoneHelperList = []
     syosetuHelperList = []
+    qiman6HelperList = []
     for item in data:
         # if CocomanhuaHelper.match(item["url"]):
         #     cocomanhuaHelperList.append(
@@ -147,6 +168,8 @@ if __name__ == "__main__":
                     translateUrl=item["translateUrl"],
                 )
             )
+        if Qiman6Helper.match(item["url"]):
+            qiman6HelperList.append(Qiman6Helper(name=item["name"], url=item["url"]))
 
     # for cocomanhuaHelper in cocomanhuaHelperList:
     #     printT(
@@ -191,6 +214,15 @@ if __name__ == "__main__":
         schedule.every(5).to(30).minutes.do(
             syosetuChecker,
             syosetuHelper=syosetuHelper,
+            show_no_update_msg=False,
+        )
+    for qiman6Helper in qiman6HelperList:
+        printT(
+            f"Current chapter for comic {qiman6Helper.name}: {qiman6Helper.latest_chapter_title} ({qiman6Helper.latest_chapter_url})"
+        )
+        schedule.every(5).to(30).minutes.do(
+            qiman6Checker,
+            qiman6Helper=qiman6Helper,
             show_no_update_msg=False,
         )
 
