@@ -63,7 +63,7 @@ def qiman6Checker(qiman6Helper, show_no_update_msg=False):
             f"Update found for {qiman6Helper.name}: {qiman6Helper.latest_chapter_title} ({wutuxsHelper.latest_chapter_url})"
         )
 
-        content = f"novel <<{comic_name}>> updated!"
+        content = f"comic <<{comic_name}>> updated!"
         url_text = f"<<{comic_name}>> {qiman6Helper.latest_chapter_title}"
         tgHelper.send_channel(
             content=content,
