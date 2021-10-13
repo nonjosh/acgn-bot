@@ -3,7 +3,7 @@ import time
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
 
-BASE_URL = "https://m.manhuagui.com/"
+BASE_URL = "https://m.manhuagui.com"
 
 
 class ManhuaguiHelper:
