@@ -19,6 +19,7 @@ class Chapter:
 
 class EsjzoneHelper:
     def __init__(self, name, url) -> None:
+        self.media_type = "novel"
         self.name = name
         self.url = url
         self.code = url.rsplit("/")[-2]

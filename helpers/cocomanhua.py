@@ -10,6 +10,7 @@ MAX_RETRY_NUM = 5
 
 class CocomanhuaHelper:
     def __init__(self, name, url) -> None:
+        self.media_type = "comic"
         self.name = name
         self.url = url
         self.code = url.rsplit("/")[-2]

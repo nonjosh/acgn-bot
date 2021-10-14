@@ -25,6 +25,7 @@ class Chapter:
 
 class SyosetuHelper:
     def __init__(self, name, url, translate_url=None) -> None:
+        self.media_type = "novel"
         self.name = name
         self.url = url
         self.code = url.rsplit("/")[-2]

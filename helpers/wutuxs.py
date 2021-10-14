@@ -10,6 +10,7 @@ MAX_RETRY_NUM = 5
 
 class WutuxsHelper:
     def __init__(self, name, url) -> None:
+        self.media_type = "novel"
         self.name = name
         self.url = url
         self.a_link = url.replace(BASE_URL, "")
