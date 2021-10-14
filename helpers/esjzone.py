@@ -1,7 +1,11 @@
-import requests
 import time
+import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
+
+BASE_URL = "https://www.esjzone.cc/"
+RETRY_INTERVAL = 60 * 5  # unit in second
+MAX_RETRY_NUM = 5
 
 
 class Chapter:
@@ -13,9 +17,6 @@ class Chapter:
         return repr((self.url, self.title))
 
 
-BASE_URL = "https://www.esjzone.cc/"
-
-
 class EsjzoneHelper:
     def __init__(self, name, url) -> None:
         self.name = name
@@ -23,17 +24,17 @@ class EsjzoneHelper:
         self.code = url.rsplit("/")[-2]
         self.a_link = f"/comic/{self.code}/"
         self.chapter_count = 0
-        self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+        (
+            self.latest_chapter_url,
+            self.latest_chapter_title,
+        ) = self.get_latest_chapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
             self.latest_chapter_title
         )
-        pass
 
-    def getLatestChapter(self):
+    def get_latest_chapter(self):
         request_sucess = False
-        RETRY_INTERVAL = 60 * 5  # unit in second
-        MAX_RETRY_NUM = 5
-        RETRY_NUM = 0
+        retry_num = 0
 
         while not request_sucess:
             try:
@@ -43,43 +44,48 @@ class EsjzoneHelper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception:
+            except Exception as e:
                 time.sleep(RETRY_INTERVAL)
-            RETRY_NUM += 1
+            retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
-            if RETRY_NUM >= MAX_RETRY_NUM:
+            if retry_num >= MAX_RETRY_NUM:
                 return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        chapterList = []
-        for chapterDiv in soup.find("div", id="chapterList").findAll("a"):
-            title = chapterDiv.text
+        chapter_list = []
+        for chapter_div in soup.find("div", id="chapter_list").findAll("a"):
+            title = chapter_div.text
             url = (
-                chapterDiv["href"].replace("www.esjzone.cc", "esjzone.cc").split("#")[0]
+                chapter_div["href"]
+                .replace("www.esjzone.cc", "esjzone.cc")
+                .split("#")[0]
             )
             chapter = Chapter(title=title, url=url)
-            chapterList.append(chapter)
+            chapter_list.append(chapter)
 
-        chapterListOrdered = sorted(
-            chapterList, key=lambda item: (len(item.url), item.url)
+        chapter_list_ordered = sorted(
+            chapter_list, key=lambda item: (len(item.url), item.url)
         )
 
         try:
             # Get latest content
             latest_chapter_url, latest_chapter_title = (
-                chapterListOrdered[-1].url,
-                chapterListOrdered[-1].title,
+                chapter_list_ordered[-1].url,
+                chapter_list_ordered[-1].title,
             )
             return latest_chapter_url, latest_chapter_title
-        except:
+        except Exception as e:
             return self.latest_chapter_url, self.latest_chapter_title
 
-    def checkUpdate(self):
-        _, latest_chapter_title = self.getLatestChapter()
+    def check_update(self):
+        _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
-            self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+            (
+                self.latest_chapter_url,
+                self.latest_chapter_title,
+            ) = self.get_latest_chapter()
             self.latest_chapter_title_cht = HanziConv.toTraditional(
                 self.latest_chapter_title
             )
@@ -92,11 +98,10 @@ class EsjzoneHelper:
         return BASE_URL in url
 
 
-if __name__ == "__main__":
+def test():
+    """simple test"""
     request_sucess = False
-    RETRY_INTERVAL = 60 * 5  # unit in second
-    MAX_RETRY_NUM = 5
-    RETRY_NUM = 0
+    retry_num = 0
 
     url = "https://www.esjzone.cc/detail/1591099430.html"
     while not request_sucess:
@@ -107,22 +112,32 @@ if __name__ == "__main__":
                 request_sucess = True
             else:
                 time.sleep(RETRY_INTERVAL)
-        except Exception:
+        except Exception as e:
             time.sleep(RETRY_INTERVAL)
-        RETRY_NUM += 1
+        retry_num += 1
         # break and return current chapter if reach MAX_RETRY_NUM
-        if RETRY_NUM >= MAX_RETRY_NUM:
+        if retry_num >= MAX_RETRY_NUM:
             print("fail to request url")
 
     soup = BeautifulSoup(response.text, "html.parser")
 
-    chapterList = []
-    for chapterDiv in soup.find("div", id="chapterList").findAll("a"):
-        title = chapterDiv.text
-        url = chapterDiv["href"].replace("www.esjzone.cc", "esjzone.cc").split("#")[0]
+    chapter_list = []
+    for chapter_div in soup.find("div", id="chapter_list").findAll("a"):
+        title = chapter_div.text
+        url = (
+            chapter_div["href"]
+            .replace("www.esjzone.cc", "esjzone.cc")
+            .split("#")[0]
+        )
         chapter = Chapter(title=title, url=url)
-        chapterList.append(chapter)
+        chapter_list.append(chapter)
         # print(chapter)
 
-    for chapter in sorted(chapterList, key=lambda item: (len(item.url), item.url)):
+    for chapter in sorted(
+        chapter_list, key=lambda item: (len(item.url), item.url)
+    ):
         print(chapter)
+
+
+if __name__ == "__main__":
+    test()

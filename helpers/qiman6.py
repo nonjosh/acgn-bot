@@ -1,9 +1,11 @@
-import requests
 import time
+import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
 
 BASE_URL = "http://qiman6.com"
+RETRY_INTERVAL = 60 * 5  # unit in second
+MAX_RETRY_NUM = 5
 
 
 class Chapter:
@@ -23,19 +25,19 @@ class Qiman6Helper:
         self.a_link = f"/comic/{self.code}/"
         self.chapter_count = 0
         self.latest_chapter_url, self.latest_chapter_title = None, None
-        self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+        (
+            self.latest_chapter_url,
+            self.latest_chapter_title,
+        ) = self.get_latest_chapter()
         self.latest_chapter_title_cht = (
             HanziConv.toTraditional(self.latest_chapter_title)
             if self.latest_chapter_title is not None
             else None
         )
-        pass
 
-    def getLatestChapter(self):
+    def get_latest_chapter(self):
         request_sucess = False
-        RETRY_INTERVAL = 60 * 5  # unit in second
-        MAX_RETRY_NUM = 5
-        RETRY_NUM = 0
+        retry_num = 0
 
         while not request_sucess:
             try:
@@ -45,41 +47,44 @@ class Qiman6Helper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception:
+            except Exception as e:
                 time.sleep(RETRY_INTERVAL)
-            RETRY_NUM += 1
+            retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
-            if RETRY_NUM >= MAX_RETRY_NUM:
+            if retry_num >= MAX_RETRY_NUM:
                 return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        chapterList = []
-        for chapterItem in soup.findAll("li", {"class": "chapter-item"}):
-            title = chapterItem.find("a").text
-            url = BASE_URL + chapterItem.find("a")["href"]
+        chapter_list = []
+        for chapter_item in soup.findAll("li", {"class": "chapter-item"}):
+            title = chapter_item.find("a").text
+            url = BASE_URL + chapter_item.find("a")["href"]
             chapter = Chapter(title=title, url=url)
-            chapterList.append(chapter)
+            chapter_list.append(chapter)
 
-        chapterListOrdered = sorted(
-            chapterList, key=lambda item: (len(item.url), item.url)
+        chapter_list_ordered = sorted(
+            chapter_list, key=lambda item: (len(item.url), item.url)
         )
 
         try:
             # Get latest content
             latest_chapter_url, latest_chapter_title = (
-                chapterListOrdered[-1].url,
-                chapterListOrdered[-1].title,
+                chapter_list_ordered[-1].url,
+                chapter_list_ordered[-1].title,
             )
             return latest_chapter_url, latest_chapter_title
-        except:
+        except Exception as e:
             return self.latest_chapter_url, self.latest_chapter_title
 
-    def checkUpdate(self):
-        _, latest_chapter_title = self.getLatestChapter()
+    def check_update(self):
+        _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
-            self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+            (
+                self.latest_chapter_url,
+                self.latest_chapter_title,
+            ) = self.get_latest_chapter()
             self.latest_chapter_title_cht = HanziConv.toTraditional(
                 self.latest_chapter_title
             )
@@ -92,9 +97,13 @@ class Qiman6Helper:
         return BASE_URL in url
 
 
-if __name__ == "__main__":
+def test():
     name = "仙帝歸来"
     url = "http://qiman6.com/12235/"
-    qiman6Helper = Qiman6Helper(name, url)
-    url, title = qiman6Helper.getLatestChapter()
+    qiman6_helper = Qiman6Helper(name, url)
+    url, title = qiman6_helper.get_latest_chapter()
     print(title, url)
+
+
+if __name__ == "__main__":
+    test()

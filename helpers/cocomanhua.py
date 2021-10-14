@@ -1,29 +1,31 @@
-import requests
 import time
+import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
 
-BASE_URL = "https://m.manhuagui.com"
+BASE_URL = "https://www.cocomanhua.com"
+RETRY_INTERVAL = 60 * 5  # unit in second
+MAX_RETRY_NUM = 5
 
 
-class ManhuaguiHelper:
+class CocomanhuaHelper:
     def __init__(self, name, url) -> None:
         self.name = name
         self.url = url
         self.code = url.rsplit("/")[-2]
-        self.a_link = f"/comic/{self.code}/"
+        self.a_link = f"/{self.code}/"
         self.chapter_count = 0
-        self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+        (
+            self.latest_chapter_url,
+            self.latest_chapter_title,
+        ) = self.get_latest_chapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
             self.latest_chapter_title
         )
-        pass
 
-    def getLatestChapter(self):
+    def get_latest_chapter(self):
         request_sucess = False
-        RETRY_INTERVAL = 60 * 5  # unit in second
-        MAX_RETRY_NUM = 5
-        RETRY_NUM = 0
+        retry_num = 0
 
         while not request_sucess:
             try:
@@ -33,11 +35,11 @@ class ManhuaguiHelper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception:
+            except Exception as e:
                 time.sleep(RETRY_INTERVAL)
-            RETRY_NUM += 1
+            retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
-            if RETRY_NUM >= MAX_RETRY_NUM:
+            if retry_num >= MAX_RETRY_NUM:
                 return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -51,7 +53,7 @@ class ManhuaguiHelper:
             try:
                 link = one_a_tag["href"]
                 if link.startswith(self.a_link):
-                    chapter_title = one_a_tag.text
+                    chapter_title = one_a_tag.string
                     chapter_list.append((link, chapter_title))
             except KeyError:
                 pass
@@ -64,14 +66,17 @@ class ManhuaguiHelper:
             latest_chapter_url = BASE_URL + latest_chapter_url
 
             return latest_chapter_url, latest_chapter_title
-        except:
+        except Exception as e:
             return self.latest_chapter_url, self.latest_chapter_title
 
-    def checkUpdate(self):
-        _, latest_chapter_title = self.getLatestChapter()
+    def check_update(self):
+        _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
-            self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+            (
+                self.latest_chapter_url,
+                self.latest_chapter_title,
+            ) = self.get_latest_chapter()
             self.latest_chapter_title_cht = HanziConv.toTraditional(
                 self.latest_chapter_title
             )
@@ -81,4 +86,4 @@ class ManhuaguiHelper:
 
     @staticmethod
     def match(url):
-        return BASE_URL in url
+        return "https://www.cocomanhua.com" in url

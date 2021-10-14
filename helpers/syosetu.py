@@ -1,5 +1,5 @@
-import requests
 import time
+import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
 
@@ -7,7 +7,10 @@ RETRY_INTERVAL = 60 * 5  # unit in second
 MAX_RETRY_NUM = 5
 BASE_URL = "https://ncode.syosetu.com"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36"
+        " (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+    )
 }
 
 
@@ -21,20 +24,22 @@ class Chapter:
 
 
 class SyosetuHelper:
-    def __init__(self, name, url, translateUrl=None) -> None:
+    def __init__(self, name, url, translate_url=None) -> None:
         self.name = name
         self.url = url
         self.code = url.rsplit("/")[-2]
         self.a_link = f"/comic/{self.code}/"
-        self.translateUrl = translateUrl
+        self.translate_url = translate_url
         self.chapter_count = 0
-        self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+        (
+            self.latest_chapter_url,
+            self.latest_chapter_title,
+        ) = self.get_latest_chapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
             self.latest_chapter_title
         )
-        pass
 
-    def getLatestChapter(self):
+    def get_latest_chapter(self):
         request_sucess = False
         retry_num = 0
 
@@ -46,7 +51,7 @@ class SyosetuHelper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception:
+            except Exception as e:
                 time.sleep(RETRY_INTERVAL)
             retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
@@ -55,32 +60,35 @@ class SyosetuHelper:
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        chapterList = []
+        chapter_list = []
         for chapter_a in soup.find("div", {"class": "index_box"}).findAll("a"):
             title = chapter_a.text
             url = BASE_URL + chapter_a["href"]
             chapter = Chapter(title=title, url=url)
-            chapterList.append(chapter)
+            chapter_list.append(chapter)
 
-        chapterListOrdered = sorted(
-            chapterList, key=lambda item: (len(item.url), item.url)
+        chapter_list_ordered = sorted(
+            chapter_list, key=lambda item: (len(item.url), item.url)
         )
 
         try:
             # Get latest content
             latest_chapter_url, latest_chapter_title = (
-                chapterListOrdered[-1].url,
-                chapterListOrdered[-1].title,
+                chapter_list_ordered[-1].url,
+                chapter_list_ordered[-1].title,
             )
             return latest_chapter_url, latest_chapter_title
-        except:
+        except Exception as e:
             return self.latest_chapter_url, self.latest_chapter_title
 
-    def checkUpdate(self):
-        _, latest_chapter_title = self.getLatestChapter()
+    def check_update(self):
+        _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
-            self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+            (
+                self.latest_chapter_url,
+                self.latest_chapter_title,
+            ) = self.get_latest_chapter()
             self.latest_chapter_title_cht = HanziConv.toTraditional(
                 self.latest_chapter_title
             )
@@ -97,10 +105,10 @@ if __name__ == "__main__":
     syosetuHelper = SyosetuHelper(
         "舔狗生肉",
         url="https://ncode.syosetu.com/n6621fl",
-        translateUrl="https://masiro.me/admin/novelView?novel_id=212",
+        translate_url="https://masiro.me/admin/novelView?novel_id=212",
     )
 
-    print(syosetuHelper.getLatestChapter())
+    print(syosetuHelper.get_latest_chapter())
 
     # request_sucess = False
     # RETRY_INTERVAL = 60 * 5  # unit in second
@@ -109,7 +117,11 @@ if __name__ == "__main__":
 
     # url = "https://ncode.syosetu.com/n6621fl"
     # headers = {
-    #     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"
+    #     "User-Agent": (
+    #         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5)"
+    #         " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102"
+    #         " Safari/537.36"
+    #     )
     # }
 
     # while not request_sucess:
@@ -120,7 +132,7 @@ if __name__ == "__main__":
     #             request_sucess = True
     #         else:
     #             time.sleep(RETRY_INTERVAL)
-    #     except Exception:
+    #     except Exception as e:
     #         time.sleep(RETRY_INTERVAL)
     #     RETRY_NUM += 1
     #     # break and return current chapter if reach MAX_RETRY_NUM
@@ -129,13 +141,13 @@ if __name__ == "__main__":
 
     # soup = BeautifulSoup(response.text, "html.parser")
 
-    # chapterList = []
+    # chapter_list = []
     # for chapter_a in soup.find("div", {"class": "index_box"}).findAll("a"):
     #     title = chapter_a.text
     #     url = BASE_URL + chapter_a["href"]
     #     chapter = Chapter(title=title, url=url)
-    #     chapterList.append(chapter)
+    #     chapter_list.append(chapter)
     #     # print(chapter)
 
-    # for chapter in sorted(chapterList, key=lambda item: (len(item.url), item.url)):
+    # for chapter in sorted(chapter_list, key=lambda item: (len(item.url), item.url)):
     #     print(chapter)

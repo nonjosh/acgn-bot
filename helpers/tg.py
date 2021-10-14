@@ -4,12 +4,12 @@ import telegram
 from dotenv import load_dotenv
 
 load_dotenv()
-token = os.environ.get("TOKEN")
-chat_id = os.environ.get("CHAT_ID")
+TOKEN = os.environ.get("TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
 
 
 class TgHelper:
-    def __init__(self, token=token, chat_id=chat_id) -> None:
+    def __init__(self, token=TOKEN, chat_id=CHAT_ID) -> None:
         self.token = token
         self.chat_id = chat_id
 
@@ -47,6 +47,10 @@ class TgHelper:
                 retries += 1
 
 
+def test():
+    tg_helper = TgHelper()
+    tg_helper.send_channel(content="Test")
+
+
 if __name__ == "__main__":
-    tgHelper = TgHelper()
-    tgHelper.send_channel(content="Test")
+    test()

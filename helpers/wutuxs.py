@@ -1,9 +1,11 @@
-import requests
 import time
+import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
 
 BASE_URL = "http://www.wutuxs.com"
+RETRY_INTERVAL = 60 * 5  # unit in second
+MAX_RETRY_NUM = 5
 
 
 class WutuxsHelper:
@@ -12,17 +14,17 @@ class WutuxsHelper:
         self.url = url
         self.a_link = url.replace(BASE_URL, "")
         self.chapter_count = 0
-        self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+        (
+            self.latest_chapter_url,
+            self.latest_chapter_title,
+        ) = self.get_latest_chapter()
         self.latest_chapter_title_cht = HanziConv.toTraditional(
             self.latest_chapter_title
         )
-        pass
 
-    def getLatestChapter(self):
+    def get_latest_chapter(self):
         request_sucess = False
-        RETRY_INTERVAL = 60 * 5  # unit in second
-        MAX_RETRY_NUM = 5
-        RETRY_NUM = 0
+        retry_num = 0
 
         while not request_sucess:
             try:
@@ -33,11 +35,11 @@ class WutuxsHelper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception:
+            except Exception as e:
                 time.sleep(RETRY_INTERVAL)
-            RETRY_NUM += 1
+            retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
-            if RETRY_NUM >= MAX_RETRY_NUM:
+            if retry_num >= MAX_RETRY_NUM:
                 return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -64,14 +66,17 @@ class WutuxsHelper:
             latest_chapter_url = BASE_URL + latest_chapter_url
 
             return latest_chapter_url, latest_chapter_title
-        except:
+        except Exception as e:
             return None, None
 
-    def checkUpdate(self):
-        _, latest_chapter_title = self.getLatestChapter()
+    def check_update(self):
+        _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
-            self.latest_chapter_url, self.latest_chapter_title = self.getLatestChapter()
+            (
+                self.latest_chapter_url,
+                self.latest_chapter_title,
+            ) = self.get_latest_chapter()
             self.latest_chapter_title_cht = HanziConv.toTraditional(
                 self.latest_chapter_title
             )

@@ -1,17 +1,13 @@
 from datetime import datetime
 
 
-def getDateTime():
+def print_t(msg):
     now = datetime.now()
     current_time = now.strftime("%Y/%m/%d %H:%M:%S")
-    return current_time
+    print(f"[{current_time}] {msg}")
 
 
-def printT(msg):
-    print(f"[{getDateTime()}] {msg}")
-
-
-def withinCheckPeriod(start_hour, end_hour):
+def within_check_period(start_hour, end_hour):
     now = datetime.now()
     current_hour = now.strftime("%H")
     return start_hour <= int(current_hour) <= end_hour
