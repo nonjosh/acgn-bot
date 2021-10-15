@@ -21,9 +21,13 @@ tg_helper = TgHelper()
 def my_checker(my_helper, show_no_update_msg=False):
     name = my_helper.name
     if my_helper.check_update():
+        if my_helper.translate_url is not None:
+            url = my_helper.translate_url
+        else:
+            url = my_helper.latest_chapter_url
         print_t(
             f"Update found for {my_helper.name}:"
-            f" {my_helper.latest_chapter_title} ({my_helper.translate_url})"
+            f" {my_helper.latest_chapter_title} ({url})"
         )
 
         content = f"{my_helper.media_type} <<{name}>> updated!"
@@ -31,7 +35,7 @@ def my_checker(my_helper, show_no_update_msg=False):
         tg_helper.send_channel(
             content=content,
             url_text=url_text,
-            url=my_helper.translate_url,
+            url=url,
         )
     else:
         if show_no_update_msg:
