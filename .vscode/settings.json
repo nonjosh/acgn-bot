@@ -5,13 +5,10 @@
     "python.formatting.blackArgs": [
         "--line-length=79",
         "--experimental-string-processing"
-        ],
+    ],
     "files.exclude": {
         "**/__pycache__": true
     },
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.linting.pylintArgs": [
-        "--class-naming-style=PascalCase",
-    ]
 }
