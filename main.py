@@ -21,7 +21,7 @@ tg_helper = TgHelper()
 def my_checker(my_helper, show_no_update_msg=False):
     name = my_helper.name
     if my_helper.check_update():
-        if my_helper.translate_url is not None:
+        if hasattr(my_helper, "translate_url"):
             url = my_helper.translate_url
         else:
             url = my_helper.latest_chapter_url
