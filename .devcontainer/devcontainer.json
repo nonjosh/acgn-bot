@@ -13,7 +13,6 @@
 			"NODE_VERSION": "lts/*"
 		}
 	},
-	"workspaceFolder": "/app",
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
