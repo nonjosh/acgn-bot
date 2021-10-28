@@ -49,7 +49,7 @@ def main():
     with open(LIST_YAML_PATH, encoding="utf8") as list_file:
         data = yaml.load(list_file, Loader=yaml.FullLoader)
 
-    Helper_list = [
+    helper_list = [
         # CocomanhuaHelper,
         WutuxsHelper,
         ManhuaguiHelper,
@@ -58,9 +58,9 @@ def main():
         Qiman6Helper,
     ]
     for item in data:
-        for Helper in Helper_list:
-            if Helper.match(item["url"]):
-                my_helper = Helper(name=item["name"], url=item["url"])
+        for helper in helper_list:
+            if helper.match(item["url"]):
+                my_helper = helper(name=item["name"], url=item["url"])
                 print_t(
                     "Current chapter for"
                     f" {my_helper.media_type} {my_helper.name}:"
