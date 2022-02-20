@@ -13,7 +13,7 @@ from helpers import (
 )
 
 
-LIST_YAML_PATH = "list.yaml"
+LIST_YAML_PATH = "config/list.yaml"
 
 tg_helper = TgHelper()
 

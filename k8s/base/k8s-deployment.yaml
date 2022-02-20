@@ -17,7 +17,16 @@ spec:
         - image: nonjosh/acgn-bot
           name: acgn-bot
           imagePullPolicy: Never
-          resources: {}
+          resources: {
+            limits: {
+              cpu: "1",
+              memory: "1Gi"
+            },
+            requests: {
+              cpu: "1",
+              memory: "1Gi"
+            }
+          }
           env:
             - name: TOKEN
               valueFrom:
@@ -29,4 +38,14 @@ spec:
                 secretKeyRef:
                   name: acgn-bot
                   key: channel-id
+          volumeMounts:
+            - name: list
+              mountPath: "/app/config"
+              readOnly: true
+      volumes:
+        - name: list
+          configMap:
+            name: acgn-bot.list.yaml
       restartPolicy: Always
+
+# kubectl create configmap acgn-bot.list.yaml --from-file=config/list.yaml --dry-run=client -o yaml | kubectl apply -f -
