@@ -34,10 +34,12 @@ choose either option below to run the application
 #### Option 1: Python
 
 1. Create `.env`
+
     ```sh
     TOKEN=<your token>
     CHAT_ID=<your chat_id>
     ```
+
 2. Start the application with the following command:
 
     ```sh
@@ -48,10 +50,12 @@ choose either option below to run the application
 #### Option 2: Docker Compose
 
 1. Create `.env`
+
     ```sh
     TOKEN=<your token>
     CHAT_ID=<your chat_id>
     ```
+
 2. Start the container with the following command:
 
     ```sh
@@ -83,8 +87,7 @@ edit your list in the file `list.yaml`
 - [ ] Show error for invalid pages (e.g. esjzone)
 - [ ] troubleshoot cocomanhua 403 response
 - [ ] add support for mangatoro.com
-- [ ] add support for masiro.me
-- [ ] ConfigMap for setting
-- [ ] Revamp main.py (add more re-usable functions/classes)
+- [X] ConfigMap for setting
+- [X] Revamp main.py (add more re-usable functions/classes)
 - [ ] Support other IM bot other than Telegram (e.g. Signal, Discord)
 - [ ] Add back time range for checking
