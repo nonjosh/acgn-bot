@@ -152,6 +152,11 @@ def main():
             if helper:
                 add_schedule(helper, urls=item_obj[urls_type])
 
+    if len(schedule.jobs) == 0:
+        raise ValueError(
+            "No schedule job found, please check format in list.yaml"
+        )
+
     # Run the scheduler
     while True:
         schedule.run_pending()
