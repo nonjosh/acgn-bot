@@ -27,7 +27,7 @@ def my_checker(my_helper, urls: List[str], show_no_update_msg=False):
         my_helper (Helper): helper
         show_no_update_msg (bool, optional): print no update msg. Defaults to False.
     """
-    has_update = my_helper.has_update()
+    has_update = my_helper.check_update()
     if has_update:
         if hasattr(my_helper, "translate_url"):
             url = my_helper.translate_url
