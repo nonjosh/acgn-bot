@@ -9,3 +9,4 @@ LICENSE
 deprecated/
 k8s/
 **/.devcontainer
+.env

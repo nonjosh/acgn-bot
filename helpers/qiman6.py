@@ -1,3 +1,4 @@
+"""qiman6Helper"""
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -9,6 +10,8 @@ MAX_RETRY_NUM = 5
 
 
 class Chapter:
+    """Chapter class"""
+
     def __init__(self, title, url) -> None:
         self.title = title
         self.url = url
@@ -18,6 +21,8 @@ class Chapter:
 
 
 class Qiman6Helper:
+    """Qiman6Helper"""
+
     def __init__(self, name, url) -> None:
         self.media_type = "comic"
         self.name = name
@@ -25,7 +30,7 @@ class Qiman6Helper:
         self.code = url.rsplit("/")[-2]
         self.a_link = f"/comic/{self.code}/"
         self.chapter_count = 0
-        self.latest_chapter_url, self.latest_chapter_title = None, None
+        self.latest_chapter_url = self.latest_chapter_title = None
         (
             self.latest_chapter_url,
             self.latest_chapter_title,
@@ -37,6 +42,11 @@ class Qiman6Helper:
         )
 
     def get_latest_chapter(self):
+        """Get latest chapter
+
+        Returns:
+            tuple: (url, title)
+        """
         request_sucess = False
         retry_num = 0
 
@@ -48,7 +58,7 @@ class Qiman6Helper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception as e:
+            except requests.exceptions.RequestException:
                 time.sleep(RETRY_INTERVAL)
             retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
@@ -68,17 +78,19 @@ class Qiman6Helper:
             chapter_list, key=lambda item: (len(item.url), item.url)
         )
 
-        try:
+        if len(chapter_list_ordered) > 0:
             # Get latest content
-            latest_chapter_url, latest_chapter_title = (
-                chapter_list_ordered[-1].url,
-                chapter_list_ordered[-1].title,
-            )
-            return latest_chapter_url, latest_chapter_title
-        except Exception as e:
+            latest_chapter_obj = chapter_list_ordered[-1]
+            return latest_chapter_obj.url, latest_chapter_obj.title
+        else:
             return self.latest_chapter_url, self.latest_chapter_title
 
     def check_update(self):
+        """Check update
+
+        Returns:
+            bool: True if update, False if not
+        """
         _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
@@ -95,10 +107,19 @@ class Qiman6Helper:
 
     @staticmethod
     def match(url):
+        """Match url
+
+        Args:
+            url (str): url to check
+
+        Returns:
+            bool: True if match, False if not
+        """
         return BASE_URL in url
 
 
 def test():
+    """test"""
     name = "仙帝歸来"
     url = "http://qiman6.com/12235/"
     qiman6_helper = Qiman6Helper(name, url)
