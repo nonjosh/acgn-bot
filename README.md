@@ -29,7 +29,7 @@ Current supported websites:
 
 ### Setup
 
-choose either option below to run the application
+Choose either option below to run the application
 
 #### Option 1: Python
 
@@ -64,14 +64,20 @@ choose either option below to run the application
 
 #### Option 3: Kubernetes
 
-1. Create your `secret/acgn-bot`
+1. Set your bot token and chat_id in `secret/acgn-bot`
 
     ```sh
     # Examples in k8s/secrets/k8s-secrets.yaml, remember to change to your token/chat_id first
     kubectl apply -f k8s/secrets/k8s-secrets.yaml
     ```
 
-2. Build local image and create deployment
+2. Set your checking list yaml file in `configmap/acgn-bot.list.yaml`
+
+    ```sh
+    kubectl create configmap acgn-bot.list.yaml --from-file=config/list.yaml --dry-run=client -o yaml | kubectl apply -f -
+    ```
+
+3. Build local image and create deployment
 
     ```sh
     docker build . -t nonjosh/acgn-bot
@@ -80,12 +86,12 @@ choose either option below to run the application
 
 ### Edit your list
 
-edit your list in the file `list.yaml`
+Edit your list in the file `list.yaml`. Restart container to apply changes.
 
 ## Features to add
 
 - [ ] Show error for invalid pages (e.g. esjzone)
-- [ ] troubleshoot cocomanhua 403 response
+- [ ] hack cocomanhua cloudflare DDOS protection
 - [ ] add support for mangatoro.com
 - [X] ConfigMap for setting
 - [X] Revamp main.py (add more re-usable functions/classes)
