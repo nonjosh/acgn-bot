@@ -13,6 +13,12 @@ class TgHelper:
     """Telegram helper"""
 
     def __init__(self, token=TOKEN, chat_id=CHAT_ID) -> None:
+
+        if token is None:
+            raise ValueError("Telegram bot token is not given")
+        if chat_id is None:
+            raise ValueError("Chat id is not given")
+
         self.token = token
         self.chat_id = chat_id
         self.bot = telegram.Bot(token=self.token)
