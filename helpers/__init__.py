@@ -1,4 +1,3 @@
-from helpers.functions import *
 from helpers.tg import TgHelper
 from helpers.cocomanhua import CocomanhuaHelper
 from helpers.wutuxs import WutuxsHelper
