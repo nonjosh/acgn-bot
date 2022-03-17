@@ -69,7 +69,7 @@ class ManhuaguiHelper:
 
         self.chapter_count = len(chapter_list)
 
-        if chapter_list > 0:
+        if len(chapter_list) > 0:
             # Get latest content
             latest_chapter_url, latest_chapter_title = chapter_list[0]
             latest_chapter_url = BASE_URL + latest_chapter_url
