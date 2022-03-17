@@ -3,10 +3,13 @@ import os
 import time
 import telegram
 from dotenv import load_dotenv
+from utils import get_logger
 
 load_dotenv()
 TOKEN = os.environ.get("TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
+
+logger = get_logger(__name__)
 
 
 class TgHelper:
@@ -61,7 +64,7 @@ class TgHelper:
                 success = True
             except telegram.TelegramError as err:
                 wait = retries * 30
-                print(f"Error occurs for {content}: {err}")
-                print(f"Waiting {wait} secs and re-trying...")
+                logger.error(f"Error occurs for {content}: {err}")
+                logger.error(f"Waiting {wait} secs and re-trying...")
                 time.sleep(wait * 1000)
                 retries += 1

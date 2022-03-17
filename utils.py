@@ -1,16 +1,53 @@
 """Utility functions"""
 from datetime import datetime
+import logging
+from logging.handlers import TimedRotatingFileHandler
+
+# Create logging formatter
+FORMATTER = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "%Y-%m-%dT%H:%M:%S%z",
+)
+
+LOG_FILE = "./logs/app.log"
 
 
-def print_t(msg: str):
-    """print with timestamp
+def get_logger(
+    logger_name: str, log_level: int = logging.INFO
+) -> logging.Logger:
+    """Set logger
 
     Args:
-        msg (str): message string
+        log_file (str): log file path
+        log_level (int, optional): log level. Defaults to logging.INFO.
+
+    return:
+        logging.Logger: logger object
     """
-    now = datetime.now()
-    current_time = now.strftime("%Y/%m/%d %H:%M:%S")
-    print(f"[{current_time}] {msg}")
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(log_level)
+
+    # Create console handler and set level to debug
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(log_level)
+
+    # Add formatter to console_handler
+    console_handler.setFormatter(FORMATTER)
+
+    # Add console_handler to logger
+    logger.addHandler(console_handler)
+
+    # Create error file handler and set level to error
+    file_handler = TimedRotatingFileHandler(filename=LOG_FILE, when="midnight")
+    file_handler.setLevel(log_level)
+
+    # Add formatter to file_handler
+    file_handler.setFormatter(FORMATTER)
+
+    # Add file_handler to logger
+    logger.addHandler(file_handler)
+
+    return logger
 
 
 def within_check_period(start_hour: str, end_hour: str) -> bool:
@@ -25,6 +62,7 @@ def within_check_period(start_hour: str, end_hour: str) -> bool:
     """
     now = datetime.now()
     current_hour = now.strftime("%H")
+
     return start_hour <= int(current_hour) <= end_hour
 
 

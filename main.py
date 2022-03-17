@@ -12,10 +12,11 @@ from helpers import (
     SyosetuHelper,
     Qiman6Helper,
 )
-from utils import print_t, get_main_domain_name
+from utils import get_logger, get_main_domain_name
 
 LIST_YAML_PATH = "config/list.yaml"
 
+logger = get_logger(__name__)
 tg_helper = TgHelper()
 
 
@@ -34,7 +35,7 @@ def my_checker(my_helper, urls: List[str], show_no_update_msg=False):
             url = my_helper.latest_chapter_url
 
         # Print update message
-        print_t(
+        logger.info(
             f"Update found for {my_helper.name}:"
             f" {my_helper.latest_chapter_title} ({url})"
         )
@@ -43,7 +44,7 @@ def my_checker(my_helper, urls: List[str], show_no_update_msg=False):
         tg_helper.send_msg(content=content_html_text)
     else:
         if show_no_update_msg:
-            print_t(
+            logger.info(
                 f"No update found for {my_helper.media_type} {my_helper.name}"
             )
 
@@ -74,7 +75,7 @@ def get_msg_content(my_helper, urls: List[str] = None) -> str:
 
 def print_latest_chapter(my_helper):
     """Print latest chapter"""
-    print_t(
+    logger.info(
         f"Current chapter for {my_helper.media_type} {my_helper.name}:"
         f" {my_helper.latest_chapter_title} ({my_helper.latest_chapter_url})"
     )
@@ -138,7 +139,7 @@ def get_helper(item_obj, urls_type: str = "comic_urls"):
 
 def main():
     """Main logic"""
-    # print_t("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
+    # logger.info("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
 
     with open(LIST_YAML_PATH, encoding="utf8") as list_file:
         yml_data = yaml.load(list_file, Loader=yaml.FullLoader)
@@ -152,7 +153,7 @@ def main():
                 add_schedule(helper, urls=item_obj[urls_type])
 
     if len(schedule.jobs) > 0:
-        print_t(f"Scheduled {len(schedule.jobs)} checker(s).")
+        logger.info(f"Scheduled {len(schedule.jobs)} checker(s).")
     else:
         raise ValueError(
             "No schedule job found, please check format in list.yaml"
@@ -165,5 +166,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print_t("Program Start!")
+    logger.info("Program Start!")
     main()

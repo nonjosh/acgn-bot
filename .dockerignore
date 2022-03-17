@@ -10,3 +10,4 @@ deprecated/
 k8s/
 **/.devcontainer
 .env
+logs/*.log*
