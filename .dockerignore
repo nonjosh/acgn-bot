@@ -11,4 +11,6 @@ k8s/
 **/.devcontainer
 .env
 logs/*.log*
-test_*.py
+test_*
+**/__pycache__
+**/.mypy_cache
