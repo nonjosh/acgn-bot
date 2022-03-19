@@ -76,7 +76,6 @@ class ManhuaguiHelper:
             return latest_chapter_url, latest_chapter_title
         else:
             logger.warn(f"No chapter found for {self.name} ({self.url})")
-            logger.warn(chapter_list)
             return self.latest_chapter_url, self.latest_chapter_title
 
     def check_update(self):
