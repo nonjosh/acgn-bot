@@ -36,8 +36,10 @@ def my_checker(my_helper, urls: List[str], show_no_update_msg=False):
 
         # Print update message
         logger.info(
-            f"Update found for {my_helper.name}:"
-            f" {my_helper.latest_chapter_title} ({url})"
+            "Update found for %s: %s (%s)",
+            my_helper.name,
+            my_helper.latest_chapter_title,
+            url,
         )
 
         content_html_text = get_msg_content(my_helper, urls)
@@ -45,7 +47,9 @@ def my_checker(my_helper, urls: List[str], show_no_update_msg=False):
     else:
         if show_no_update_msg:
             logger.info(
-                f"No update found for {my_helper.media_type} {my_helper.name}"
+                "No update found for %s %s",
+                my_helper.media_type,
+                my_helper.name,
             )
 
 
@@ -76,8 +80,11 @@ def get_msg_content(my_helper, urls: List[str] = None) -> str:
 def print_latest_chapter(my_helper):
     """Print latest chapter"""
     logger.info(
-        f"Current chapter for {my_helper.media_type} {my_helper.name}:"
-        f" {my_helper.latest_chapter_title} ({my_helper.latest_chapter_url})"
+        "Current chapter for %s %s: %s (%s)",
+        my_helper.media_type,
+        my_helper.name,
+        my_helper.latest_chapter_title,
+        my_helper.latest_chapter_url,
     )
 
 
@@ -153,7 +160,7 @@ def main():
                 add_schedule(helper, urls=item_obj[urls_type])
 
     if len(schedule.jobs) > 0:
-        logger.info(f"Scheduled {len(schedule.jobs)} checker(s).")
+        logger.info("Scheduled %s checker(s).", len(schedule.jobs))
     else:
         raise ValueError(
             "No schedule job found, please check format in list.yaml"

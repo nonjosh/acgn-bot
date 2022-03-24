@@ -11,6 +11,7 @@ MAX_RETRY_NUM = 5
 
 logger = get_logger(__name__)
 
+
 class Chapter:
     """Chapter class"""
 
@@ -85,7 +86,7 @@ class Qiman6Helper:
             latest_chapter_obj = chapter_list_ordered[-1]
             return latest_chapter_obj.url, latest_chapter_obj.title
         else:
-            logger.warn(f"Empty chapter list for {self.name} ({self.url})")
+            logger.warn("Empty chapter list for %s (%s)", self.name, self.url)
             return self.latest_chapter_url, self.latest_chapter_title
 
     def check_update(self):

@@ -48,7 +48,7 @@ class ManhuaguiHelper:
             retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
             if retry_num >= MAX_RETRY_NUM:
-                logger.warn(f"Reach max retry num for {self.url}")
+                logger.warn("Reach max retry num for %s", self.url)
                 return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -75,7 +75,7 @@ class ManhuaguiHelper:
             latest_chapter_url = BASE_URL + latest_chapter_url
             return latest_chapter_url, latest_chapter_title
         else:
-            logger.warn(f"Empty chapter list for {self.name} ({self.url})")
+            logger.warn("Empty chapter list for %s (%s)", self.name, self.url)
             return self.latest_chapter_url, self.latest_chapter_title
 
     def check_update(self):
