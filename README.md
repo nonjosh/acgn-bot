@@ -1,5 +1,8 @@
 # Telegram bot: Check anime/comic/game/novel websites update
 
+![docker build workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/docker-build.yml/badge.svg)
+![pylint workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/pylint.yml/badge.svg)
+
 ## Introduction
 
 This bot scans anime/comic/game/novel websites, and send telegram message to specific channel/group/chat upon new chapters releases.
@@ -11,7 +14,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 
 ### Default Settings
 
-Checking interval: ***5~30 per min***
+Checking interval: **_5~30 per min_**
 
 RETRY_INTERVAL: 5min
 
@@ -93,7 +96,5 @@ Edit your list in the file `list.yaml`. Restart container to apply changes.
 - [ ] Show error for invalid pages (e.g. esjzone)
 - [ ] hack cocomanhua cloudflare DDOS protection
 - [ ] add support for mangatoro.com
-- [X] ConfigMap for setting
-- [X] Revamp main.py (add more re-usable functions/classes)
 - [ ] Support other IM bot other than Telegram (e.g. Signal, Discord)
 - [ ] Add back time range for checking
