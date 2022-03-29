@@ -1,4 +1,5 @@
 #!/usr/local/bin/python
+# pylint: disable-all
 from __future__ import print_function
 
 import argparse
