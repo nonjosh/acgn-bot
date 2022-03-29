@@ -3,6 +3,18 @@
 ![docker build workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/docker-build.yml/badge.svg)
 ![pylint workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/pylint.yml/badge.svg)
 
+- [Telegram bot: Check anime/comic/game/novel websites update](#telegram-bot-check-animecomicgamenovel-websites-update)
+  - [Introduction](#introduction)
+    - [Screenshots](#screenshots)
+    - [Default Settings](#default-settings)
+  - [How to use](#how-to-use)
+    - [Setup](#setup)
+      - [Option 1: Python](#option-1-python)
+      - [Option 2: Docker Compose](#option-2-docker-compose)
+      - [Option 3: Kubernetes](#option-3-kubernetes)
+    - [Edit your list](#edit-your-list)
+  - [Features to add](#features-to-add)
+
 ## Introduction
 
 This bot scans anime/comic/game/novel websites, and send telegram message to specific channel/group/chat upon new chapters releases.
@@ -93,6 +105,8 @@ Edit your list in the file `list.yaml`. Restart container to apply changes.
 
 ## Features to add
 
+- [ ] Support update notification of multiple chapters
+- [ ] Add pytest
 - [ ] Show error for invalid pages (e.g. esjzone)
 - [ ] hack cocomanhua cloudflare DDOS protection
 - [ ] add support for mangatoro.com
