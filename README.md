@@ -26,7 +26,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 
 ### Default Settings
 
-Checking interval: **_5~30 per min_**
+Checking interval: **_30~60 min_**
 
 RETRY_INTERVAL: 5min
 

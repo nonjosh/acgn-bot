@@ -96,7 +96,7 @@ def add_schedule(helper, urls: List[str] = None):
         urls (List[str], optional): [description]. Defaults to None.
     """
     print_latest_chapter(helper)
-    schedule.every(5).to(30).minutes.do(
+    schedule.every(30).to(60).minutes.do(
         my_checker,
         my_helper=helper,
         urls=urls,
