@@ -5,7 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 
 # Create logging formatter
 FORMATTER = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s",
     "%Y-%m-%dT%H:%M:%S%z",
 )
 
