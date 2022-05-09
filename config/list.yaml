@@ -112,7 +112,8 @@
   comic_urls:
     - http://qiman6.com/24334/
     - https://www.cocomanga.com/20042/
-# - name: 放開那個女巫
-#   comic_urls:
-#     - http://qiman6.com/15437/
-#     - https://www.cocomanga.com/12394/
+- name: 放開那個女巫
+  comic_urls:
+    - https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e
+    - http://qiman6.com/15437/
+    - https://www.cocomanga.com/12394/

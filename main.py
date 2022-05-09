@@ -11,6 +11,7 @@ from helpers import (
     EsjzoneHelper,
     SyosetuHelper,
     Qiman6Helper,
+    BaozimhHelper,
 )
 from utils import get_logger, get_main_domain_name
 
@@ -122,6 +123,7 @@ def get_helper(item_obj, urls_type: str = "comic_urls"):
                 # CocomanhuaHelper,
                 ManhuaguiHelper,
                 Qiman6Helper,
+                BaozimhHelper,
             ]
     elif urls_type == "novel_urls":
         if "novel_urls" in item_obj:

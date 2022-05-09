@@ -34,11 +34,15 @@ MAX_RETRY_NUM: 5
 
 Current supported websites:
 
-- novel: <http://www.wutuxs.com>
-- comic: <https://www.cocomanhua.com>
-- comic: <https://m.manhuagui.com/>
-- novel: <https://www.esjzone.cc/> (Only works for in-site links)
-- novel: <https://ncode.syosetu.com>
+- novel:
+  - <http://www.wutuxs.com>
+  - <https://www.esjzone.cc> (Only works for in-site links)
+  - <https://ncode.syosetu.com>
+- comic:
+  - ~~<https://www.cocomanhua.com>~~ (no long support due to Cloudflare Protection)
+  - <https://m.manhuagui.com>
+  - <http://qiman6.com>
+  - <https://www.baozimh.com>
 
 ## How to use
 
