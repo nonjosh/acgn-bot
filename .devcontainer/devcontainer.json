@@ -40,7 +40,8 @@
 		"oderwat.indent-rainbow",
 		"njpwerner.autodocstring",
 		"Gruntfuggly.todo-tree",
-		"2gua.rainbow-brackets"
+		"2gua.rainbow-brackets",
+		"redhat.vscode-yaml"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
