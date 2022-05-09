@@ -1,32 +1,22 @@
 """qiman6Helper"""
+import logging
 import time
 import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
-from utils import get_logger
+from helpers.chapter import Chapter
 
 BASE_URL = "http://qiman6.com"
 RETRY_INTERVAL = 60 * 5  # unit in second
 MAX_RETRY_NUM = 5
 
-logger = get_logger(__name__)
-
-
-class Chapter:
-    """Chapter class"""
-
-    def __init__(self, title, url) -> None:
-        self.title = title
-        self.url = url
-
-    def __repr__(self):
-        return repr((self.url, self.title))
-
 
 class Qiman6Helper:
     """Qiman6Helper"""
 
-    def __init__(self, name, url) -> None:
+    def __init__(self, name, url, logger_name="dev") -> None:
+        self.logger = logging.getLogger(logger_name)
+
         self.media_type = "comic"
         self.name = name
         self.url = url
@@ -66,6 +56,7 @@ class Qiman6Helper:
             retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
             if retry_num >= MAX_RETRY_NUM:
+                self.logger.warning("Reach max retry number for %s", self.url)
                 return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -85,9 +76,11 @@ class Qiman6Helper:
             # Get latest content
             latest_chapter_obj = chapter_list_ordered[-1]
             return latest_chapter_obj.url, latest_chapter_obj.title
-        else:
-            logger.warn("Empty chapter list for %s (%s)", self.name, self.url)
-            return self.latest_chapter_url, self.latest_chapter_title
+
+        self.logger.warning(
+            "Empty chapter list for %s (%s)", self.name, self.url
+        )
+        return self.latest_chapter_url, self.latest_chapter_title
 
     def check_update(self):
         """Check update
@@ -106,8 +99,7 @@ class Qiman6Helper:
                 self.latest_chapter_title
             )
             return True
-        else:
-            return False
+        return False
 
     @staticmethod
     def match(url):

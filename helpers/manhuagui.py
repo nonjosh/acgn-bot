@@ -1,18 +1,21 @@
+""" manhuagui helper """
+import logging
 import time
 import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
-from utils import get_logger
 
 BASE_URL = "https://m.manhuagui.com"
 RETRY_INTERVAL = 60 * 5  # unit in second
 MAX_RETRY_NUM = 5
 
-logger = get_logger(__name__)
-
 
 class ManhuaguiHelper:
-    def __init__(self, name, url) -> None:
+    """ManhuaguiHelper"""
+
+    def __init__(self, name, url, logger_name="dev") -> None:
+        self.logger = logging.getLogger(logger_name)
+
         self.media_type = "comic"
         self.name = name
         self.url = url
@@ -32,6 +35,11 @@ class ManhuaguiHelper:
             self.latest_chapter_title_cht = None
 
     def get_latest_chapter(self):
+        """Get latest chapter
+
+        Returns:
+            tuple: (url, title)
+        """
         request_sucess = False
         retry_num = 0
 
@@ -43,12 +51,12 @@ class ManhuaguiHelper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception as e:
+            except requests.exceptions.RequestException:
                 time.sleep(RETRY_INTERVAL)
             retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
             if retry_num >= MAX_RETRY_NUM:
-                logger.warn("Reach max retry num for %s", self.url)
+                self.logger.warning("Reach max retry number for %s", self.url)
                 return self.latest_chapter_url, self.latest_chapter_title
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -74,11 +82,18 @@ class ManhuaguiHelper:
             latest_chapter_url, latest_chapter_title = chapter_list[0]
             latest_chapter_url = BASE_URL + latest_chapter_url
             return latest_chapter_url, latest_chapter_title
-        else:
-            logger.warn("Empty chapter list for %s (%s)", self.name, self.url)
-            return self.latest_chapter_url, self.latest_chapter_title
+
+        self.logger.warning(
+            "Empty chapter list for %s (%s)", self.name, self.url
+        )
+        return self.latest_chapter_url, self.latest_chapter_title
 
     def check_update(self):
+        """Check update
+
+        Returns:
+            bool: True if update, False if not
+        """
         _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
@@ -90,15 +105,23 @@ class ManhuaguiHelper:
                 self.latest_chapter_title
             )
             return True
-        else:
-            return False
+        return False
 
     @staticmethod
     def match(url):
+        """Match url
+
+        Args:
+            url (str): url to check
+
+        Returns:
+            bool: True if match, False if not
+        """
         return BASE_URL in url
 
 
 def test():
+    """test"""
     name = "獨自一人的異世界攻略"
     url = "https://m.manhuagui.com/comic/30903/"
     manhuagui_helper = ManhuaguiHelper(name, url)

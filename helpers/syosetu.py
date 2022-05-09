@@ -1,7 +1,9 @@
+""" SyosetuHelper """
 import time
 import requests
 from bs4 import BeautifulSoup
 from hanziconv import HanziConv
+from helpers.chapter import Chapter
 
 RETRY_INTERVAL = 60 * 5  # unit in second
 MAX_RETRY_NUM = 5
@@ -14,16 +16,9 @@ HEADERS = {
 }
 
 
-class Chapter:
-    def __init__(self, title, url) -> None:
-        self.title = title
-        self.url = url
-
-    def __repr__(self):
-        return repr((self.url, self.title))
-
-
 class SyosetuHelper:
+    """SyosetuHelper"""
+
     def __init__(self, name, url, translate_url=None) -> None:
         self.media_type = "novel"
         self.name = name
@@ -41,6 +36,11 @@ class SyosetuHelper:
         )
 
     def get_latest_chapter(self):
+        """Get latest chapter
+
+        Returns:
+            tuple: (url, title)
+        """
         request_sucess = False
         retry_num = 0
 
@@ -52,7 +52,7 @@ class SyosetuHelper:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
-            except Exception as e:
+            except requests.exceptions.RequestException:
                 time.sleep(RETRY_INTERVAL)
             retry_num += 1
             # break and return current chapter if reach MAX_RETRY_NUM
@@ -72,17 +72,21 @@ class SyosetuHelper:
             chapter_list, key=lambda item: (len(item.url), item.url)
         )
 
-        try:
+        if len(chapter_list_ordered) > 0:
             # Get latest content
             latest_chapter_url, latest_chapter_title = (
                 chapter_list_ordered[-1].url,
                 chapter_list_ordered[-1].title,
             )
             return latest_chapter_url, latest_chapter_title
-        except Exception as e:
-            return self.latest_chapter_url, self.latest_chapter_title
+        return self.latest_chapter_url, self.latest_chapter_title
 
     def check_update(self):
+        """Check update
+
+        Returns:
+            bool: True if update, False if not
+        """
         _, latest_chapter_title = self.get_latest_chapter()
 
         if latest_chapter_title != self.latest_chapter_title:
@@ -94,11 +98,18 @@ class SyosetuHelper:
                 self.latest_chapter_title
             )
             return True
-        else:
-            return False
+        return False
 
     @staticmethod
     def match(url):
+        """Match url
+
+        Args:
+            url (str): url to check
+
+        Returns:
+            bool: True if match, False if not
+        """
         return BASE_URL in url
 
 
