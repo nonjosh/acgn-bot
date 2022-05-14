@@ -6,3 +6,5 @@ services:
     image: nonjosh/acgn-bot
     restart: always
     network_mode: bridge
+    env_file:
+      - .env
