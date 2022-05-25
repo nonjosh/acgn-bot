@@ -121,7 +121,7 @@ def get_helper(item_obj, urls_type: str = "comic_urls"):
         if "comic_urls" in item_obj:
             helper_list = [
                 # CocomanhuaHelper,
-                # ManhuaguiHelper,
+                ManhuaguiHelper,
                 Qiman6Helper,
                 BaozimhHelper,
             ]

@@ -46,11 +46,13 @@ class ManhuaguiHelper:
         while not request_sucess:
             try:
                 # Connect to the URL
-                response = requests.get(self.url)
+                response = requests.get(url=self.url, timeout=3)
                 if response.status_code == 200:
                     request_sucess = True
                 else:
                     time.sleep(RETRY_INTERVAL)
+            except requests.exceptions.ConnectionError:
+                retry_num = MAX_RETRY_NUM
             except requests.exceptions.RequestException:
                 time.sleep(RETRY_INTERVAL)
             retry_num += 1
