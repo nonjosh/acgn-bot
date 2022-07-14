@@ -1,4 +1,4 @@
-FROM python:3.9.12-slim
+FROM python:3.9.13-slim
 
 ENV TZ=Asia/Hong_Kong
 
