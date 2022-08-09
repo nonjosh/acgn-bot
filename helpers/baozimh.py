@@ -3,7 +3,7 @@ import logging
 import time
 import requests
 from bs4 import BeautifulSoup
-from hanziconv import HanziConv
+import chinese_converter
 
 BASE_URL = "https://www.baozimh.com"
 RETRY_INTERVAL = 60 * 5  # unit in second
@@ -26,7 +26,7 @@ class BaozimhHelper:
             self.latest_chapter_title,
         ) = self.get_latest_chapter()
         self.latest_chapter_title_cht = (
-            HanziConv.toTraditional(self.latest_chapter_title)
+            chinese_converter.to_traditional(self.latest_chapter_title)
             if self.latest_chapter_title is not None
             else None
         )
@@ -94,7 +94,7 @@ class BaozimhHelper:
                 self.latest_chapter_url,
                 self.latest_chapter_title,
             ) = self.get_latest_chapter()
-            self.latest_chapter_title_cht = HanziConv.toTraditional(
+            self.latest_chapter_title_cht = chinese_converter.to_traditional(
                 self.latest_chapter_title
             )
             return True

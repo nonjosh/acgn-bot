@@ -3,7 +3,7 @@ import logging
 import time
 import requests
 from bs4 import BeautifulSoup
-from hanziconv import HanziConv
+import chinese_converter
 from helpers.chapter import Chapter
 
 BASE_URL = "http://qiman6.com"
@@ -29,7 +29,7 @@ class Qiman6Helper:
             self.latest_chapter_title,
         ) = self.get_latest_chapter()
         self.latest_chapter_title_cht = (
-            HanziConv.toTraditional(self.latest_chapter_title)
+            chinese_converter.to_traditional(self.latest_chapter_title)
             if self.latest_chapter_title is not None
             else None
         )
@@ -95,7 +95,7 @@ class Qiman6Helper:
                 self.latest_chapter_url,
                 self.latest_chapter_title,
             ) = self.get_latest_chapter()
-            self.latest_chapter_title_cht = HanziConv.toTraditional(
+            self.latest_chapter_title_cht = chinese_converter.to_traditional(
                 self.latest_chapter_title
             )
             return True
