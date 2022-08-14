@@ -1,49 +1,36 @@
 """main"""
 import time
-from typing import List
 import yaml
 import schedule
-from helpers import (
-    TgHelper,
-    # CocomanhuaHelper,
-    WutuxsHelper,
-    ManhuaguiHelper,
-    EsjzoneHelper,
-    SyosetuHelper,
-    Qiman6Helper,
-    BaozimhHelper,
-)
-from utils import get_logger, get_main_domain_name
+import helpers
+from utils import get_logger
 
 LIST_YAML_PATH = "config/list.yaml"
 
 logger = get_logger(__name__)
-tg_helper = TgHelper()
+tg_helper = helpers.tg.TgHelper()
 
 
-def my_checker(my_helper, urls: List[str], show_no_update_msg=False):
-    """my_checker
+def job(my_helper, show_no_update_msg=False):
+    """job for schedule
 
     Args:
         my_helper (Helper): helper
         show_no_update_msg (bool, optional): print no update msg. Defaults to False.
     """
-    has_update = my_helper.check_update()
-    if has_update:
-        if hasattr(my_helper, "translate_url"):
-            url = my_helper.translate_url
-        else:
-            url = my_helper.latest_chapter_url
+    updated_chapter_list = my_helper.checker.get_updated_chapter_list()
+    if len(updated_chapter_list) > 0:
 
-        # Print update message
-        logger.info(
-            "Update found for %s: %s (%s)",
-            my_helper.name,
-            my_helper.latest_chapter_title,
-            url,
-        )
+        for updated_chapter in updated_chapter_list:
+            # Print update message
+            logger.info(
+                "Update found for %s: %s (%s)",
+                my_helper.name,
+                updated_chapter.title,
+                updated_chapter.url,
+            )
 
-        content_html_text = get_msg_content(my_helper, urls)
+        content_html_text = get_msg_content(my_helper)
         tg_helper.send_msg(content=content_html_text)
     else:
         if show_no_update_msg:
@@ -54,12 +41,11 @@ def my_checker(my_helper, urls: List[str], show_no_update_msg=False):
             )
 
 
-def get_msg_content(my_helper, urls: List[str] = None) -> str:
+def get_msg_content(my_helper) -> str:
     """Construct html message content from helper and urls
 
     Args:
         my_helper (Helper): helper object
-        urls (List[str], optional): list of urls. Defaults to None.
 
     Returns:
         str: message content (html)
@@ -67,83 +53,56 @@ def get_msg_content(my_helper, urls: List[str] = None) -> str:
 
     content_html_text = f"{my_helper.name} {my_helper.media_type} updated!\n"
     urls_texts = [
-        f"<a href='{url}'>{get_main_domain_name(url)}</a>" for url in urls
+        f"<a href='{url}'>{my_helper.main_domain_name}</a>"
+        for url in my_helper.urls
     ]
     content_html_text += " | ".join(urls_texts) + "\n"
-    content_html_text += (
-        f"latest chapter: <a href='{my_helper.latest_chapter_url}'>"
-        f"{my_helper.latest_chapter_title}</a>"
-    )
+
+    content_html_text += "Updated chapter(s):"
+    updated_chapter_list = my_helper.checker.updated_chapter_list
+    chapter_texts = [
+        f"<a href='{updated_chapter.url}'>{updated_chapter.title}</a>"
+        for updated_chapter in updated_chapter_list
+    ]
+    content_html_text += ", ".join(chapter_texts)
 
     return content_html_text
 
 
-def print_latest_chapter(my_helper):
+def print_latest_chapter(my_helper) -> None:
     """Print latest chapter"""
+    latest_chapter_obj = my_helper.checker.get_latest_chapter()
+    latest_chapter_title = latest_chapter_obj.title
+    latest_chapter_url = latest_chapter_obj.url
+
     logger.info(
         "Current chapter for %s %s: %s (%s)",
         my_helper.media_type,
         my_helper.name,
-        my_helper.latest_chapter_title,
-        my_helper.latest_chapter_url,
+        latest_chapter_title,
+        latest_chapter_url,
     )
 
 
-def add_schedule(helper, urls: List[str] = None):
+def add_schedule(my_helper) -> None:
     """Add task to schedule
 
     Args:
-        helper (Helper): [description]
+        my_helper (Helper): [description]
         urls (List[str], optional): [description]. Defaults to None.
     """
-    print_latest_chapter(helper)
+    # Initialize checker chapter list
+    _ = my_helper.checker.get_updated_chapter_list()
+
+    # Print latest chapter
+    print_latest_chapter(my_helper)
+
+    # Add schedule
     schedule.every(30).to(60).minutes.do(
-        my_checker,
-        my_helper=helper,
-        urls=urls,
+        job,
+        my_helper=my_helper,
         show_no_update_msg=False,
     )
-
-
-def get_helper(item_obj, urls_type: str = "comic_urls"):
-    """Define helper based on item_obj
-
-    Args:
-        item_obj (dict): item object contains helper name and urls
-        urls_type (str, optional): [description]. Defaults to "comic_urls".
-
-    Returns:
-        helper
-    """
-    # Set helper list for checking (default list: comic)
-    helper_list = []
-    if urls_type == "comic_urls":
-        if "comic_urls" in item_obj:
-            helper_list = [
-                # CocomanhuaHelper,
-                ManhuaguiHelper,
-                Qiman6Helper,
-                BaozimhHelper,
-            ]
-    elif urls_type == "novel_urls":
-        if "novel_urls" in item_obj:
-            helper_list = [
-                WutuxsHelper,
-                EsjzoneHelper,
-                SyosetuHelper,
-            ]
-    else:
-        raise ValueError(f"Unknown urls_type: {urls_type}")
-
-    # Check helper type and return helper
-    if len(helper_list) > 0:
-        for helper in helper_list:
-            if helper.match(item_obj[urls_type][0]):
-                return helper(
-                    name=item_obj["name"], url=item_obj[urls_type][0]
-                )
-
-    return None
 
 
 def main():
@@ -156,13 +115,22 @@ def main():
     # Add schedule for each item
     for item_obj in yml_data:
         # Create helper object and add add to schedule
-        for urls_type in ["comic_urls", "novel_urls"]:
-            helper = get_helper(item_obj, urls_type)
-            if helper:
-                add_schedule(helper, urls=item_obj[urls_type])
+        if "novel_urls" in item_obj:
+            novel_helper = helpers.NovelChapterHelper(
+                name=item_obj["name"], urls=item_obj["novel_urls"]
+            )
+            add_schedule(novel_helper)
+        if "comic_urls" in item_obj:
+            comic_helper = helpers.ComicChapterHelper(
+                name=item_obj["name"], urls=item_obj["comic_urls"]
+            )
+            add_schedule(comic_helper)
 
+    # Print how many tasks added
     if len(schedule.jobs) > 0:
-        logger.info("Scheduled %s checker(s).", len(schedule.jobs))
+        logger.info(
+            "Scheduled %s checker(s) successfully.", len(schedule.jobs)
+        )
     else:
         raise ValueError(
             "No schedule job found, please check format in list.yaml"
