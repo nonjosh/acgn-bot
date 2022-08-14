@@ -1,6 +1,5 @@
 """main"""
 import time
-import yaml
 import schedule
 import helpers
 from utils import get_logger
@@ -109,8 +108,9 @@ def main():
     """Main logic"""
     # logger.info("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
 
-    with open(LIST_YAML_PATH, encoding="utf8") as list_file:
-        yml_data = yaml.load(list_file, Loader=yaml.FullLoader)
+    yml_data = helpers.ymlParser.YmlParser(
+        yml_filepath=LIST_YAML_PATH
+    ).yml_data
 
     # Add schedule for each item
     for item_obj in yml_data:
