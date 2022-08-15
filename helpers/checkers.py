@@ -7,6 +7,23 @@ from bs4 import BeautifulSoup
 from helpers.chapter import Chapter
 
 
+def get_chapter_list_diff(new_list: List, old_list: List) -> List[Chapter]:
+    """Get list of new chapters that not in old list
+
+    Args:
+        new_list (List[Chapter]): new chapter list
+        old_list (List[Chapter]): old chapter list
+
+    Returns:
+        List[Chapter]: list of new chapters that not in old list
+    """
+    diff_list = []
+    for new_chp in new_list:
+        if new_chp not in old_list:
+            diff_list.append(new_chp)
+    return diff_list
+
+
 class AbstractChapterChecker(ABC):
     """Abstract checker class"""
 
@@ -17,6 +34,7 @@ class AbstractChapterChecker(ABC):
         self.retry_interval = retry_interval
         self.max_retry_num = max_retry_num
         self.chapter_list = []
+        self.updated_chapter_list = []
 
     def get_latest_response(
         self, apparent_encoding: bool = True
@@ -78,19 +96,21 @@ class AbstractChapterChecker(ABC):
         Returns:
             List[Chapter]: list of Chapter objects
         """
+        self.updated_chapter_list = []
+
+        # Get latest chapter list
         latest_chapter_list = self.get_latest_chapter_list()
-        if len(latest_chapter_list) > len(self.chapter_list):
-            # Get list of updated chapters
-            updated_chapter_list = list(
-                set(latest_chapter_list) - set(self.chapter_list)
-            )
-            # Update chapter list
-            self.chapter_list = latest_chapter_list
-            # Return updated chapter list
-            return updated_chapter_list
-        else:
-            # No update
-            return []
+
+        # Get list of updated chapters
+        self.updated_chapter_list = get_chapter_list_diff(
+            latest_chapter_list, self.chapter_list
+        )
+
+        # Update chapter list
+        self.chapter_list = latest_chapter_list
+
+        # Return updated chapter list
+        return self.updated_chapter_list
 
     @abstractmethod
     def get_latest_chapter_list(self) -> List[Chapter]:

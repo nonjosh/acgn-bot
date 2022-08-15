@@ -4,6 +4,7 @@ from typing import List
 from abc import ABC, abstractmethod
 from urllib.parse import urlparse
 from helpers.tg import TgHelper
+from helpers.chapter import Chapter
 from helpers.ymlParser import YmlParser
 import helpers.checkers as checkers
 
@@ -57,6 +58,7 @@ class NovelChapterHelper(AbstractChapterHelper):
         checker_dict = {
             "wutuxs": checkers.WutuxsChecker(check_url=self.check_url),
             "syosetu": checkers.SyosetuChecker(check_url=self.check_url),
+            "99wx": checkers.WxChecker(check_url=self.check_url),
         }
         # Check if domain name is in checker_dict
         if self.main_domain_name in checker_dict:
