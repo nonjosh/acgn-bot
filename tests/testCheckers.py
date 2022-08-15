@@ -37,6 +37,17 @@ class TestCheckers(unittest.TestCase):
         chapter_list = wutuxs_checker.get_latest_chapter_list()
         self.validate_chapter_list(chapter_list)
 
+    def test_wx_checker(self):
+        """99wx"""
+        # Initialize checker
+        wutuxs_checker = checkers.WxChecker(
+            check_url="https://www.99wx.cc/wanxiangzhiwang/"
+        )
+
+        # Check if can get chapter list
+        chapter_list = wutuxs_checker.get_latest_chapter_list()
+        self.validate_chapter_list(chapter_list)
+
     # Comic Checkers
     def test_manhuagui_checker(self):
         """Manhuagui"""
