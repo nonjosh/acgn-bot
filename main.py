@@ -51,7 +51,7 @@ def get_msg_content(my_helper) -> str:
 
     content_html_text = f"{my_helper.name} {my_helper.media_type} updated!\n"
     urls_texts = [
-        f"<a href='{url}'>{my_helper.main_domain_name}</a>"
+        f"<a href='{url}'>{helpers.get_main_domain_name(url)}</a>"
         for url in my_helper.urls
     ]
     content_html_text += " | ".join(urls_texts) + "\n"
