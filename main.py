@@ -1,4 +1,5 @@
 """main"""
+import threading
 import time
 from typing import Union
 import schedule
@@ -136,15 +137,14 @@ def add_schedule(
         urls (List[str], optional): [description]. Defaults to None.
     """
     # Initialize helper
-    init_helper(my_helper)
+    # Define lambda function for init helper
+    init_helper_func = lambda: init_helper(my_helper)
+    run_threaded(job_func=init_helper_func)
 
-    # Add schedule
-    schedule.every(30).to(60).minutes.do(
-        job,
-        my_helper=my_helper,
-        tg_helper=tg_helper,
-        show_no_update_msg=False,
-    )
+    # Add schedule thread
+    # Define lambda function for job
+    job_func = lambda: job(my_helper, tg_helper)
+    schedule.every(30).to(60).minutes.do(run_threaded, job_func)
 
 
 def main():
