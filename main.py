@@ -56,8 +56,8 @@ def get_msg_content(my_helper) -> str:
     ]
     content_html_text += " | ".join(urls_texts) + "\n"
 
-    content_html_text += "Updated chapter(s):"
     updated_chapter_list = my_helper.checker.updated_chapter_list
+    content_html_text += f"Updated {len(updated_chapter_list)} chapter(s): "
     chapter_texts = [
         f"<a href='{updated_chapter.url}'>{updated_chapter.title}</a>"
         for updated_chapter in updated_chapter_list
