@@ -3,6 +3,7 @@ import threading
 import time
 from typing import Union
 import schedule
+import chinese_converter
 import helpers
 from utils import get_logger
 
@@ -78,7 +79,7 @@ def get_msg_content(
     ]
     content_html_text += ", ".join(chapter_texts)
 
-    return content_html_text
+    return chinese_converter.to_traditional(content_html_text)
 
 
 def print_latest_chapter(
