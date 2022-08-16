@@ -1,15 +1,20 @@
 """main"""
 import time
+from typing import Union
 import schedule
 import helpers
 from utils import get_logger
 
-LIST_YAML_PATH = "config/list.yaml"
+DEFAULT_LIST_YAML_PATH = "config/list.yaml"
 
 logger = get_logger(__name__)
 
 
-def job(my_helper, tg_helper, show_no_update_msg=False):
+def job(
+    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
+    tg_helper: helpers.TgHelper,
+    show_no_update_msg=False,
+) -> None:
     """job for schedule
 
     Args:
@@ -39,7 +44,9 @@ def job(my_helper, tg_helper, show_no_update_msg=False):
             )
 
 
-def get_msg_content(my_helper) -> str:
+def get_msg_content(
+    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper]
+) -> str:
     """Construct html message content from helper and urls
 
     Args:
@@ -67,7 +74,9 @@ def get_msg_content(my_helper) -> str:
     return content_html_text
 
 
-def print_latest_chapter(my_helper) -> None:
+def print_latest_chapter(
+    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper]
+) -> None:
     """Print latest chapter"""
     latest_chapter_obj = my_helper.checker.get_latest_chapter()
     if latest_chapter_obj is not None:
@@ -89,7 +98,9 @@ def print_latest_chapter(my_helper) -> None:
         )
 
 
-def init_helper(my_helper) -> None:
+def init_helper(
+    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
+) -> None:
     """Initialize helper
 
     Args:
@@ -102,7 +113,16 @@ def init_helper(my_helper) -> None:
     print_latest_chapter(my_helper)
 
 
-def add_schedule(my_helper, tg_helper) -> None:
+def run_threaded(job_func: callable) -> None:
+    """Run job in thread"""
+    job_thread = threading.Thread(target=job_func)
+    job_thread.start()
+
+
+def add_schedule(
+    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
+    tg_helper: helpers.TgHelper,
+) -> None:
     """Add task to schedule
 
     Args:
@@ -123,11 +143,9 @@ def add_schedule(my_helper, tg_helper) -> None:
 
 def main():
     """Main logic"""
-    tg_helper = helpers.tg.TgHelper()
+    tg_helper = helpers.TgHelper()
 
-    yml_data = helpers.ymlParser.YmlParser(
-        yml_filepath=LIST_YAML_PATH
-    ).yml_data
+    yml_data = helpers.YmlParser(yml_filepath=DEFAULT_LIST_YAML_PATH).yml_data
 
     # Add schedule for each item
     for item_obj in yml_data:
