@@ -21,6 +21,12 @@ def job(
         my_helper (Helper): helper
         show_no_update_msg (bool, optional): print no update msg. Defaults to False.
     """
+    # Check if old chapter list is empty
+    if len(my_helper.checker.chapter_list) == 0:
+        # Initialize checker chapter list
+        _ = my_helper.checker.get_updated_chapter_list()
+        return
+    # Check for update
     updated_chapter_list = my_helper.checker.get_updated_chapter_list()
     if len(updated_chapter_list) > 0:
 
