@@ -70,16 +70,23 @@ def get_msg_content(my_helper) -> str:
 def print_latest_chapter(my_helper) -> None:
     """Print latest chapter"""
     latest_chapter_obj = my_helper.checker.get_latest_chapter()
-    latest_chapter_title = latest_chapter_obj.title
-    latest_chapter_url = latest_chapter_obj.url
+    if latest_chapter_obj is not None:
+        latest_chapter_title = latest_chapter_obj.title
+        latest_chapter_url = latest_chapter_obj.url
 
-    logger.info(
-        "Current chapter for %s %s: %s (%s)",
-        my_helper.media_type,
-        my_helper.name,
-        latest_chapter_title,
-        latest_chapter_url,
-    )
+        logger.info(
+            "Current chapter for %s %s: %s (%s)",
+            my_helper.media_type,
+            my_helper.name,
+            latest_chapter_title,
+            latest_chapter_url,
+        )
+    else:
+        logger.info(
+            "No chapter found for %s %s",
+            my_helper.media_type,
+            my_helper.name,
+        )
 
 
 def init_helper(my_helper) -> None:
