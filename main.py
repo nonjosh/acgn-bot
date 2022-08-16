@@ -123,7 +123,6 @@ def add_schedule(my_helper, tg_helper) -> None:
 
 def main():
     """Main logic"""
-    # logger.info("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
     tg_helper = helpers.tg.TgHelper()
 
     yml_data = helpers.ymlParser.YmlParser(
