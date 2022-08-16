@@ -1,0 +1,69 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "k8s update configmap",
+      "type": "shell",
+      "command": "kubectl create configmap acgn-bot.list.yaml --from-file=config/list.yaml --dry-run=client -o yaml | kubectl apply -f -"
+    },
+    {
+      "label": "Run unit tests",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "command": "python",
+      "type": "shell",
+      "args": [
+        "-m",
+        "unittest",
+      ],
+      "options": {
+        "env": {
+          "PYTEST_ADDOPTS": "-vv --tb=native -k unit_tests"
+        }
+      },
+      "problemMatcher": [
+        {
+          "fileLocation": "absolute",
+          "pattern": [
+            {
+              "regexp": "^\\s+File \"(.*)\", line (\\d+), in (.*)$",
+              "file": 1,
+              "line": 2
+            },
+            {
+              "regexp": "^\\s+(.*)$",
+              "message": 1
+            }
+          ]
+        }
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      }
+    },
+    {
+      "label": "Run Python",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "${file}"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      }
+    }
+  ]
+}
