@@ -7,10 +7,9 @@ from utils import get_logger
 LIST_YAML_PATH = "config/list.yaml"
 
 logger = get_logger(__name__)
-tg_helper = helpers.tg.TgHelper()
 
 
-def job(my_helper, show_no_update_msg=False):
+def job(my_helper, tg_helper, show_no_update_msg=False):
     """job for schedule
 
     Args:
@@ -83,12 +82,11 @@ def print_latest_chapter(my_helper) -> None:
     )
 
 
-def add_schedule(my_helper) -> None:
-    """Add task to schedule
+def init_helper(my_helper) -> None:
+    """Initialize helper
 
     Args:
-        my_helper (Helper): [description]
-        urls (List[str], optional): [description]. Defaults to None.
+        my_helper (Helper): helper object
     """
     # Initialize checker chapter list
     _ = my_helper.checker.get_updated_chapter_list()
@@ -96,10 +94,22 @@ def add_schedule(my_helper) -> None:
     # Print latest chapter
     print_latest_chapter(my_helper)
 
+
+def add_schedule(my_helper, tg_helper) -> None:
+    """Add task to schedule
+
+    Args:
+        my_helper (Helper): [description]
+        urls (List[str], optional): [description]. Defaults to None.
+    """
+    # Initialize helper
+    init_helper(my_helper)
+
     # Add schedule
     schedule.every(30).to(60).minutes.do(
         job,
         my_helper=my_helper,
+        tg_helper=tg_helper,
         show_no_update_msg=False,
     )
 
@@ -107,6 +117,7 @@ def add_schedule(my_helper) -> None:
 def main():
     """Main logic"""
     # logger.info("Check hour range: {}:00:00 - {}:00:00".format(start_hour, end_hour))
+    tg_helper = helpers.tg.TgHelper()
 
     yml_data = helpers.ymlParser.YmlParser(
         yml_filepath=LIST_YAML_PATH
@@ -119,12 +130,12 @@ def main():
             novel_helper = helpers.NovelChapterHelper(
                 name=item_obj["name"], urls=item_obj["novel_urls"]
             )
-            add_schedule(novel_helper)
+            add_schedule(my_helper=novel_helper, tg_helper=tg_helper)
         if "comic_urls" in item_obj:
             comic_helper = helpers.ComicChapterHelper(
                 name=item_obj["name"], urls=item_obj["comic_urls"]
             )
-            add_schedule(comic_helper)
+            add_schedule(my_helper=comic_helper, tg_helper=tg_helper)
 
     # Print how many tasks added
     if len(schedule.jobs) > 0:
