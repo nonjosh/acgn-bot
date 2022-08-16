@@ -258,6 +258,11 @@ class QimanChecker(AbstractChapterChecker):
     """QimanChecker"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
+        """Get latest chapter list from qiman
+
+        Returns:
+            List[Chapter]: latest chapter list
+        """
         url_parse = urlparse(self.check_url)
         api_url = urlunparse(url_parse._replace(path="/bookchapter/"))
 
@@ -304,6 +309,11 @@ class BaozimhChecker(AbstractChapterChecker):
     """Baozimh checker"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
+        """Get latest chapter list from baozimh
+
+        Returns:
+            List[Chapter]: latest chapter list
+        """
         soup = self.get_latest_soup(apparent_encoding=False)
         if soup is None:
             return []
@@ -328,6 +338,11 @@ class XbiqugeChecker(AbstractChapterChecker):
     """Xbiquge checker"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
+        """Get latest chapter list from xbiquge
+
+        Returns:
+            List[Chapter]: latest chapter list
+        """
         soup = self.get_latest_soup()
         if soup is None:
             return []
