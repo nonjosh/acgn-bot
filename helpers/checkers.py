@@ -101,16 +101,17 @@ class AbstractChapterChecker(ABC):
         # Get latest chapter list
         latest_chapter_list = self.get_latest_chapter_list()
 
-        # Get list of updated chapters
-        self.updated_chapter_list = get_chapter_list_diff(
-            latest_chapter_list, self.chapter_list
-        )
+        # Get list of updated chapters if new chapter list is valid (not empty)
+        if len(latest_chapter_list) > 0:
+            self.updated_chapter_list = get_chapter_list_diff(
+                latest_chapter_list, self.chapter_list
+            )
+            # Update chapter list
+            self.chapter_list = latest_chapter_list
 
-        # Update chapter list
-        self.chapter_list = latest_chapter_list
-
-        # Return updated chapter list
-        return self.updated_chapter_list
+            # Return updated chapter list
+            return self.updated_chapter_list
+        return []
 
     @abstractmethod
     def get_latest_chapter_list(self) -> List[Chapter]:
