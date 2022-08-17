@@ -1,2 +1,5 @@
 [MESSAGES CONTROL]
-disable=W0105
+disable=W0105, R0903
+
+[BASIC]
+module-rgx=[a-z_][a-z0-9_]{1,30}$

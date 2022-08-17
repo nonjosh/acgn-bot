@@ -9,6 +9,29 @@
       "command": "kubectl create configmap acgn-bot.list.yaml --from-file=config/list.yaml --dry-run=client -o yaml | kubectl apply -f -"
     },
     {
+      "label": "pylint: whole project",
+      "command": "pylint $(git ls-files '*.py')",
+      "type": "shell",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": {
+        "fileLocation": [
+          "relative",
+          "${workspaceRoot}"
+        ],
+        "pattern": {
+          "regexp": "(.+):(\\d+): (.+)",
+          "file": 1,
+          "line": 2,
+          "code": 3,
+          "message": 3
+        }
+      }
+    },
+    {
       "label": "Run unit tests",
       "group": {
         "kind": "test",
@@ -18,7 +41,7 @@
       "type": "shell",
       "args": [
         "-m",
-        "unittest",
+        "unittest"
       ],
       "options": {
         "env": {

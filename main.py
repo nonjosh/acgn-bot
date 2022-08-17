@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 def job(
     my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
-    tg_helper: helpers.TgHelper,
+    tg_helper: helpers.tg.TgHelper,
     show_no_update_msg=False,
 ) -> None:
     """job for schedule
@@ -129,7 +129,7 @@ def run_threaded(job_func: callable) -> None:
 
 def add_schedule(
     my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
-    tg_helper: helpers.TgHelper,
+    tg_helper: helpers.tg.TgHelper,
 ) -> None:
     """Add task to schedule
 
@@ -139,20 +139,26 @@ def add_schedule(
     """
     # Initialize helper
     # Define lambda function for init helper
-    init_helper_func = lambda: init_helper(my_helper)
+    def init_helper_func():
+        return init_helper(my_helper)
+
     run_threaded(job_func=init_helper_func)
 
     # Add schedule thread
     # Define lambda function for job
-    job_func = lambda: job(my_helper, tg_helper)
+    def job_func():
+        return job(my_helper, tg_helper)
+
     schedule.every(30).to(60).minutes.do(run_threaded, job_func)
 
 
 def main():
     """Main logic"""
-    tg_helper = helpers.TgHelper()
+    tg_helper = helpers.tg.TgHelper()
 
-    yml_data = helpers.YmlParser(yml_filepath=DEFAULT_LIST_YAML_PATH).yml_data
+    yml_data = helpers.yml_parser.YmlParser(
+        yml_filepath=DEFAULT_LIST_YAML_PATH
+    ).yml_data
 
     # Add schedule for each item
     for item_obj in yml_data:

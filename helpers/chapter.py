@@ -14,8 +14,7 @@ class Chapter:
     def __eq__(self, other):
         if isinstance(other, Chapter):
             return (self.title == other.title) and (self.url == other.url)
-        else:
-            return False
+        return False
 
     def __ne__(self, other):
         return not self.__eq__(other)

@@ -6,9 +6,6 @@
     "--line-length=79",
     "--experimental-string-processing"
   ],
-  "files.exclude": {
-    "**/__pycache__": true
-  },
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
   "[python]": {
@@ -17,10 +14,8 @@
   },
   "python.testing.unittestArgs": [
     "-v",
-    "-s",
-    "./tests",
-    "-p",
-    "test*.py"
+    "--start-directory=./tests",
+    "--pattern=test*.py"
   ],
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": true

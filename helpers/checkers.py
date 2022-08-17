@@ -131,8 +131,7 @@ class AbstractChapterChecker(ABC):
         """
         if len(self.chapter_list) > 0:
             return self.chapter_list[-1]
-        else:
-            return None
+        return None
 
 
 class WutuxsChecker(AbstractChapterChecker):

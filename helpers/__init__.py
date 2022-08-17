@@ -3,10 +3,7 @@ import logging
 from typing import List
 from abc import ABC, abstractmethod
 from urllib.parse import urlparse
-from helpers.tg import TgHelper
-from helpers.chapter import Chapter
-from helpers.ymlParser import YmlParser
-import helpers.checkers as checkers
+from helpers import checkers
 
 
 def get_main_domain_name(url_str) -> str:

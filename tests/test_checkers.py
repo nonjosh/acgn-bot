@@ -1,6 +1,7 @@
+"""Test webscrapping function of the checker classes"""
 import unittest
-from helpers import Chapter
-import helpers.checkers as checkers
+from helpers.chapter import Chapter
+from helpers import checkers
 
 
 class TestCheckers(unittest.TestCase):
