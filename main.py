@@ -5,6 +5,8 @@ from typing import Union
 import schedule
 import chinese_converter
 import helpers
+from helpers.tg import TgHelper
+from helpers.yml_parser import YmlParser
 from utils import get_logger
 
 DEFAULT_LIST_YAML_PATH = "config/list.yaml"
@@ -14,7 +16,7 @@ logger = get_logger(__name__)
 
 def job(
     my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
-    tg_helper: helpers.tg.TgHelper,
+    tg_helper: TgHelper,
     show_no_update_msg=False,
 ) -> None:
     """job for schedule
@@ -129,7 +131,7 @@ def run_threaded(job_func: callable) -> None:
 
 def add_schedule(
     my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
-    tg_helper: helpers.tg.TgHelper,
+    tg_helper: TgHelper,
 ) -> None:
     """Add task to schedule
 
@@ -154,11 +156,9 @@ def add_schedule(
 
 def main():
     """Main logic"""
-    tg_helper = helpers.tg.TgHelper()
+    tg_helper = TgHelper()
 
-    yml_data = helpers.yml_parser.YmlParser(
-        yml_filepath=DEFAULT_LIST_YAML_PATH
-    ).yml_data
+    yml_data = YmlParser(yml_filepath=DEFAULT_LIST_YAML_PATH).yml_data
 
     # Add schedule for each item
     for item_obj in yml_data:
