@@ -1,3 +1,4 @@
+"""Checkers"""
 from abc import ABC, abstractmethod
 from typing import List
 import time
@@ -73,7 +74,7 @@ class AbstractChapterChecker(ABC):
                 time.sleep(self.retry_interval)
             retry_num += 1
 
-            # break and return current chapter if reach MAX_RETRY_NUM
+            # break and return empty response if reach MAX_RETRY_NUM
             if retry_num >= self.max_retry_num:
                 return None
 
