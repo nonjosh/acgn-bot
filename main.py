@@ -7,7 +7,7 @@ import chinese_converter
 import helpers
 from helpers.tg import TgHelper
 from helpers.yml_parser import YmlParser
-from utils import get_logger
+from helpers.utils import get_logger, get_main_domain_name
 
 DEFAULT_LIST_YAML_PATH = "config/list.yaml"
 
@@ -68,7 +68,7 @@ def get_msg_content(
 
     content_html_text = f"{my_helper.name} {my_helper.media_type} updated!\n"
     urls_texts = [
-        f"<a href='{url}'>{helpers.get_main_domain_name(url)}</a>"
+        f"<a href='{url}'>{get_main_domain_name(url)}</a>"
         for url in my_helper.urls
     ]
     content_html_text += " | ".join(urls_texts) + "\n"

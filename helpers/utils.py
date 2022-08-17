@@ -1,5 +1,6 @@
 """Utility functions"""
 from datetime import datetime
+from urllib.parse import urlparse
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
@@ -68,6 +69,7 @@ def within_check_period(start_hour: str, end_hour: str) -> bool:
 
 def get_main_domain_name(url_str) -> str:
     """get url domain texts
+    e.g. "https://ncode.syosetu.com/n6621fl"-> "syosetu"
 
     Args:
         url_str (str): url string
@@ -75,7 +77,7 @@ def get_main_domain_name(url_str) -> str:
     Returns:
         str: domain name of url
     """
-    domain_name = url_str.split("/")[2]
-    main_domain_name = domain_name.split(".")[-2]
+    netloc = urlparse(url_str).netloc
+    main_domain_name = netloc.split(".")[-2]
 
     return main_domain_name

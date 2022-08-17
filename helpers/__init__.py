@@ -2,24 +2,7 @@
 import logging
 from typing import List
 from abc import ABC, abstractmethod
-from urllib.parse import urlparse
-from helpers import checkers
-
-
-def get_main_domain_name(url_str) -> str:
-    """get url domain texts
-    e.g. "https://ncode.syosetu.com/n6621fl"-> "syosetu"
-
-    Args:
-        url_str (str): url string
-
-    Returns:
-        str: domain name of url
-    """
-    netloc = urlparse(url_str).netloc
-    main_domain_name = netloc.split(".")[-2]
-
-    return main_domain_name
+from helpers import checkers, utils
 
 
 class AbstractChapterHelper(ABC):
@@ -33,7 +16,7 @@ class AbstractChapterHelper(ABC):
 
         # Only check first url
         self.check_url = urls[0]
-        self.main_domain_name = get_main_domain_name(self.check_url)
+        self.main_domain_name = utils.get_main_domain_name(self.check_url)
         self.checker = None
         self.media_type = None
 

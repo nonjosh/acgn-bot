@@ -3,7 +3,7 @@ import os
 import time
 import telegram
 from dotenv import load_dotenv
-from utils import get_logger
+from helpers.utils import get_logger
 
 load_dotenv()
 TOKEN = os.environ.get("TOKEN")
