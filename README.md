@@ -2,6 +2,8 @@
 
 ![docker build workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/docker-build.yml/badge.svg)
 ![pylint workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/pylint.yml/badge.svg)
+![unittest workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/python-test.yml/badge.svg)
+![CodeQL workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/codeql-analysis.yml/badge.svg)
 
 - [Telegram bot: Check anime/comic/game/novel websites update](#telegram-bot-check-animecomicgamenovel-websites-update)
   - [Introduction](#introduction)
@@ -26,23 +28,23 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 
 ### Default Settings
 
-Checking interval: **_30~60 min_**
-
-RETRY_INTERVAL: 5min
-
-MAX_RETRY_NUM: 5
+| Setting              | Default value   |
+|----------------------|-----------------|
+| Checking Interval    | **_30~60 min_** |
+| Retry Interval       | 5 min           |
+| Maximum Retry Number | 5               |
 
 Current supported websites:
 
-- novel:
-  - <http://www.wutuxs.com>
-  - <https://www.esjzone.cc> (Only works for in-site links)
-  - <https://ncode.syosetu.com>
-- comic:
-  - ~~<https://www.cocomanhua.com>~~ (no long support due to Cloudflare Protection)
-  - <https://m.manhuagui.com>
-  - <http://qiman6.com>
-  - <https://www.baozimh.com>
+| Name      | Example Url                                                  | Media Type |
+|-----------|--------------------------------------------------------------|------------|
+| wutuxs    | http://www.wutuxs.com/html/9/9715/                           | novel      |
+| syosetu   | https://ncode.syosetu.com/n6621fl                            | novel      |
+| 99wx      | https://www.99wx.cc/wanxiangzhiwang                          | novel      |
+| manhuagui | https://m.manhuagui.com/comic/30903/                         | comic      |
+| qiman     | http://qiman57.com/19827/                                    | comic      |
+| baozimh   | https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e | comic      |
+| xbiquge   | https://www.xbiquge.la/55/55945/                             | comic      |
 
 ## How to use
 
@@ -109,10 +111,6 @@ Edit your list in the file `list.yaml`. Restart container to apply changes.
 
 ## Features to add
 
-- [ ] Support update notification of multiple chapters
-- [ ] Add pytest
-- [ ] Show error for invalid pages (e.g. esjzone)
-- [ ] hack cocomanhua cloudflare DDOS protection
-- [ ] add support for mangatoro.com
-- [ ] Support other IM bot other than Telegram (e.g. Signal, Discord)
-- [ ] Add back time range for checking
+- hack cocomanhua cloudflare DDOS protection
+- Support other IM bot other than Telegram (e.g. Signal, Discord)
+- Add back time range for checking
