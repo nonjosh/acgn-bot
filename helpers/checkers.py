@@ -42,6 +42,9 @@ class AbstractChapterChecker(ABC):
     ) -> requests.Response:
         """Get latest response
 
+        Args:
+            apparent_encoding (bool): whether to use apparent encoding
+
         Returns:
             requests.Response: latest response
         """
@@ -83,10 +86,15 @@ class AbstractChapterChecker(ABC):
     def get_latest_soup(self, apparent_encoding: bool = True) -> BeautifulSoup:
         """Get latest soup
 
+        Args:
+            apparent_encoding (bool): whether to use apparent encoding
+
         Returns:
             BeautifulSoup: latest soup
         """
-        response = self.get_latest_response(apparent_encoding)
+        response = self.get_latest_response(
+            apparent_encoding=apparent_encoding
+        )
         if response is None:
             return None
         return BeautifulSoup(response.text, "html.parser")
@@ -270,39 +278,56 @@ class QimanChecker(AbstractChapterChecker):
         comic_id = int(urlparse(self.check_url).path.strip("/"))
 
         # Send with POST method
-        response = requests.post(
-            api_url,
-            data={"id": comic_id, "id2": 1},
-        )
-        if response.status_code == 200:
-            """Sample response:
-            [
-                {
-                    "id": "886859",
-                    "name": "周刊136话"
-                },
-                {
-                    "id": "886858",
-                    "name": "周刊135话"
-                },
-                {
-                    "id": "886857",
-                    "name": "周刊134话"
-                },
-                ...
-            ]
-            """
-            chapter_list = []
-            for chapter_obj in response.json():
-                chapter_id = chapter_obj["id"]
-                chapter_url = urlunparse(
-                    url_parse._replace(path=f"/{comic_id}/{chapter_id}.html")
-                )
-                chapter_list.append(
-                    Chapter(title=chapter_obj["name"], url=chapter_url)
-                )
-            return chapter_list[::-1]
+        request_sucess = False
+        retry_num = 0
 
+        while not request_sucess:
+            try:
+                response = requests.post(
+                    api_url,
+                    data={"id": comic_id, "id2": 1},
+                )
+                if response.status_code == 200:
+                    """Sample response:
+                    [
+                        {
+                            "id": "886859",
+                            "name": "周刊136话"
+                        },
+                        {
+                            "id": "886858",
+                            "name": "周刊135话"
+                        },
+                        {
+                            "id": "886857",
+                            "name": "周刊134话"
+                        },
+                        ...
+                    ]
+                    """
+                    chapter_list = []
+                    for chapter_obj in response.json():
+                        chapter_id = chapter_obj["id"]
+                        chapter_url = urlunparse(
+                            url_parse._replace(
+                                path=f"/{comic_id}/{chapter_id}.html"
+                            )
+                        )
+                        chapter_list.append(
+                            Chapter(title=chapter_obj["name"], url=chapter_url)
+                        )
+                    return chapter_list[::-1]
+                else:
+                    time.sleep(self.retry_interval)
+            except requests.exceptions.ConnectionError:
+                return []
+            except requests.exceptions.RequestException:
+                time.sleep(self.retry_interval)
+            retry_num += 1
+
+            # break and return empty response if reach MAX_RETRY_NUM
+            if retry_num >= self.max_retry_num:
+                return []
         return []
 
 
