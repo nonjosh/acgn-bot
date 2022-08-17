@@ -61,6 +61,7 @@ class ComicChapterHelper(AbstractChapterHelper):
             "qiman57": checkers.QimanChecker(check_url=self.check_url),
             "baozimh": checkers.BaozimhChecker(check_url=self.check_url),
             "xbiquge": checkers.XbiqugeChecker(check_url=self.check_url),
+            "dashuhuwai": checkers.DashuhuwaiChecker(check_url=self.check_url),
         }
         # Check if domain name is in checker_dict
         if self.main_domain_name in checker_dict:

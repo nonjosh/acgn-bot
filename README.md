@@ -45,6 +45,7 @@ Current supported websites:
 | qiman     | http://qiman57.com/19827/                                    | comic      |
 | baozimh   | https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e | comic      |
 | xbiquge   | https://www.xbiquge.la/55/55945/                             | comic      |
+| dashuhuwai| https://www.dashuhuwai.com/comic/fangkainagenvwu/            | comic      |
 
 ## How to use
 

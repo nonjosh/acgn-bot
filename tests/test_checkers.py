@@ -91,3 +91,13 @@ class TestCheckers(unittest.TestCase):
         # Check if can get chapter list
         chapter_list = xbiquge_checker.get_latest_chapter_list()
         self.validate_chapter_list(chapter_list)
+
+    def test_dashuhuwai_checker(self):
+        """Dashuhuwai"""
+        # Initialize checker
+        check_url = "https://www.dashuhuwai.com/comic/fangkainagenvwu/"
+        dashuhuwai_checker = checkers.DashuhuwaiChecker(check_url)
+
+        # Check if can get chapter list
+        chapter_list = dashuhuwai_checker.get_latest_chapter_list()
+        self.validate_chapter_list(chapter_list)
