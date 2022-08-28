@@ -37,7 +37,8 @@ def job(
             latest_chapter_title = latest_chapter_obj.title
             latest_chapter_url = latest_chapter_obj.url
             logger.info(
-                "Current chapter for %s %s: %s (%s)",
+                "%d chapters found for %s %s - latest: %s (%s)",
+                len(updated_chapter_list),
                 my_helper.media_type,
                 my_helper.name,
                 latest_chapter_title,
