@@ -23,13 +23,35 @@ def job(
 
     Args:
         my_helper (Helper): helper
+        tg_helper (TgHelper): tg helper
         show_no_update_msg (bool, optional): print no update msg. Defaults to False.
     """
-    # Check if old chapter list is empty
+    # Initialize checker chapter list if list is empty originally
     if len(my_helper.checker.chapter_list) == 0:
         # Initialize checker chapter list
-        _ = my_helper.checker.get_updated_chapter_list()
+        updated_chapter_list = my_helper.checker.get_updated_chapter_list()
+
+        # Print latest chapter if success
+        if len(updated_chapter_list) > 0:
+            latest_chapter_obj = updated_chapter_list[-1]
+            latest_chapter_title = latest_chapter_obj.title
+            latest_chapter_url = latest_chapter_obj.url
+            logger.info(
+                "Current chapter for %s %s: %s (%s)",
+                my_helper.media_type,
+                my_helper.name,
+                latest_chapter_title,
+                latest_chapter_url,
+            )
+        else:
+            if show_no_update_msg:
+                logger.info(
+                    "Cannot get chapter list for %s %s",
+                    my_helper.media_type,
+                    my_helper.name,
+                )
         return
+
     # Check for update
     updated_chapter_list = my_helper.checker.get_updated_chapter_list()
     if len(updated_chapter_list) > 0:
@@ -84,47 +106,11 @@ def get_msg_content(
     return chinese_converter.to_traditional(content_html_text)
 
 
-def print_latest_chapter(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper]
-) -> None:
-    """Print latest chapter"""
-    latest_chapter_obj = my_helper.checker.get_latest_chapter()
-    if latest_chapter_obj is not None:
-        latest_chapter_title = latest_chapter_obj.title
-        latest_chapter_url = latest_chapter_obj.url
-
-        logger.info(
-            "Current chapter for %s %s: %s (%s)",
-            my_helper.media_type,
-            my_helper.name,
-            latest_chapter_title,
-            latest_chapter_url,
-        )
-    else:
-        logger.info(
-            "No chapter found for %s %s",
-            my_helper.media_type,
-            my_helper.name,
-        )
-
-
-def init_helper(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
-) -> None:
-    """Initialize helper
-
-    Args:
-        my_helper (Helper): helper object
-    """
-    # Initialize checker chapter list
-    _ = my_helper.checker.get_updated_chapter_list()
-
-    # Print latest chapter
-    print_latest_chapter(my_helper)
-
-
 def run_threaded(job_func: callable) -> None:
-    """Run job in thread"""
+    """Run job in thread
+    Args:
+        job_func (callable): job function
+    """
     job_thread = threading.Thread(target=job_func)
     job_thread.start()
 
@@ -137,12 +123,13 @@ def add_schedule(
 
     Args:
         my_helper (Helper): [description]
+        tg_helper (TgHelper): [description]
         urls (List[str], optional): [description]. Defaults to None.
     """
     # Initialize helper
     # Define lambda function for init helper
     def init_helper_func():
-        return init_helper(my_helper)
+        return job(my_helper, tg_helper)
 
     run_threaded(job_func=init_helper_func)
 
