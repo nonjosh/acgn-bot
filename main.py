@@ -57,8 +57,8 @@ def job(
     updated_chapter_list = my_helper.checker.get_updated_chapter_list()
     if len(updated_chapter_list) > 0:
 
+        # Print update message for each chapter in terminal
         for updated_chapter in updated_chapter_list:
-            # Print update message
             logger.info(
                 "Update found for %s: %s (%s)",
                 my_helper.name,
@@ -66,9 +66,11 @@ def job(
                 updated_chapter.url,
             )
 
+        # Send update message to telegram
         content_html_text = get_msg_content(my_helper)
         tg_helper.send_msg(content=content_html_text)
     else:
+        # Print no update message for each chapter in terminal (if enabled)
         if show_no_update_msg:
             logger.info(
                 "No update found for %s %s",
