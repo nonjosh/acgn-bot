@@ -27,16 +27,16 @@ class TestCheckers(unittest.TestCase):
         chapter_list = syosetu_checker.get_latest_chapter_list()
         self.validate_chapter_list(chapter_list)
 
-    def test_wutuxs_checker(self):
-        """Wutuxs"""
-        # Initialize checker
-        wutuxs_checker = checkers.WutuxsChecker(
-            check_url="http://www.wutuxs.com/html/9/9715/"
-        )
+    # def test_wutuxs_checker(self):
+    #     """Wutuxs"""
+    #     # Initialize checker
+    #     wutuxs_checker = checkers.WutuxsChecker(
+    #         check_url="http://www.wutuxs.com/html/9/9715/"
+    #     )
 
-        # Check if can get chapter list
-        chapter_list = wutuxs_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
+    #     # Check if can get chapter list
+    #     chapter_list = wutuxs_checker.get_latest_chapter_list()
+    #     self.validate_chapter_list(chapter_list)
 
     def test_wx_checker(self):
         """99wx"""
