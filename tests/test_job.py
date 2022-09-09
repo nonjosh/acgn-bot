@@ -46,7 +46,7 @@ class TestJob(unittest.TestCase):
         # Initialize helper
         my_helper = NovelChapterHelper(
             name="test",
-            urls=["http://www.wutuxs.com/html/9/9715/"],
+            urls=["https://www.99wx.cc/wanxiangzhiwang/"],
         )
 
         # Check if can get chapter list
