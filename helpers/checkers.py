@@ -3,9 +3,18 @@ from abc import ABC, abstractmethod
 from typing import List
 import time
 from urllib.parse import urlparse, urlunparse
+import json
 import requests
 from bs4 import BeautifulSoup
 from helpers.chapter import Chapter
+
+DEFAULT_HEADER = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5)"
+        " AppleWebKit/537.36 (KHTML, like Gecko)"
+        " Chrome/50.0.2661.102 Safari/537.36"
+    )
+}
 
 
 def get_chapter_list_diff(new_list: List, old_list: List) -> List[Chapter]:
@@ -29,9 +38,16 @@ class AbstractChapterChecker(ABC):
     """Abstract checker class"""
 
     def __init__(
-        self, check_url: str, retry_interval: int = 5, max_retry_num: int = 3
+        self,
+        check_url: str,
+        request_timeout: int = 5,
+        headers: dict = None,
+        retry_interval: int = 5,
+        max_retry_num: int = 3,
     ) -> None:
         self.check_url = check_url
+        self.request_timeout = request_timeout
+        self.headers = headers if headers is not None else DEFAULT_HEADER
         self.retry_interval = retry_interval
         self.max_retry_num = max_retry_num
         self.chapter_list = []
@@ -55,14 +71,9 @@ class AbstractChapterChecker(ABC):
             try:
                 # Connect to the URL
                 response = requests.get(
-                    self.check_url,
-                    headers={
-                        "User-Agent": (
-                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5)"
-                            " AppleWebKit/537.36 (KHTML, like Gecko)"
-                            " Chrome/50.0.2661.102 Safari/537.36"
-                        )
-                    },
+                    url=self.check_url,
+                    headers=self.headers,
+                    timeout=self.request_timeout,
                 )
                 if response.status_code == 200:
                     # override encoding by real educated guess as provided by chardet
@@ -284,8 +295,10 @@ class QimanChecker(AbstractChapterChecker):
         while not request_sucess:
             try:
                 response = requests.post(
-                    api_url,
+                    url=api_url,
                     data={"id": comic_id, "id2": 1},
+                    headers=self.headers,
+                    timeout=self.request_timeout,
                 )
                 if response.status_code == 200:
                     """Sample response:
@@ -319,6 +332,8 @@ class QimanChecker(AbstractChapterChecker):
                     return chapter_list[::-1]
                 else:
                     time.sleep(self.retry_interval)
+            except json.decoder.JSONDecodeError:
+                time.sleep(self.retry_interval)
             except requests.exceptions.ConnectionError:
                 return []
             except requests.exceptions.RequestException:
