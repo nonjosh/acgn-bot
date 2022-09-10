@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List
 import time
 from urllib.parse import urlparse, urlunparse
+import json
 import requests
 from bs4 import BeautifulSoup
 from helpers.chapter import Chapter
@@ -319,6 +320,8 @@ class QimanChecker(AbstractChapterChecker):
                     return chapter_list[::-1]
                 else:
                     time.sleep(self.retry_interval)
+            except json.decoder.JSONDecodeError:
+                time.sleep(self.retry_interval)
             except requests.exceptions.ConnectionError:
                 return []
             except requests.exceptions.RequestException:
