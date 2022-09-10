@@ -30,9 +30,14 @@ class AbstractChapterChecker(ABC):
     """Abstract checker class"""
 
     def __init__(
-        self, check_url: str, retry_interval: int = 5, max_retry_num: int = 3
+        self,
+        check_url: str,
+        request_timeout: int = 5,
+        retry_interval: int = 5,
+        max_retry_num: int = 3,
     ) -> None:
         self.check_url = check_url
+        self.request_timeout = request_timeout
         self.retry_interval = retry_interval
         self.max_retry_num = max_retry_num
         self.chapter_list = []
@@ -64,6 +69,7 @@ class AbstractChapterChecker(ABC):
                             " Chrome/50.0.2661.102 Safari/537.36"
                         )
                     },
+                    timeout=self.request_timeout,
                 )
                 if response.status_code == 200:
                     # override encoding by real educated guess as provided by chardet
@@ -287,6 +293,7 @@ class QimanChecker(AbstractChapterChecker):
                 response = requests.post(
                     api_url,
                     data={"id": comic_id, "id2": 1},
+                    timeout=self.request_timeout,
                 )
                 if response.status_code == 200:
                     """Sample response:
