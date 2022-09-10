@@ -119,6 +119,7 @@ def main():
 
     yml_data = YmlParser(yml_filepath=DEFAULT_LIST_YAML_PATH).yml_data
 
+    my_helper_list = []
     # Add schedule for each item
     for item_obj in yml_data:
         # Create helper object and add add to schedule
@@ -126,18 +127,19 @@ def main():
             novel_helper = helpers.NovelChapterHelper(
                 name=item_obj["name"], urls=item_obj["novel_urls"]
             )
-            add_schedule(my_helper=novel_helper, tg_helper=tg_helper)
+            my_helper_list.append(novel_helper)
+
         if "comic_urls" in item_obj:
             comic_helper = helpers.ComicChapterHelper(
                 name=item_obj["name"], urls=item_obj["comic_urls"]
             )
-            add_schedule(my_helper=comic_helper, tg_helper=tg_helper)
+            my_helper_list.append(comic_helper)
 
     # Print how many tasks added
     if len(schedule.jobs) > 0:
-        logger.info(
-            "Scheduled %s checker(s) successfully.", len(schedule.jobs)
-        )
+        logger.info("Scheduling %s checker(s) ....", len(schedule.jobs))
+        for my_helper in my_helper_list:
+            add_schedule(my_helper, tg_helper)
     else:
         raise ValueError(
             "No schedule job found, please check format in list.yaml"
