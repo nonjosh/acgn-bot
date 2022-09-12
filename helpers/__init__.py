@@ -2,6 +2,7 @@
 import logging
 from typing import List
 from abc import ABC, abstractmethod
+import chinese_converter
 from helpers import checkers
 from helpers.utils import get_main_domain_name, check_url_valid
 
@@ -34,6 +35,31 @@ class AbstractChapterHelper(ABC):
     def set_checker(self) -> None:
         """set checker and media_type"""
         raise NotImplementedError
+
+    def get_msg_content(self) -> str:
+        """Construct html message content from helper and urls
+
+        Returns:
+            str: message content (html)
+        """
+
+        content_html_text = f"{self.name} {self.media_type} updated!\n"
+        urls_texts = [
+            f"<a href='{url}'>{self.main_domain_name}</a>" for url in self.urls
+        ]
+        content_html_text += " | ".join(urls_texts) + "\n"
+
+        updated_chapter_list = self.checker.updated_chapter_list
+        content_html_text += (
+            f"Updated {len(updated_chapter_list)} chapter(s): "
+        )
+        chapter_texts = [
+            f"<a href='{updated_chapter.url}'>{updated_chapter.title}</a>"
+            for updated_chapter in updated_chapter_list
+        ]
+        content_html_text += ", ".join(chapter_texts)
+
+        return chinese_converter.to_traditional(content_html_text)
 
 
 class NovelChapterHelper(AbstractChapterHelper):

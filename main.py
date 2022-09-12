@@ -3,11 +3,10 @@ import threading
 import time
 from typing import Union
 import schedule
-import chinese_converter
 import helpers
 from helpers.tg import TgHelper
 from helpers.yml_parser import YmlParser
-from helpers.utils import get_logger, get_main_domain_name
+from helpers.utils import get_logger
 
 DEFAULT_LIST_YAML_PATH = "config/list.yaml"
 
@@ -67,7 +66,7 @@ def job(
             )
 
         # Send update message to telegram
-        content_html_text = get_msg_content(my_helper)
+        content_html_text = my_helper.get_msg_content()
         tg_helper.send_msg(content=content_html_text)
     else:
         # Print no update message for each chapter in terminal (if enabled)
@@ -77,36 +76,6 @@ def job(
                 my_helper.media_type,
                 my_helper.name,
             )
-
-
-def get_msg_content(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper]
-) -> str:
-    """Construct html message content from helper and urls
-
-    Args:
-        my_helper (Helper): helper object
-
-    Returns:
-        str: message content (html)
-    """
-
-    content_html_text = f"{my_helper.name} {my_helper.media_type} updated!\n"
-    urls_texts = [
-        f"<a href='{url}'>{get_main_domain_name(url)}</a>"
-        for url in my_helper.urls
-    ]
-    content_html_text += " | ".join(urls_texts) + "\n"
-
-    updated_chapter_list = my_helper.checker.updated_chapter_list
-    content_html_text += f"Updated {len(updated_chapter_list)} chapter(s): "
-    chapter_texts = [
-        f"<a href='{updated_chapter.url}'>{updated_chapter.title}</a>"
-        for updated_chapter in updated_chapter_list
-    ]
-    content_html_text += ", ".join(chapter_texts)
-
-    return chinese_converter.to_traditional(content_html_text)
 
 
 def run_threaded(job_func: callable) -> None:
