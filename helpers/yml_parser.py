@@ -1,6 +1,7 @@
 """YML Parser"""
 import yaml
 import requests
+from helpers.utils import DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT
 
 
 class YmlParser:
@@ -13,7 +14,11 @@ class YmlParser:
     ) -> None:
         if yml_url:
             # Download yaml file from url if specified
-            yml_text = requests.get(yml_url).text
+            yml_text = requests.get(
+                yml_url,
+                headers=DEFAULT_HEADERS,
+                timeout=DEFAULT_REQUEST_TIMEOUT,
+            ).text
             self.yml_data = yaml.load(yml_text, Loader=yaml.FullLoader)
         elif yml_filepath:
             # Read yaml file from file path if specified

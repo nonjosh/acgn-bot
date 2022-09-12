@@ -1,36 +1,13 @@
 """Test webscrapping function of the checker classes,
 will skip if the url is not available."""
 import unittest
-import requests
 from helpers.chapter import Chapter
 from helpers import checkers
+from helpers.utils import check_url_valid
 
 
 class TestCheckers(unittest.TestCase):
     """Check if can get chapter list for each Checker"""
-
-    def check_website_health(self, check_url: str):
-        """Check if the website is healthy"""
-        # Check if the website is healthy
-        try:
-            response = requests.get(
-                check_url, headers=checkers.DEFAULT_HEADER, timeout=10
-            )
-            response.raise_for_status()
-        except requests.exceptions.HTTPError as errh:
-            print("Http Error:", errh)
-            return False
-        except requests.exceptions.ConnectionError as errc:
-            print("Error Connecting:", errc)
-            return False
-        except requests.exceptions.Timeout as errt:
-            print("Timeout Error:", errt)
-            return False
-        except requests.exceptions.RequestException as err:
-            print("OOps: Something Else", err)
-            return False
-        else:
-            return True
 
     def validate_chapter_list(self, chapter_list: list):
         """Validate chapter list"""
@@ -43,7 +20,7 @@ class TestCheckers(unittest.TestCase):
     def universal_checking(self, test_checker, check_url: str):
         """Universal checker"""
         # Pass if the website is not healthy
-        if self.check_website_health(check_url):
+        if check_url_valid(url=check_url, verbose=True):
             # Initialize checker
             _checker = test_checker(check_url)
 
