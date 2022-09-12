@@ -47,7 +47,8 @@
 				"njpwerner.autodocstring",
 				"Gruntfuggly.todo-tree",
 				"2gua.rainbow-brackets",
-				"redhat.vscode-yaml"
+				"redhat.vscode-yaml",
+				"Serhioromano.vscode-gitflow"
 			]
 		}
 	},
