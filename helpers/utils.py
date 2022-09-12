@@ -3,6 +3,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 import logging
 from logging.handlers import TimedRotatingFileHandler
+import requests
 
 # Create logging formatter
 FORMATTER = logging.Formatter(
@@ -11,6 +12,16 @@ FORMATTER = logging.Formatter(
 )
 
 LOG_FILE = "./logs/app.log"
+
+DEFAULT_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5)"
+        " AppleWebKit/537.36 (KHTML, like Gecko)"
+        " Chrome/50.0.2661.102 Safari/537.36"
+    )
+}
+
+DEFAULT_REQUEST_TIMEOUT = 5
 
 
 def get_logger(
@@ -81,3 +92,45 @@ def get_main_domain_name(url_str) -> str:
     main_domain_name = netloc.split(".")[-2]
 
     return main_domain_name
+
+
+def check_url_valid(url: str, verbose: bool = False) -> bool:
+    """Check if url is valid
+
+    Args:
+        url (str): url string
+        verbose (bool, optional): verbose. Defaults to False.
+
+    Returns:
+        bool: True if valid, False if not
+    """
+    # Check format
+    try:
+        result = urlparse(url)
+        if not all([result.scheme, result.netloc, result.path]):
+            return False
+    except ValueError:
+        return False
+
+    # Check by requests
+    try:
+        response = requests.get(
+            url, headers=DEFAULT_HEADERS, timeout=DEFAULT_REQUEST_TIMEOUT
+        )
+        if response.status_code != 200:
+            return False
+    except requests.exceptions.HTTPError as errh:
+        if verbose:
+            print("Http Error:", errh)
+    except requests.exceptions.ConnectionError as errc:
+        if verbose:
+            print("Error Connecting:", errc)
+    except requests.exceptions.Timeout as errt:
+        if verbose:
+            print("Timeout Error:", errt)
+    except requests.exceptions.RequestException as err:
+        if verbose:
+            print("OOps: Something Else", err)
+    else:
+        return True
+    return False
