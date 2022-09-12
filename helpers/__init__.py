@@ -2,7 +2,8 @@
 import logging
 from typing import List
 from abc import ABC, abstractmethod
-from helpers import checkers, utils
+from helpers import checkers
+from helpers.utils import get_main_domain_name, check_url_valid
 
 
 class AbstractChapterHelper(ABC):
@@ -14,9 +15,15 @@ class AbstractChapterHelper(ABC):
         self.name = name
         self.urls = urls
 
-        # Only check first url
-        self.check_url = urls[0]
-        self.main_domain_name = utils.get_main_domain_name(self.check_url)
+        # Check if first url is valid, if not, use the next one
+        for url in self.urls:
+            if check_url_valid(url):
+                self.check_url = url
+                break
+        else:
+            # Use the first url if all urls are invalid
+            self.check_url = self.urls[0]
+        self.main_domain_name = get_main_domain_name(self.check_url)
         self.checker = None
         self.media_type = None
 
