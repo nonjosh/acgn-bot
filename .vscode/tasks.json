@@ -87,6 +87,26 @@
         "panel": "new",
         "focus": true
       }
+    },
+    {
+      "label": "Clear Python cache",
+      "type": "shell",
+      "command": "find . -name \"__pycache__\" -type d -exec rm -rf {} +",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+    },
+    {
+      "label": "Clear local log files",
+      "type": "shell",
+      "command": "rm -f logs/app.log*",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
     }
   ]
 }
