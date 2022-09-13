@@ -26,6 +26,8 @@ class TgHelper:
         self.chat_id = chat_id
         self.bot = telegram.Bot(token=self.token)
 
+        self.helper_list = []
+
     def send_msg(
         self, content="No input content", url_text=None, url=None, html=True
     ) -> None:
