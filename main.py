@@ -112,6 +112,13 @@ def add_schedule(
             return job(my_helper, tg_helper)
 
         schedule.every(30).to(60).minutes.do(run_threaded, job_func)
+    else:
+        logger.error(
+            "Cannot add schedule for %s %s (%s)",
+            my_helper.media_type,
+            my_helper.name,
+            my_helper.urls,
+        )
 
 
 def main() -> None:
