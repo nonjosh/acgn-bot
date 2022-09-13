@@ -201,6 +201,9 @@ class WxChecker(AbstractChapterChecker):
             )
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
+        # Reverse chapter list if it is comic
+        if "/manhua/" in self.check_url:
+            chapter_list.reverse()
         return chapter_list
 
 
