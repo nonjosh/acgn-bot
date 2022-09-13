@@ -161,7 +161,7 @@ def main() -> None:
             "No schedule job found, please check format in list.yaml"
         )
 
-    # tg_helper.run()
+    tg_helper.run()
 
     # Run the scheduler
     while True:
