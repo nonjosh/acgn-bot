@@ -28,34 +28,41 @@ class ChapterHelper:
 
         self.name = name
         self.urls = urls
+        self.media_type = media_type
+        self.checker = None
 
+        # Set check_url, main_domain_name and checker
         # Check if first url is valid, if not, use the next one
         for url in self.urls:
             if check_url_valid(url):
                 self.check_url = url
-                break
+                self.main_domain_name = get_main_domain_name(self.check_url)
+                # Set checker
+                if self.set_checker():
+                    # Escape for loop if checker is set successfully
+                    break
         else:
             # Use the first url if all urls are invalid
             self.check_url = self.urls[0]
-        self.main_domain_name = get_main_domain_name(self.check_url)
-        self.checker = None
-        self.media_type = media_type
 
-        # Set checker and media_type
-        self.set_checker()
+    def set_checker(self) -> bool:
+        """Initialize checker by checking keyword in check_url
 
-    def set_checker(self) -> None:
-        """Initialize checker by checking keyword in check_url"""
+        Returns:
+            bool: True if checker is set successfully
+        """
 
         # Check if domain name is in checker_dict
         if self.main_domain_name in CHECKER_DICT:
             self.checker = CHECKER_DICT[self.main_domain_name](
                 check_url=self.check_url
             )
+            return True
         else:
-            raise ValueError(
-                f"Website {self.main_domain_name} is not supported yet."
+            self.logger.error(
+                "Domain name %s is not supported", self.main_domain_name
             )
+            return False
 
     def get_msg_content(self) -> str:
         """Construct html message content from helper and urls
