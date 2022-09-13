@@ -1,9 +1,8 @@
 """main"""
 import threading
 import time
-from typing import Union
 import schedule
-import helpers
+from helpers import ChapterHelper
 from helpers.tg import TgHelper
 from helpers.yml_parser import YmlParser
 from helpers.utils import get_logger
@@ -14,7 +13,7 @@ logger = get_logger(__name__)
 
 
 def job(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
+    my_helper: ChapterHelper,
     tg_helper: TgHelper,
     show_no_update_msg=False,
 ) -> None:
@@ -88,7 +87,7 @@ def run_threaded(job_func: callable) -> None:
 
 
 def add_schedule(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
+    my_helper: ChapterHelper,
     tg_helper: TgHelper,
 ) -> None:
     """Add task to schedule
@@ -124,22 +123,29 @@ def main():
     for item_obj in yml_data:
         # Create helper object and add add to schedule
         if "novel_urls" in item_obj:
-            novel_helper = helpers.NovelChapterHelper(
-                name=item_obj["name"], urls=item_obj["novel_urls"]
+            novel_helper = ChapterHelper(
+                name=item_obj["name"],
+                urls=item_obj["novel_urls"],
+                media_type="novel",
             )
             my_helper_list.append(novel_helper)
 
         if "comic_urls" in item_obj:
-            comic_helper = helpers.ComicChapterHelper(
-                name=item_obj["name"], urls=item_obj["comic_urls"]
+            comic_helper = ChapterHelper(
+                name=item_obj["name"],
+                urls=item_obj["comic_urls"],
+                media_type="comic",
             )
             my_helper_list.append(comic_helper)
 
     # Print how many tasks added
-    if len(schedule.jobs) > 0:
-        logger.info("Scheduling %s checker(s) ....", len(schedule.jobs))
+    if len(my_helper_list) > 0:
+        logger.info("Scheduling %s checker(s) ....", len(my_helper_list))
         for my_helper in my_helper_list:
             add_schedule(my_helper, tg_helper)
+        logger.info(
+            "Scheduled %s checker(s) successfully.", len(schedule.jobs)
+        )
     else:
         raise ValueError(
             "No schedule job found, please check format in list.yaml"

@@ -33,16 +33,12 @@ class AbstractChapterChecker(ABC):
     def __init__(
         self,
         check_url: str,
-        request_timeout: int = DEFAULT_REQUEST_TIMEOUT,
-        headers: dict = None,
-        retry_interval: int = 5,
-        max_retry_num: int = 3,
     ) -> None:
         self.check_url = check_url
-        self.request_timeout = request_timeout
-        self.headers = headers if headers is not None else DEFAULT_HEADERS
-        self.retry_interval = retry_interval
-        self.max_retry_num = max_retry_num
+        self.request_timeout = DEFAULT_REQUEST_TIMEOUT
+        self.headers = DEFAULT_HEADERS
+        self.retry_interval = 5
+        self.max_retry_num = 3
         self.chapter_list = []
         self.updated_chapter_list = []
 
@@ -201,6 +197,9 @@ class WxChecker(AbstractChapterChecker):
             )
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
+        # Reverse chapter list if it is comic
+        if "/manhua/" in self.check_url:
+            chapter_list.reverse()
         return chapter_list
 
 
