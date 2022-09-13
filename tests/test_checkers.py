@@ -9,7 +9,7 @@ from helpers.utils import check_url_valid
 class TestCheckers(unittest.TestCase):
     """Check if can get chapter list for each Checker"""
 
-    def validate_chapter_list(self, chapter_list: list):
+    def validate_chapter_list(self, chapter_list: list) -> None:
         """Validate chapter list"""
         # Check if the list item is an Chapter object
         self.assertIsInstance(chapter_list[0], Chapter)
@@ -17,7 +17,7 @@ class TestCheckers(unittest.TestCase):
         # Check if the chapter list is not empty
         self.assertGreater(len(chapter_list), 0)
 
-    def universal_checking(self, test_checker, check_url: str):
+    def universal_checking(self, test_checker, check_url: str) -> None:
         """Universal checker"""
         # Pass if the website is not healthy
         if check_url_valid(url=check_url, verbose=True):
@@ -31,21 +31,21 @@ class TestCheckers(unittest.TestCase):
             self.skipTest(f"{check_url} is not healthy")
 
     # Novel Checkers
-    def test_syosetu_checker(self):
+    def test_syosetu_checker(self) -> None:
         """Syosetu"""
         self.universal_checking(
             test_checker=checkers.SyosetuChecker,
             check_url="https://ncode.syosetu.com/n6621fl",
         )
 
-    def test_wutuxs_checker(self):
+    def test_wutuxs_checker(self) -> None:
         """Wutuxs"""
         self.universal_checking(
             test_checker=checkers.WutuxsChecker,
             check_url="http://www.wutuxs.com/html/9/9715/",
         )
 
-    def test_wx_checker(self):
+    def test_wx_checker(self) -> None:
         """99wx"""
         self.universal_checking(
             test_checker=checkers.WxChecker,
@@ -53,21 +53,21 @@ class TestCheckers(unittest.TestCase):
         )
 
     # Comic Checkers
-    def test_manhuagui_checker(self):
+    def test_manhuagui_checker(self) -> None:
         """Manhuagui"""
         self.universal_checking(
             test_checker=checkers.ManhuaguiChecker,
             check_url="https://m.manhuagui.com/comic/30903/",
         )
 
-    def test_qiman_checker(self):
+    def test_qiman_checker(self) -> None:
         """Qiman6"""
         self.universal_checking(
             test_checker=checkers.QimanChecker,
             check_url="http://qiman57.com/19827/",
         )
 
-    def test_baozimh_checker(self):
+    def test_baozimh_checker(self) -> None:
         """Baozimh"""
         self.universal_checking(
             test_checker=checkers.BaozimhChecker,
@@ -76,14 +76,14 @@ class TestCheckers(unittest.TestCase):
             ),
         )
 
-    def test_xbiquge_checker(self):
+    def test_xbiquge_checker(self) -> None:
         """Xbiquge"""
         self.universal_checking(
             test_checker=checkers.XbiqugeChecker,
             check_url="https://www.xbiquge.la/55/55945/",
         )
 
-    def test_dashuhuwai_checker(self):
+    def test_dashuhuwai_checker(self) -> None:
         """Dashuhuwai"""
         self.universal_checking(
             test_checker=checkers.DashuhuwaiChecker,

@@ -18,7 +18,7 @@ logger = get_logger(__name__)
 class TgHelper:
     """Telegram helper"""
 
-    def __init__(self, token=TOKEN, chat_id=CHAT_ID) -> None:
+    def __init__(self, token: str = TOKEN, chat_id: str = CHAT_ID) -> None:
 
         if token is None:
             raise ValueError("Telegram bot token is not given")
@@ -50,7 +50,7 @@ class TgHelper:
         # log all errors
         self.dispatcher.add_error_handler(self.error)
 
-    def run(self):
+    def run(self) -> None:
         """Start the bot."""
         # Start the Bot
         self.updater.start_polling()
@@ -61,7 +61,11 @@ class TgHelper:
         self.updater.idle()
 
     def send_msg(
-        self, content="No input content", url_text=None, url=None, html=True
+        self,
+        content="No input content",
+        url_text: str = None,
+        url: str = None,
+        html: bool = True,
     ) -> None:
         """Send message to channel
 

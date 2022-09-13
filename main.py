@@ -106,13 +106,13 @@ def add_schedule(
 
     # Add schedule thread
     # Define lambda function for job
-    def job_func():
+    def job_func() -> None:
         return job(my_helper, tg_helper)
 
     schedule.every(30).to(60).minutes.do(run_threaded, job_func)
 
 
-def main():
+def main() -> None:
     """Main logic"""
     tg_helper = TgHelper()
 

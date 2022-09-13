@@ -7,7 +7,7 @@ from helpers import ChapterHelper
 class TestJob(unittest.TestCase):
     """Test job"""
 
-    def test_chapter_list_change(self):
+    def test_chapter_list_change(self) -> None:
         """Test if can get chapter list change in ChapterHelper"""
         # Initialize helper
         my_helper = ChapterHelper(
