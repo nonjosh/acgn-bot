@@ -1,4 +1,4 @@
-FROM python:3.9.13-slim
+FROM python:3.10.7-slim-bullseye
 
 ENV TZ=Asia/Hong_Kong
 

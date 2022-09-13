@@ -1,13 +1,15 @@
-"""Test webscrapping function of the checker classes"""
+"""Test webscrapping function of the checker classes,
+will skip if the url is not available."""
 import unittest
 from helpers.chapter import Chapter
 from helpers import checkers
+from helpers.utils import check_url_valid
 
 
 class TestCheckers(unittest.TestCase):
     """Check if can get chapter list for each Checker"""
 
-    def validate_chapter_list(self, chapter_list: list):
+    def validate_chapter_list(self, chapter_list: list) -> None:
         """Validate chapter list"""
         # Check if the list item is an Chapter object
         self.assertIsInstance(chapter_list[0], Chapter)
@@ -15,89 +17,75 @@ class TestCheckers(unittest.TestCase):
         # Check if the chapter list is not empty
         self.assertGreater(len(chapter_list), 0)
 
+    def universal_checking(self, test_checker, check_url: str) -> None:
+        """Universal checker"""
+        # Pass if the website is not healthy
+        if check_url_valid(url=check_url, verbose=True):
+            # Initialize checker
+            _checker = test_checker(check_url)
+
+            # Check if can get chapter list
+            chapter_list = _checker.get_latest_chapter_list()
+            self.validate_chapter_list(chapter_list)
+        else:
+            self.skipTest(f"{check_url} is not healthy")
+
     # Novel Checkers
-    def test_syosetu_checker(self):
+    def test_syosetu_checker(self) -> None:
         """Syosetu"""
-        # Initialize checker
-        syosetu_checker = checkers.SyosetuChecker(
-            check_url="https://ncode.syosetu.com/n6621fl"
+        self.universal_checking(
+            test_checker=checkers.SyosetuChecker,
+            check_url="https://ncode.syosetu.com/n6621fl",
         )
 
-        # Check if can get chapter list
-        chapter_list = syosetu_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
+    def test_wutuxs_checker(self) -> None:
+        """Wutuxs"""
+        self.universal_checking(
+            test_checker=checkers.WutuxsChecker,
+            check_url="http://www.wutuxs.com/html/9/9715/",
+        )
 
-    # def test_wutuxs_checker(self):
-    #     """Wutuxs"""
-    #     # Initialize checker
-    #     wutuxs_checker = checkers.WutuxsChecker(
-    #         check_url="http://www.wutuxs.com/html/9/9715/"
-    #     )
-
-    #     # Check if can get chapter list
-    #     chapter_list = wutuxs_checker.get_latest_chapter_list()
-    #     self.validate_chapter_list(chapter_list)
-
-    def test_wx_checker(self):
+    def test_wx_checker(self) -> None:
         """99wx"""
-        # Initialize checker
-        wutuxs_checker = checkers.WxChecker(
-            check_url="https://www.99wx.cc/wanxiangzhiwang/"
+        self.universal_checking(
+            test_checker=checkers.WxChecker,
+            check_url="https://www.99wx.cc/wanxiangzhiwang/",
         )
-
-        # Check if can get chapter list
-        chapter_list = wutuxs_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
 
     # Comic Checkers
-    def test_manhuagui_checker(self):
+    def test_manhuagui_checker(self) -> None:
         """Manhuagui"""
-        # Initialize checker
-        check_url = "https://m.manhuagui.com/comic/30903/"
-        manhuagui_checker = checkers.ManhuaguiChecker(check_url)
-
-        # Check if can get chapter list
-        chapter_list = manhuagui_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
-
-    def test_qiman_checker(self):
-        """Qiman6"""
-        # Initialize checker
-        check_url = "http://qiman57.com/19827/"
-        qiman6_checker = checkers.QimanChecker(check_url)
-
-        # Check if can get chapter list
-        chapter_list = qiman6_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
-
-    def test_baozimh_checker(self):
-        """Baozimh"""
-        # Initialize checker
-        check_url = (
-            "https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e"
+        self.universal_checking(
+            test_checker=checkers.ManhuaguiChecker,
+            check_url="https://m.manhuagui.com/comic/30903/",
         )
-        baozimh_checker = checkers.BaozimhChecker(check_url)
 
-        # Check if can get chapter list
-        chapter_list = baozimh_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
+    def test_qiman_checker(self) -> None:
+        """Qiman6"""
+        self.universal_checking(
+            test_checker=checkers.QimanChecker,
+            check_url="http://qiman57.com/19827/",
+        )
 
-    def test_xbiquge_checker(self):
+    def test_baozimh_checker(self) -> None:
+        """Baozimh"""
+        self.universal_checking(
+            test_checker=checkers.BaozimhChecker,
+            check_url=(
+                "https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e"
+            ),
+        )
+
+    def test_xbiquge_checker(self) -> None:
         """Xbiquge"""
-        # Initialize checker
-        check_url = "https://www.xbiquge.la/55/55945/"
-        xbiquge_checker = checkers.XbiqugeChecker(check_url)
+        self.universal_checking(
+            test_checker=checkers.XbiqugeChecker,
+            check_url="https://www.xbiquge.la/55/55945/",
+        )
 
-        # Check if can get chapter list
-        chapter_list = xbiquge_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
-
-    def test_dashuhuwai_checker(self):
+    def test_dashuhuwai_checker(self) -> None:
         """Dashuhuwai"""
-        # Initialize checker
-        check_url = "https://www.dashuhuwai.com/comic/fangkainagenvwu/"
-        dashuhuwai_checker = checkers.DashuhuwaiChecker(check_url)
-
-        # Check if can get chapter list
-        chapter_list = dashuhuwai_checker.get_latest_chapter_list()
-        self.validate_chapter_list(chapter_list)
+        self.universal_checking(
+            test_checker=checkers.DashuhuwaiChecker,
+            check_url="https://www.dashuhuwai.com/comic/fangkainagenvwu/",
+        )

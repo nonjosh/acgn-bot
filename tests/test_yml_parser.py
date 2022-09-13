@@ -6,7 +6,7 @@ from helpers.yml_parser import YmlParser
 class TestFileParser(unittest.TestCase):
     """Test file parser"""
 
-    def test_read_list(self):
+    def test_read_list(self) -> None:
         """Read list from file"""
         # Initialize parser
         file_path = "config/list.yaml"
@@ -23,7 +23,7 @@ class TestFileParser(unittest.TestCase):
 class TestUrlParser(unittest.TestCase):
     """Test url parser"""
 
-    def test_read_list(self):
+    def test_read_list(self) -> None:
         """Read list from url"""
         # Initialize parser
         url = "https://raw.githubusercontent.com/nonjosh/acgn-bot/master/config/list.yaml"

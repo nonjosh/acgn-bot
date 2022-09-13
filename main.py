@@ -1,13 +1,11 @@
 """main"""
 import threading
 import time
-from typing import Union
 import schedule
-import chinese_converter
-import helpers
+from helpers import ChapterHelper
 from helpers.tg import TgHelper
 from helpers.yml_parser import YmlParser
-from helpers.utils import get_logger, get_main_domain_name
+from helpers.utils import get_logger
 
 DEFAULT_LIST_YAML_PATH = "config/list.yaml"
 
@@ -15,7 +13,7 @@ logger = get_logger(__name__)
 
 
 def job(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
+    my_helper: ChapterHelper,
     tg_helper: TgHelper,
     show_no_update_msg=False,
 ) -> None:
@@ -67,7 +65,7 @@ def job(
             )
 
         # Send update message to telegram
-        content_html_text = get_msg_content(my_helper)
+        content_html_text = my_helper.get_msg_content()
         tg_helper.send_msg(content=content_html_text)
     else:
         # Print no update message for each chapter in terminal (if enabled)
@@ -77,36 +75,6 @@ def job(
                 my_helper.media_type,
                 my_helper.name,
             )
-
-
-def get_msg_content(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper]
-) -> str:
-    """Construct html message content from helper and urls
-
-    Args:
-        my_helper (Helper): helper object
-
-    Returns:
-        str: message content (html)
-    """
-
-    content_html_text = f"{my_helper.name} {my_helper.media_type} updated!\n"
-    urls_texts = [
-        f"<a href='{url}'>{get_main_domain_name(url)}</a>"
-        for url in my_helper.urls
-    ]
-    content_html_text += " | ".join(urls_texts) + "\n"
-
-    updated_chapter_list = my_helper.checker.updated_chapter_list
-    content_html_text += f"Updated {len(updated_chapter_list)} chapter(s): "
-    chapter_texts = [
-        f"<a href='{updated_chapter.url}'>{updated_chapter.title}</a>"
-        for updated_chapter in updated_chapter_list
-    ]
-    content_html_text += ", ".join(chapter_texts)
-
-    return chinese_converter.to_traditional(content_html_text)
 
 
 def run_threaded(job_func: callable) -> None:
@@ -119,7 +87,7 @@ def run_threaded(job_func: callable) -> None:
 
 
 def add_schedule(
-    my_helper: Union[helpers.NovelChapterHelper, helpers.ComicChapterHelper],
+    my_helper: ChapterHelper,
     tg_helper: TgHelper,
 ) -> None:
     """Add task to schedule
@@ -138,13 +106,13 @@ def add_schedule(
 
     # Add schedule thread
     # Define lambda function for job
-    def job_func():
+    def job_func() -> None:
         return job(my_helper, tg_helper)
 
     schedule.every(30).to(60).minutes.do(run_threaded, job_func)
 
 
-def main():
+def main() -> None:
     """Main logic"""
     tg_helper = TgHelper()
 
@@ -154,18 +122,28 @@ def main():
     for item_obj in yml_data:
         # Create helper object and add add to schedule
         if "novel_urls" in item_obj:
-            novel_helper = helpers.NovelChapterHelper(
-                name=item_obj["name"], urls=item_obj["novel_urls"]
+            novel_helper = ChapterHelper(
+                name=item_obj["name"],
+                urls=item_obj["novel_urls"],
+                media_type="novel",
             )
-            add_schedule(my_helper=novel_helper, tg_helper=tg_helper)
+            tg_helper.helper_list.append(novel_helper)
+
         if "comic_urls" in item_obj:
-            comic_helper = helpers.ComicChapterHelper(
-                name=item_obj["name"], urls=item_obj["comic_urls"]
+            comic_helper = ChapterHelper(
+                name=item_obj["name"],
+                urls=item_obj["comic_urls"],
+                media_type="comic",
             )
-            add_schedule(my_helper=comic_helper, tg_helper=tg_helper)
+            tg_helper.helper_list.append(comic_helper)
 
     # Print how many tasks added
-    if len(schedule.jobs) > 0:
+    if len(tg_helper.helper_list) > 0:
+        logger.info(
+            "Scheduling %s checker(s) ....", len(tg_helper.helper_list)
+        )
+        for my_helper in tg_helper.helper_list:
+            add_schedule(my_helper, tg_helper)
         logger.info(
             "Scheduled %s checker(s) successfully.", len(schedule.jobs)
         )
@@ -173,6 +151,8 @@ def main():
         raise ValueError(
             "No schedule job found, please check format in list.yaml"
         )
+
+    tg_helper.run()
 
     # Run the scheduler
     while True:
