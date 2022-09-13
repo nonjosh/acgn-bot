@@ -161,7 +161,9 @@ def main() -> None:
             "No schedule job found, please check format in list.yaml"
         )
 
-    # tg_helper.run()
+    # Telegram bot starts polling
+    tg_helper.run()
+    logger.info("Telegram bot started polling successfully.")
 
     # Run the scheduler
     while True:
