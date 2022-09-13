@@ -4,6 +4,15 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Build Docker Image",
+      "type": "shell",
+      "command": "docker build -t ${workspaceFolderBasename} .",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "k8s update configmap",
       "type": "shell",
       "command": "kubectl create configmap acgn-bot.list.yaml --from-file=config/list.yaml --dry-run=client -o yaml | kubectl apply -f -"
