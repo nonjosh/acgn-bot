@@ -71,6 +71,18 @@ class ChapterHelper:
         )
         return False
 
+    def get_urls_text(self) -> str:
+        """Construct urls text from urls
+            e.g. qiman57 | cocomanga
+
+        Returns:
+            str: urls text
+        """
+        urls_texts = [
+            f"<a href='{url}'>{self.main_domain_name}</a>" for url in self.urls
+        ]
+        return " | ".join(urls_texts) + "\n"
+
     def get_msg_content(self) -> str:
         """Construct html message content from helper and urls
 
@@ -82,10 +94,7 @@ class ChapterHelper:
         content_html_text = f"{self.name} {self.media_type} updated!\n"
 
         # qiman57 | cocomanga
-        urls_texts = [
-            f"<a href='{url}'>{self.main_domain_name}</a>" for url in self.urls
-        ]
-        content_html_text += " | ".join(urls_texts) + "\n"
+        content_html_text += self.get_urls_text()
 
         # Updated 3 chapter(s): 第六百二十六章 挑戰鐘太丘, 第六百二十七章 虛珠, 第六百二十八章 巔峰對決
         updated_chapter_list = self.checker.updated_chapter_list

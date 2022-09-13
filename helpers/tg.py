@@ -2,6 +2,9 @@
 import os
 import time
 import telegram
+from telegram import Update
+from telegram.ext import Updater, CommandHandler
+from telegram.ext.callbackcontext import CallbackContext
 from dotenv import load_dotenv
 from helpers.utils import get_logger
 
@@ -25,6 +28,37 @@ class TgHelper:
         self.token = token
         self.chat_id = chat_id
         self.bot = telegram.Bot(token=self.token)
+
+        self.helper_list = []
+
+        # Create the Updater and pass it your bot's token.
+        # Make sure to set use_context=True to use the new context based callbacks
+        # Post version 12 this will no longer be necessary
+        self.updater = Updater(self.token, use_context=True)
+
+        # Get the dispatcher to register handlers
+        self.dispatcher = self.updater.dispatcher
+
+        # on different commands - answer in Telegram
+        self.dispatcher.add_handler(
+            CommandHandler("list_config", self.list_config)
+        )
+        self.dispatcher.add_handler(
+            CommandHandler("list_latest", self.list_latest)
+        )
+
+        # log all errors
+        self.dispatcher.add_error_handler(self.error)
+
+    def run(self):
+        """Start the bot."""
+        # Start the Bot
+        self.updater.start_polling()
+
+        # Run the bot until you press Ctrl-C or the process receives SIGINT,
+        # SIGTERM or SIGABRT. This should be used most of the time, since
+        # start_polling() is non-blocking and will stop the bot gracefully.
+        self.updater.idle()
 
     def send_msg(
         self, content="No input content", url_text=None, url=None, html=True
@@ -68,3 +102,37 @@ class TgHelper:
                 logger.error("Waiting %i secs and re-trying...", wait)
                 time.sleep(wait * 1000)
                 retries += 1
+
+    def list_config(self, update: Update, _: CallbackContext) -> None:
+        """Send a message when the command /list_config is issued."""
+
+        html_response = "<b>Current Config</b>\n"
+        for helper in self.helper_list:
+            html_response += (
+                f"{helper.name} [{helper.media_type}]: "
+                + helper.get_urls_text()
+            )
+        update.message.reply_html(html_response, disable_web_page_preview=True)
+
+    def list_latest(self, update: Update, _: CallbackContext) -> None:
+        """Send a message when the command /list_latest is issued."""
+        html_response = "<b>Latest Chapters</b>\n"
+        for helper in self.helper_list:
+            latest_chapter = helper.checker.get_latest_chapter()
+            if latest_chapter is not None:
+                html_response += (
+                    f"<a href='{helper.check_url}'>{helper.name}</a>"
+                    f" [{helper.media_type}]: <a"
+                    f" href='{latest_chapter.url}'>{latest_chapter.title}</a>"
+                    f" (total: {len(helper.checker.chapter_list)}ch)\n"
+                )
+            else:
+                html_response += (
+                    f"<a href='{helper.check_url}'>{helper.name}</a>"
+                    f" [{helper.media_type}]: None\n"
+                )
+        update.message.reply_html(html_response, disable_web_page_preview=True)
+
+    def error(self, update: Update, context: CallbackContext) -> None:
+        """Log Errors caused by Updates."""
+        logger.warning('Update "%s" caused error "%s"', update, context.error)

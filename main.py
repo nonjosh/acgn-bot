@@ -127,17 +127,23 @@ def main():
                 urls=item_obj["novel_urls"],
                 media_type="novel",
             )
-            add_schedule(my_helper=novel_helper, tg_helper=tg_helper)
+            tg_helper.helper_list.append(novel_helper)
+
         if "comic_urls" in item_obj:
             comic_helper = ChapterHelper(
                 name=item_obj["name"],
                 urls=item_obj["comic_urls"],
                 media_type="comic",
             )
-            add_schedule(my_helper=comic_helper, tg_helper=tg_helper)
+            tg_helper.helper_list.append(comic_helper)
 
     # Print how many tasks added
-    if len(schedule.jobs) > 0:
+    if len(tg_helper.helper_list) > 0:
+        logger.info(
+            "Scheduling %s checker(s) ....", len(tg_helper.helper_list)
+        )
+        for my_helper in tg_helper.helper_list:
+            add_schedule(my_helper, tg_helper)
         logger.info(
             "Scheduled %s checker(s) successfully.", len(schedule.jobs)
         )
@@ -145,6 +151,8 @@ def main():
         raise ValueError(
             "No schedule job found, please check format in list.yaml"
         )
+
+    tg_helper.run()
 
     # Run the scheduler
     while True:
