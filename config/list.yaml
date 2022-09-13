@@ -82,15 +82,20 @@
 - name: 異劍戰記Völundio
   comic_urls:
     - https://m.manhuagui.com/comic/37432/
+- name: 摺紙戰士A
+  comic_urls:
+    - https://m.manhuagui.com/comic/41682/
 
 - name: SSS級自殺獵人
   comic_urls:
     - https://www.baozimh.com/comic/sssjizishaxiren-shinnoahsinnoaneidaneidabillk_r
-    - https://www.cocomanga.com/19931/
+    - https://www.cocomanga.com/manga-ur54421/
 - name: 元尊
   novel_urls:
+    - https://www.99wx.cc/yuanzun/
     - http://www.wutuxs.com/html/7/7876/
   comic_urls:
+    - https://www.99wx.cc/manhua/yuanzun/
     - http://qiman57.com/12780/
     - https://www.cocomanga.com/10136/
 - name: 萬相之王
@@ -98,12 +103,13 @@
     - https://www.99wx.cc/wanxiangzhiwang/
     - http://www.wutuxs.com/html/9/9715/
   comic_urls:
+    - https://www.99wx.cc/manhua/wanxiangzhiwang/
     - http://qiman57.com/24453/
     - https://www.cocomanga.com/20669/
-- name: 仙帝歸来
-  comic_urls:
-    - http://qiman57.com/12235/
-    - https://www.cocomanga.com/12650/
+# - name: 仙帝歸来
+#   comic_urls:
+#     - http://qiman57.com/12235/
+#     - https://www.cocomanga.com/12650/
 - name: 英雄？我早就不當了
   comic_urls:
     - http://qiman57.com/17128/
@@ -112,22 +118,22 @@
 #   comic_urls:
 #     - http://qiman57.com/11952/
 #     - https://www.cocomanga.com/12457/
-- name: 萬古神王
-  comic_urls:
-    - http://qiman57.com/17384/
-    - https://www.cocomanga.com/12970/
+# - name: 萬古神王
+#   comic_urls:
+#     - http://qiman57.com/17384/
+#     - https://www.cocomanga.com/12970/
 - name: 失業魔王
   comic_urls:
     - http://qiman57.com/16793/
     - https://www.cocomanga.com/13657/
-- name: 修真聊天群
-  comic_urls:
-    - http://qiman57.com/9454/
-    - https://www.cocomanga.com/10268/
+# - name: 修真聊天群
+#   comic_urls:
+#     - http://qiman57.com/9454/
+#     - https://www.cocomanga.com/10268/
 - name: 我家大師兄腦子有坑
   comic_urls:
     - http://qiman57.com/12624/
-    - https://www.cocomanga.com/10994/
+    - https://www.cocomanga.com/manga-su13521/
 - name: 我的女徒弟們都是未來諸天大佬
   comic_urls:
     - http://qiman57.com/24583/

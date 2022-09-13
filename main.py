@@ -1,4 +1,5 @@
 """main"""
+import os
 import threading
 import time
 import schedule
@@ -125,7 +126,21 @@ def main() -> None:
     """Main logic"""
     tg_helper = TgHelper()
 
-    yml_data = YmlParser(yml_filepath=DEFAULT_LIST_YAML_PATH).yml_data
+    # Check if CONFIG_YML_URL is set
+    if "CONFIG_YML_URL" in os.environ:
+        # Get config from url
+        yml_url = os.environ["CONFIG_YML_URL"]
+        yml_parser = YmlParser(yml_url=yml_url)
+        yml_data = yml_parser.yml_data
+    elif "CONFIG_YML_FILEPATH" in os.environ:
+        # Get config from path
+        yml_filepath = os.environ["CONFIG_YML_PATH"]
+        yml_parser = YmlParser(yml_filepath=yml_filepath)
+        yml_data = yml_parser.yml_data
+    else:
+        # Get config from default path
+        yml_parser = YmlParser(yml_filepath=DEFAULT_LIST_YAML_PATH)
+        yml_data = yml_parser.yml_data
 
     # Add schedule for each item
     for item_obj in yml_data:
