@@ -102,14 +102,23 @@ def add_schedule(
     def init_helper_func():
         return job(my_helper, tg_helper)
 
-    run_threaded(job_func=init_helper_func)
+    # Only add to schedule if checker is set up successfully
+    if my_helper.checker:
+        run_threaded(job_func=init_helper_func)
 
-    # Add schedule thread
-    # Define lambda function for job
-    def job_func() -> None:
-        return job(my_helper, tg_helper)
+        # Add schedule thread
+        # Define lambda function for job
+        def job_func() -> None:
+            return job(my_helper, tg_helper)
 
-    schedule.every(30).to(60).minutes.do(run_threaded, job_func)
+        schedule.every(30).to(60).minutes.do(run_threaded, job_func)
+    else:
+        logger.error(
+            "Cannot add schedule for %s %s (%s)",
+            my_helper.media_type,
+            my_helper.name,
+            my_helper.urls,
+        )
 
 
 def main() -> None:
@@ -152,7 +161,7 @@ def main() -> None:
             "No schedule job found, please check format in list.yaml"
         )
 
-    tg_helper.run()
+    # tg_helper.run()
 
     # Run the scheduler
     while True:
