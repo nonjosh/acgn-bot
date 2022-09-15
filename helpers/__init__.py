@@ -79,7 +79,8 @@ class ChapterHelper:
             str: urls text
         """
         urls_texts = [
-            f"<a href='{url}'>{self.main_domain_name}</a>" for url in self.urls
+            f"<a href='{url}'>{get_main_domain_name(url)}</a>"
+            for url in self.urls
         ]
         return " | ".join(urls_texts) + "\n"
 
