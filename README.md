@@ -9,6 +9,7 @@
   - [Introduction](#introduction)
     - [Screenshots](#screenshots)
     - [Default Settings](#default-settings)
+    - [Supported Telegram Commands](#supported-telegram-commands)
     - [Environment Variables](#environment-variables)
   - [How to use](#how-to-use)
     - [Setup](#setup)
@@ -49,6 +50,13 @@ Current supported websites:
 | dashuhuwai| <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |
 | mn4u      | <https://mn4u.net/zgm-2149/>                                   | comic      |
 | comick    | <https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw>  | comic      |
+
+### Supported Telegram Commands
+
+| Command       | Description                    |
+|---------------|--------------------------------|
+| /list_config  | List all valid config websites |
+| /list_latest  | List latest chapters           |
 
 ### Environment Variables
 
