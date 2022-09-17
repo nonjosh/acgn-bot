@@ -8,6 +8,7 @@
 - [Telegram bot: Check anime/comic/game/novel websites update](#telegram-bot-check-animecomicgamenovel-websites-update)
   - [Introduction](#introduction)
     - [Screenshots](#screenshots)
+    - [Supported websites](#supported-websites)
     - [Default Settings](#default-settings)
     - [Supported Telegram Commands](#supported-telegram-commands)
     - [Environment Variables](#environment-variables)
@@ -28,15 +29,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 ![alt text](img/terminal-output.png)
 ![alt text](img/tg-output.png)
 
-### Default Settings
-
-| Setting              | Default value   |
-|----------------------|-----------------|
-| Checking Interval    | **_30~60 min_** |
-| Retry Interval       | 5 min           |
-| Maximum Retry Number | 5               |
-
-Current supported websites:
+### Supported websites
 
 | Name      | Example Url                                                    | Media Type |
 |-----------|----------------------------------------------------------------|------------|
@@ -50,6 +43,14 @@ Current supported websites:
 | dashuhuwai| <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |
 | mn4u      | <https://mn4u.net/zgm-2149/>                                   | comic      |
 | comick    | <https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw>  | comic      |
+
+### Default Settings
+
+| Setting              | Default value   |
+|----------------------|-----------------|
+| Checking Interval    | **_30~60 min_** |
+| Retry Interval       | 5 min           |
+| Maximum Retry Number | 5               |
 
 ### Supported Telegram Commands
 
