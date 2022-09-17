@@ -117,7 +117,9 @@ class TgHelper:
 
     def list_latest(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_latest is issued."""
-        html_response = "<b>Latest Chapters</b>\n"
+        html_response = (
+            f"<b>Latest Chapters (total {len(self.helper_list)})</b>\n"
+        )
         for helper in self.helper_list:
             if helper.checker:
                 latest_chapter = helper.checker.get_latest_chapter()
