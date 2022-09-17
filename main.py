@@ -168,9 +168,13 @@ def main() -> None:
         )
         for my_helper in tg_helper.helper_list:
             add_schedule(my_helper, tg_helper)
-        logger.info(
-            "Scheduled %s checker(s) successfully.", len(schedule.jobs)
-        )
+        if len(schedule.jobs) > 0:
+            logger.info(
+                "Scheduled %s checker(s) successfully.", len(schedule.jobs)
+            )
+        else:
+            logger.error("No checker scheduled.")
+            raise Exception("No checker scheduled.")
     else:
         raise ValueError(
             "No schedule job found, please check format in list.yaml"
