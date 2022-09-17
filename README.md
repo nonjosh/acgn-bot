@@ -40,12 +40,14 @@ Current supported websites:
 |-----------|--------------------------------------------------------------|------------|
 | wutuxs    | http://www.wutuxs.com/html/9/9715/                           | novel      |
 | syosetu   | https://ncode.syosetu.com/n6621fl                            | novel      |
-| 99wx      | https://www.99wx.cc/wanxiangzhiwang                          | novel      |
+| 99wx      | https://www.99wx.cc/wanxiangzhiwang                          | novel/comic|
 | manhuagui | https://m.manhuagui.com/comic/30903/                         | comic      |
 | qiman     | http://qiman57.com/19827/                                    | comic      |
 | baozimh   | https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e | comic      |
 | xbiquge   | https://www.xbiquge.la/55/55945/                             | comic      |
 | dashuhuwai| https://www.dashuhuwai.com/comic/fangkainagenvwu/            | comic      |
+| mn4u      | https://mn4u.net/zgm-2149/                                   | comic      |
+| comick    | https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw  | comic      |
 
 ## How to use
 
