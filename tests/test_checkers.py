@@ -89,3 +89,19 @@ class TestCheckers(unittest.TestCase):
             test_checker=checkers.DashuhuwaiChecker,
             check_url="https://www.dashuhuwai.com/comic/fangkainagenvwu/",
         )
+
+    def test_mn4u_checker(self) -> None:
+        """Mn4u"""
+        self.universal_checking(
+            test_checker=checkers.Mn4uChecker,
+            check_url="https://mn4u.net/zgm-2149/",
+        )
+
+    def test_comick_checker(self) -> None:
+        """Comick"""
+        self.universal_checking(
+            test_checker=checkers.ComickChecker,
+            check_url=(
+                "https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw"
+            ),
+        )
