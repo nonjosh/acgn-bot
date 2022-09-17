@@ -9,6 +9,7 @@
   - [Introduction](#introduction)
     - [Screenshots](#screenshots)
     - [Default Settings](#default-settings)
+    - [Environment Variables](#environment-variables)
   - [How to use](#how-to-use)
     - [Setup](#setup)
       - [Option 1: Python](#option-1-python)
@@ -36,18 +37,27 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 
 Current supported websites:
 
-| Name      | Example Url                                                  | Media Type |
-|-----------|--------------------------------------------------------------|------------|
-| wutuxs    | http://www.wutuxs.com/html/9/9715/                           | novel      |
-| syosetu   | https://ncode.syosetu.com/n6621fl                            | novel      |
-| 99wx      | https://www.99wx.cc/wanxiangzhiwang                          | novel/comic|
-| manhuagui | https://m.manhuagui.com/comic/30903/                         | comic      |
-| qiman     | http://qiman57.com/19827/                                    | comic      |
-| baozimh   | https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e | comic      |
-| xbiquge   | https://www.xbiquge.la/55/55945/                             | comic      |
-| dashuhuwai| https://www.dashuhuwai.com/comic/fangkainagenvwu/            | comic      |
-| mn4u      | https://mn4u.net/zgm-2149/                                   | comic      |
-| comick    | https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw  | comic      |
+| Name      | Example Url                                                    | Media Type |
+|-----------|----------------------------------------------------------------|------------|
+| wutuxs    | <http://www.wutuxs.com/html/9/9715/>                           | novel      |
+| syosetu   | <https://ncode.syosetu.com/n6621fl>                            | novel      |
+| 99wx      | <https://www.99wx.cc/wanxiangzhiwang>                          | novel/comic|
+| manhuagui | <https://m.manhuagui.com/comic/30903/>                         | comic      |
+| qiman     | <http://qiman57.com/19827/>                                    | comic      |
+| baozimh   | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e> | comic      |
+| xbiquge   | <https://www.xbiquge.la/55/55945/>                             | comic      |
+| dashuhuwai| <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |
+| mn4u      | <https://mn4u.net/zgm-2149/>                                   | comic      |
+| comick    | <https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw>  | comic      |
+
+### Environment Variables
+
+| Name               | Default value   | Description                                                         |
+|--------------------|-----------------|---------------------------------------------------------------------|
+| TOKEN              |                 |Telegram Bot Token                                                   |
+| CHAT_ID            |                 |Telegram Chat ID                                                     |
+| CONFIG_YML_URL     |                 |Config file url (Optional)                                           |
+| CONFIG_YML_FILEPATH|config/list.yaml |Config file path (Optional, only used when CONFIG_YML_URL is not set)|
 
 ## How to use
 
