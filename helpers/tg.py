@@ -105,7 +105,9 @@ class TgHelper:
     def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
 
-        html_response = "<b>Current Config</b>\n"
+        html_response = (
+            f"<b>Current Config (total {len(self.helper_list)})</b>\n"
+        )
         for helper in self.helper_list:
             html_response += (
                 f"{helper.name} [{helper.media_type}]: "
