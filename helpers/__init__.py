@@ -94,7 +94,7 @@ class ChapterHelper:
         """
 
         # 元尊 comic updated!
-        content_html_text = f"{self.name} {self.media_type} updated!\n"
+        content_html_text = f"{self.media_type} {self.name} updated!\n"
 
         # qiman57 | cocomanga
         content_html_text += self.get_urls_text()
