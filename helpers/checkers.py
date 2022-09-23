@@ -155,9 +155,6 @@ class WutuxsChecker(AbstractChapterChecker):
         if not soup:
             return []
 
-        soup = self.get_latest_soup()
-        if soup is None:
-            return []
         a_list = list(soup.find("table", id="at").findAll("a"))
         chapter_list = []
         for chapter_tag in a_list:
@@ -184,9 +181,6 @@ class WxChecker(AbstractChapterChecker):
         if not soup:
             return []
 
-        soup = self.get_latest_soup()
-        if soup is None:
-            return []
         a_list = list(soup.find("div", id="play_0").findAll("a"))
         chapter_list = []
         for chapter_tag in a_list:
