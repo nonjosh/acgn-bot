@@ -39,7 +39,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 | manhuagui | <https://m.manhuagui.com/comic/30903/>                         | comic      |
 | qiman     | <http://qiman57.com/19827/>                                    | comic      |
 | baozimh   | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e> | comic      |
-| xbiquge   | <https://www.xbiquge.la/55/55945/>                             | comic      |
+| xbiquge   | <https://www.xbiquge.so/book/53099/>                           | comic      |
 | dashuhuwai| <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |
 | mn4u      | <https://mn4u.net/zgm-2149/>                                   | comic      |
 | comick    | <https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw>  | comic      |
