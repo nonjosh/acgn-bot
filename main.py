@@ -59,7 +59,8 @@ def job(
         # Print update message for each chapter in terminal
         for updated_chapter in updated_chapter_list:
             logger.info(
-                "Update found for %s: %s (%s)",
+                "Update found for %s %s: %s (%s)",
+                my_helper.media_type,
                 my_helper.name,
                 updated_chapter.title,
                 updated_chapter.url,

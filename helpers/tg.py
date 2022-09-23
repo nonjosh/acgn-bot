@@ -110,8 +110,7 @@ class TgHelper:
         )
         for helper in self.helper_list:
             html_response += (
-                f"{helper.name} [{helper.media_type}]: "
-                + helper.get_urls_text()
+                f"{helper.media_type} {helper.name}: " + helper.get_urls_text()
             )
         update.message.reply_html(html_response, disable_web_page_preview=True)
 
@@ -125,8 +124,8 @@ class TgHelper:
                 latest_chapter = helper.checker.get_latest_chapter()
                 if latest_chapter is not None:
                     html_response += (
-                        f"<a href='{helper.check_url}'>{helper.name}</a>"
-                        f" [{helper.media_type}]: <a"
+                        f"{helper.media_type} <a"
+                        f" href='{helper.check_url}'>{helper.name}</a>: <a"
                         f" href='{latest_chapter.url}'>{latest_chapter.title}</a>"
                         f" (total: {len(helper.checker.chapter_list)}ch)\n"
                     )
