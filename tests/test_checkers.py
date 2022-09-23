@@ -80,7 +80,8 @@ class TestCheckers(unittest.TestCase):
         """Xbiquge"""
         self.universal_checking(
             test_checker=checkers.XbiqugeChecker,
-            check_url="https://www.xbiquge.la/55/55945/",
+            # check_url="https://www.xbiquge.la/55/55945/",
+            check_url="https://www.xbiquge.so/book/53099/",
         )
 
     def test_dashuhuwai_checker(self) -> None:
