@@ -388,6 +388,11 @@ class XbiqugeChecker(AbstractChapterChecker):
             )
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
+        # Remvoe duplicated
+        chapter_list = list(set(chapter_list))
+
+        # Sort by chapter url
+        chapter_list.sort(key=lambda x: x.url)
         return chapter_list
 
 
