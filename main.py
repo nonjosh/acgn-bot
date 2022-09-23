@@ -134,7 +134,7 @@ def main() -> None:
         yml_data = yml_parser.yml_data
     elif "CONFIG_YML_FILEPATH" in os.environ:
         # Get config from path
-        yml_filepath = os.environ["CONFIG_YML_PATH"]
+        yml_filepath = os.environ["CONFIG_YML_FILEPATH"]
         yml_parser = YmlParser(yml_filepath=yml_filepath)
         yml_data = yml_parser.yml_data
     else:
