@@ -46,6 +46,9 @@ class TgHelper:
         self.dispatcher.add_handler(
             CommandHandler("list_latest", self.list_latest)
         )
+        self.dispatcher.add_handler(
+            CommandHandler("list_latest_check", self.list_latest_check)
+        )
 
         # log all errors
         self.dispatcher.add_error_handler(self.error)
@@ -134,6 +137,20 @@ class TgHelper:
                         f"<a href='{helper.check_url}'>{helper.name}</a>"
                         f" [{helper.media_type}]: None\n"
                     )
+        update.message.reply_html(html_response, disable_web_page_preview=True)
+
+    def list_latest_check(self, update: Update, _: CallbackContext) -> None:
+        """List latest check time of each helper when the command /list_latest_check is issued."""
+        html_response = (
+            f"<b>Latest Check (total {len(self.helper_list)})</b>\n"
+        )
+        for helper in self.helper_list:
+            if helper.checker:
+                html_response += (
+                    f"{helper.media_type} <a"
+                    f" href='{helper.check_url}'>{helper.name}</a>: "
+                    f"{helper.checker.last_check_time}\n"
+                )
         update.message.reply_html(html_response, disable_web_page_preview=True)
 
     def error(self, update: Update, context: CallbackContext) -> None:
