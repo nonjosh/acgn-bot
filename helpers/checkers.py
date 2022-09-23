@@ -42,6 +42,8 @@ class AbstractChapterChecker(ABC):
         self.chapter_list = []
         self.updated_chapter_list = []
 
+        self.last_check_time = None
+
     def get_latest_response(
         self, apparent_encoding: bool = True
     ) -> requests.Response:
@@ -53,6 +55,9 @@ class AbstractChapterChecker(ABC):
         Returns:
             requests.Response: latest response
         """
+        # Update last check time
+        self.last_check_time = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+
         request_sucess = False
         retry_num = 0
 
@@ -269,6 +274,9 @@ class QimanChecker(AbstractChapterChecker):
         Returns:
             List[Chapter]: latest chapter list
         """
+        # Update last check time
+        self.last_check_time = time.strftime("%Y-%m-%dT%H:%M:%S%z")
+
         url_parse = urlparse(self.check_url)
         api_url = urlunparse(url_parse._replace(path="/bookchapter/"))
 
