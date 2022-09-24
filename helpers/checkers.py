@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 import time
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, urljoin
 import json
 import requests
 from bs4 import BeautifulSoup
@@ -383,9 +383,7 @@ class XbiqugeChecker(AbstractChapterChecker):
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text
             chapter_path = chapter_tag["href"]
-            chapter_url = urlunparse(
-                urlparse(self.check_url)._replace(path=chapter_path)
-            )
+            chapter_url = urljoin(self.check_url, chapter_path)
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
         # Remvoe duplicated
