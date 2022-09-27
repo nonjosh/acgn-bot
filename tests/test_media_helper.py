@@ -1,16 +1,16 @@
 """Test basic flow of each job"""
 import unittest
 from helpers.chapter import Chapter
-from helpers import ChapterHelper
+from helpers.media import MediaHelper
 
 
-class TestJob(unittest.TestCase):
-    """Test job"""
+class TestMediaHelper(unittest.TestCase):
+    """Test MediaHelper"""
 
     def test_chapter_list_change(self) -> None:
         """Test if can get chapter list change in ChapterHelper"""
         # Initialize helper
-        my_helper = ChapterHelper(
+        my_helper = MediaHelper(
             name="test",
             urls=["http://qiman57.com/24583/"],
             media_type="comic",
