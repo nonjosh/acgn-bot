@@ -31,3 +31,42 @@ class YmlParser:
         else:
             # Raise error if no yml url or file path specified
             raise ValueError("yml_url or yml_filepath must be specified")
+
+        # Validate yaml file
+        if not self.validate():
+            raise ValueError("Yaml file is invalid")
+
+    def validate(self) -> bool:
+        """Validate yaml file"""
+
+        # Check if the yaml file is a list
+        if not isinstance(self.yml_data, list):
+            logger.error("Yaml file is not a list")
+            return False
+
+        # Check if each item in the list contains the required keys
+        for item in self.yml_data:
+            if "name" not in item:
+                logger.error("Yaml file item does not contain name")
+                return False
+            if not any(key in item for key in ("comic_urls", "novel_urls")):
+                logger.error(
+                    "Yaml file item does not contain comic_urls or novel_urls"
+                )
+                return False
+
+        # Check if comic_urls and novel_urls are lists
+        for item in self.yml_data:
+            if "comic_urls" in item and not isinstance(
+                item["comic_urls"], list
+            ):
+                logger.error("comic_urls is not a list")
+                return False
+            if "novel_urls" in item and not isinstance(
+                item["novel_urls"], list
+            ):
+                logger.error("novel_urls is not a list")
+                return False
+
+        # Return true if all checks passed
+        return True
