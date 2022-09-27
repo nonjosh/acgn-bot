@@ -1,194 +1,30 @@
 """main"""
-import os
-import threading
-import time
-import schedule
-from helpers import ChapterHelper
-from helpers.tg import TgHelper
-from helpers.yml_parser import YmlParser
 from helpers.utils import get_logger
-
-DEFAULT_LIST_YAML_PATH = "config/list.yaml"
+from helpers.tg import TgHelper
+from helpers.config import ConfigHelper
+from helpers.schedule import ScheduleHelper
 
 logger = get_logger(__name__)
 
 
-def job(
-    my_helper: ChapterHelper,
-    tg_helper: TgHelper,
-    show_no_update_msg=False,
-) -> None:
-    """job for schedule
-
-    Args:
-        my_helper (Helper): helper
-        tg_helper (TgHelper): tg helper
-        show_no_update_msg (bool, optional): print no update msg. Defaults to False.
-    """
-    # Initialize checker chapter list if list is empty originally
-    if len(my_helper.checker.chapter_list) == 0:
-        # Initialize checker chapter list
-        updated_chapter_list = my_helper.checker.get_updated_chapter_list()
-
-        # Print latest chapter if success
-        if len(updated_chapter_list) > 0:
-            latest_chapter_obj = updated_chapter_list[-1]
-            latest_chapter_title = latest_chapter_obj.title
-            latest_chapter_url = latest_chapter_obj.url
-            logger.info(
-                "%d chapters found for %s %s - latest: %s (%s)",
-                len(updated_chapter_list),
-                my_helper.media_type,
-                my_helper.name,
-                latest_chapter_title,
-                latest_chapter_url,
-            )
-        else:
-            if show_no_update_msg:
-                logger.info(
-                    "Cannot get chapter list for %s %s",
-                    my_helper.media_type,
-                    my_helper.name,
-                )
-        return
-
-    # Check for update
-    updated_chapter_list = my_helper.checker.get_updated_chapter_list()
-    if len(updated_chapter_list) > 0:
-
-        # Print update message for each chapter in terminal
-        for updated_chapter in updated_chapter_list:
-            logger.info(
-                "Update found for %s %s: %s (%s)",
-                my_helper.media_type,
-                my_helper.name,
-                updated_chapter.title,
-                updated_chapter.url,
-            )
-
-        # Send update message to telegram
-        content_html_text = my_helper.get_msg_content()
-        tg_helper.send_msg(content=content_html_text)
-    else:
-        # Print no update message for each chapter in terminal (if enabled)
-        if show_no_update_msg:
-            logger.info(
-                "No update found for %s %s",
-                my_helper.media_type,
-                my_helper.name,
-            )
-
-
-def run_threaded(job_func: callable) -> None:
-    """Run job in thread
-    Args:
-        job_func (callable): job function
-    """
-    job_thread = threading.Thread(target=job_func)
-    job_thread.start()
-
-
-def add_schedule(
-    my_helper: ChapterHelper,
-    tg_helper: TgHelper,
-) -> None:
-    """Add task to schedule
-
-    Args:
-        my_helper (Helper): [description]
-        tg_helper (TgHelper): [description]
-        urls (List[str], optional): [description]. Defaults to None.
-    """
-    # Initialize helper
-    # Define lambda function for init helper
-    def init_helper_func():
-        return job(my_helper, tg_helper)
-
-    # Only add to schedule if checker is set up successfully
-    if my_helper.checker:
-        run_threaded(job_func=init_helper_func)
-
-        # Add schedule thread
-        # Define lambda function for job
-        def job_func() -> None:
-            return job(my_helper, tg_helper)
-
-        schedule.every(30).to(60).minutes.do(run_threaded, job_func)
-    else:
-        logger.error(
-            "Cannot add schedule for %s %s (%s)",
-            my_helper.media_type,
-            my_helper.name,
-            my_helper.urls,
-        )
-
-
 def main() -> None:
     """Main logic"""
+    # Initialize Telegram helper
     tg_helper = TgHelper()
 
-    # Check if CONFIG_YML_URL is set
-    if "CONFIG_YML_URL" in os.environ:
-        # Get config from url
-        yml_url = os.environ["CONFIG_YML_URL"]
-        yml_parser = YmlParser(yml_url=yml_url)
-        yml_data = yml_parser.yml_data
-    elif "CONFIG_YML_FILEPATH" in os.environ:
-        # Get config from path
-        yml_filepath = os.environ["CONFIG_YML_FILEPATH"]
-        yml_parser = YmlParser(yml_filepath=yml_filepath)
-        yml_data = yml_parser.yml_data
-    else:
-        # Get config from default path
-        yml_parser = YmlParser(yml_filepath=DEFAULT_LIST_YAML_PATH)
-        yml_data = yml_parser.yml_data
+    # Get yml data
+    config_helper = ConfigHelper()
 
-    # Add schedule for each item
-    for item_obj in yml_data:
-        # Create helper object and add add to schedule
-        if "novel_urls" in item_obj:
-            novel_helper = ChapterHelper(
-                name=item_obj["name"],
-                urls=item_obj["novel_urls"],
-                media_type="novel",
-            )
-            tg_helper.helper_list.append(novel_helper)
-
-        if "comic_urls" in item_obj:
-            comic_helper = ChapterHelper(
-                name=item_obj["name"],
-                urls=item_obj["comic_urls"],
-                media_type="comic",
-            )
-            tg_helper.helper_list.append(comic_helper)
-
-    # Print how many tasks added
-    if len(tg_helper.helper_list) > 0:
-        logger.info(
-            "Scheduling %s checker(s) ....", len(tg_helper.helper_list)
-        )
-        for my_helper in tg_helper.helper_list:
-            add_schedule(my_helper, tg_helper)
-        if len(schedule.jobs) > 0:
-            logger.info(
-                "Scheduled %s checker(s) successfully.", len(schedule.jobs)
-            )
-        else:
-            logger.error("No checker scheduled.")
-            raise Exception("No checker scheduled.")
-    else:
-        raise ValueError(
-            "No schedule job found, please check format in list.yaml"
-        )
+    # Initialize schedule helper and print how many tasks added
+    yml_data = config_helper.get_yml_data()
+    schedule_helper = ScheduleHelper(yml_data=yml_data, tg_helper=tg_helper)
 
     # Telegram bot starts polling
     tg_helper.run()
     logger.info("Telegram bot started polling successfully.")
 
     # Run the scheduler
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    schedule_helper.run()
 
 
 if __name__ == "__main__":

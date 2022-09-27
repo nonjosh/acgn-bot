@@ -7,6 +7,7 @@ from telegram.ext import Updater, CommandHandler
 from telegram.ext.callbackcontext import CallbackContext
 from dotenv import load_dotenv
 from helpers.utils import get_logger
+from helpers.message import MessageHelper
 
 load_dotenv()
 TOKEN = os.environ.get("TOKEN")
@@ -29,8 +30,6 @@ class TgHelper:
         self.chat_id = chat_id
         self.bot = telegram.Bot(token=self.token)
 
-        self.helper_list = []
-
         # Create the Updater and pass it your bot's token.
         # Make sure to set use_context=True to use the new context based callbacks
         # Post version 12 this will no longer be necessary
@@ -47,7 +46,7 @@ class TgHelper:
             CommandHandler("list_latest", self.list_latest)
         )
         self.dispatcher.add_handler(
-            CommandHandler("list_latest_check", self.list_latest_check)
+            CommandHandler("list_last_check", self.list_last_check)
         )
 
         # log all errors
@@ -108,49 +107,17 @@ class TgHelper:
     def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
 
-        html_response = (
-            f"<b>Current Config (total {len(self.helper_list)})</b>\n"
-        )
-        for helper in self.helper_list:
-            html_response += (
-                f"{helper.media_type} {helper.name}: " + helper.get_urls_text()
-            )
+        html_response = MessageHelper().get_config_list_html_message()
         update.message.reply_html(html_response, disable_web_page_preview=True)
 
     def list_latest(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_latest is issued."""
-        html_response = (
-            f"<b>Latest Chapters (total {len(self.helper_list)})</b>\n"
-        )
-        for helper in self.helper_list:
-            if helper.checker:
-                latest_chapter = helper.checker.get_latest_chapter()
-                if latest_chapter is not None:
-                    html_response += (
-                        f"{helper.media_type} <a"
-                        f" href='{helper.check_url}'>{helper.name}</a>: <a"
-                        f" href='{latest_chapter.url}'>{latest_chapter.title}</a>"
-                        f" (total: {len(helper.checker.chapter_list)}ch)\n"
-                    )
-                else:
-                    html_response += (
-                        f"<a href='{helper.check_url}'>{helper.name}</a>"
-                        f" [{helper.media_type}]: None\n"
-                    )
+        html_response = MessageHelper().get_latest_chapter_list_html_message()
         update.message.reply_html(html_response, disable_web_page_preview=True)
 
-    def list_latest_check(self, update: Update, _: CallbackContext) -> None:
-        """List latest check time of each helper when the command /list_latest_check is issued."""
-        html_response = (
-            f"<b>Latest Check (total {len(self.helper_list)})</b>\n"
-        )
-        for helper in self.helper_list:
-            if helper.checker:
-                html_response += (
-                    f"{helper.media_type} <a"
-                    f" href='{helper.check_url}'>{helper.name}</a>: "
-                    f"{helper.checker.last_check_time}\n"
-                )
+    def list_last_check(self, update: Update, _: CallbackContext) -> None:
+        """List latest check time of each helper when the command /list_last_check is issued."""
+        html_response = MessageHelper().get_last_check_time_list_html_message()
         update.message.reply_html(html_response, disable_web_page_preview=True)
 
     def error(self, update: Update, context: CallbackContext) -> None:
