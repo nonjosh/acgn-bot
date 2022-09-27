@@ -116,7 +116,7 @@ class TgHelper:
         update.message.reply_html(html_response, disable_web_page_preview=True)
 
     def list_last_check(self, update: Update, _: CallbackContext) -> None:
-        """List latest check time of each helper when the command /list_last_check is issued."""
+        """List last check time of each helper when the command /list_last_check is issued."""
         html_response = MessageHelper().get_last_check_time_list_html_message()
         update.message.reply_html(html_response, disable_web_page_preview=True)
 
