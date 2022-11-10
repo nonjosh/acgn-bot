@@ -92,14 +92,13 @@ class MessageHelper:
             str: html message
         """
         html_response = (
-            "<b>Latest Check (total"
+            "<b>Late Check Time (total"
             f" {len(MediaListState.media_helper_list)})</b>\n"
         )
         for helper in MediaListState.media_helper_list:
             if helper.checker:
                 html_response += (
-                    f"{helper.media_type} <a"
-                    f" href='{helper.check_url}'>{helper.name}</a>: "
-                    f"{helper.checker.last_check_time}\n"
+                    f"{helper.checker.last_check_time}| {helper.media_type} "
+                    f"<a href='{helper.check_url}'>{helper.name}</a>\n"
                 )
         return html_response

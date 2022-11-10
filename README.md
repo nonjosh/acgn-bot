@@ -54,10 +54,11 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 
 ### Supported Telegram Commands
 
-| Command       | Description                    |
-|---------------|--------------------------------|
-| /list_config  | List all valid config websites |
-| /list_latest  | List latest chapters           |
+| Command           | Description                    |
+|-------------------|--------------------------------|
+| /list_config      | List all valid config websites |
+| /list_latest      | List latest chapters           |
+| /list_last_check  | List last check time           |
 
 ### Environment Variables
 

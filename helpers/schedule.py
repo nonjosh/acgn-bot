@@ -7,6 +7,7 @@ from helpers.tg import TgHelper
 from helpers.media import MediaHelper
 from helpers.message import MessageHelper
 from helpers.media_list_state import MediaListState
+from helpers.checkers import ManhuaguiChecker
 
 logger = get_logger(__name__)
 
@@ -152,7 +153,10 @@ class ScheduleHelper:
 
         # Only add to schedule if checker is set up successfully
         if media_helper.checker:
-            run_threaded(job_func=init_helper_func)
+            # Run for the first time if not Manhuagui
+            # because Manhuagui will block ip addresses with high frequency attampts
+            if not isinstance(media_helper.checker, ManhuaguiChecker):
+                run_threaded(job_func=init_helper_func)
 
             # Add schedule thread
             # Define lambda function for job
