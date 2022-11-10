@@ -394,7 +394,7 @@ class BaozimhChecker(AbstractChapterChecker):
 
         a_list = [
             a.findAll("a", {"class": "comics-chapters__item"})
-            for a in soup.findAll("div", {"class": "pure-g"})[1]
+            for a in soup.select("div[class='pure-g']")
         ]
         chapter_list = []
         for chapter_tag in a_list:
