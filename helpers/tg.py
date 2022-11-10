@@ -49,9 +49,6 @@ class TgHelper:
             CommandHandler("list_last_check", self.list_last_check)
         )
 
-        # log all errors
-        self.dispatcher.add_error_handler(self.error)
-
     def run(self) -> None:
         """Start the bot."""
         # Start the Bot
@@ -119,14 +116,3 @@ class TgHelper:
         """List last check time of each helper when the command /list_last_check is issued."""
         html_response = MessageHelper().get_last_check_time_list_html_message()
         update.message.reply_html(html_response, disable_web_page_preview=True)
-
-    def error(self, update: Update, context: CallbackContext) -> None:
-        """Log Errors caused by Updates."""
-        # Skip for telegram server throttling
-        if isinstance(
-            context.error.__context__,
-            telegram.vendor.ptb_urllib3.urllib3.exceptions.MaxRetryError,
-        ):
-            return
-
-        logger.warning('Update "%s" caused error "%s"', update, context.error)
