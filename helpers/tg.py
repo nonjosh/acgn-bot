@@ -122,4 +122,11 @@ class TgHelper:
 
     def error(self, update: Update, context: CallbackContext) -> None:
         """Log Errors caused by Updates."""
+        # Skip for telegram server throttling
+        if isinstance(
+            context.error.__context__,
+            telegram.vendor.ptb_urllib3.urllib3.exceptions.MaxRetryError,
+        ):
+            return
+
         logger.warning('Update "%s" caused error "%s"', update, context.error)
