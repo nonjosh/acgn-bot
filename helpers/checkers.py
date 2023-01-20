@@ -374,7 +374,8 @@ class QimanChecker(AbstractChapterChecker):
                     Chapter(title=chapter_obj["name"], url=chapter_url)
                 )
             return chapter_list[::-1]
-
+        except AttributeError:
+            return []
         except json.decoder.JSONDecodeError:
             return []
 
