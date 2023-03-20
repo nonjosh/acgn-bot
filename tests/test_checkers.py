@@ -52,12 +52,19 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.99wx.cc/wanxiangzhiwang/",
         )
 
+    def test_69shu_checker(self) -> None:
+        """69shu"""
+        self.universal_checking(
+            test_checker=checkers.SixNineShuChecker,
+            check_url="https://www.69shu.com/txt/40423.htm",
+        )
+
     # Comic Checkers
     def test_manhuagui_checker(self) -> None:
         """Manhuagui"""
         self.universal_checking(
-            test_checker=checkers.ManhuaguiChecker,
-            check_url="https://m.manhuagui.com/comic/30903/",
+            test_checker=checkers.SixNineShuChecker,
+            check_url="https://www.69shu.com/txt/40423.htm",
         )
 
     def test_qiman_checker(self) -> None:
