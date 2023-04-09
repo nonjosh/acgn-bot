@@ -110,6 +110,6 @@ class TestCheckers(unittest.TestCase):
         self.universal_checking(
             test_checker=checkers.ComickChecker,
             check_url=(
-                "https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw"
+                "https://comick.top/mushoku-tensei-jobless-reincarnation"
             ),
         )
