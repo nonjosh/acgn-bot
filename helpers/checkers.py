@@ -530,12 +530,13 @@ class ComickChecker(AbstractChapterChecker):
         a_list = list(soup.find("div", id="list-chapter").findAll("a"))
         chapter_list = []
         for chapter_tag in a_list:
-            chapter_title = chapter_tag["title"]
-            chapter_path = chapter_tag["href"]
-            chapter_url = urlunparse(
-                urlparse(self.check_url)._replace(path=chapter_path)
-            )
-            chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
+            if chapter_tag.get("title"):
+                chapter_title = chapter_tag["title"]
+                chapter_path = chapter_tag["href"]
+                chapter_url = urlunparse(
+                    urlparse(self.check_url)._replace(path=chapter_path)
+                )
+                chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
         # Reverse the list to get the latest chapter first
         return chapter_list[::-1]
