@@ -81,6 +81,13 @@ class AbstractChapterChecker(ABC):
                     request_sucess = True
                 else:
                     time.sleep(self.retry_interval)
+
+                # Check if response headers contains set-cookie PHPSESSID
+                # If yes, set the cookie to the request header for the next request
+                if "set-cookie" in response.headers:
+                    self.headers["Cookie"] = response.headers["set-cookie"]
+                    request_sucess = False
+                    print("Set cookie to request header")
             except requests.exceptions.ConnectionError:
                 return None
             except requests.exceptions.RequestException:
