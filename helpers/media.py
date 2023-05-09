@@ -11,7 +11,7 @@ CHECKER_DICT = {
     "69shu": checkers.SixNineShuChecker,
     "99wx": checkers.WxChecker,
     "manhuagui": checkers.ManhuaguiChecker,
-    "qiman57": checkers.QimanChecker,
+    "qiman59": checkers.QimanChecker,
     "baozimh": checkers.BaozimhChecker,
     "xbiquge": checkers.XbiqugeChecker,
     "dashuhuwai": checkers.DashuhuwaiChecker,
@@ -75,7 +75,7 @@ class MediaHelper:
 
     def get_urls_text(self) -> str:
         """Construct urls text from urls
-            e.g. qiman57 | cocomanga
+            e.g. qiman59 | cocomanga
 
         Returns:
             str: urls text

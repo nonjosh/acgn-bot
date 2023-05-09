@@ -24,7 +24,7 @@ class MessageHelper:
             f"{media_helper.media_type} {media_helper.name} updated!\n"
         )
 
-        # qiman57 | cocomanga
+        # qiman59 | cocomanga
         content_html_text += media_helper.get_urls_text()
 
         # Updated 3 chapter(s): 第六百二十六章 挑戰鐘太丘, 第六百二十七章 虛珠, 第六百二十八章 巔峰對決
