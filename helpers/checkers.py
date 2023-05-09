@@ -84,7 +84,13 @@ class AbstractChapterChecker(ABC):
 
                 # Check if response headers contains set-cookie PHPSESSID
                 # If yes, set the cookie to the request header for the next request
-                if "set-cookie" in response.headers:
+                #
+                # now syosetu and mn4u both have `set-cookie` in response headers,
+                # but only mn4u have the string `PHPSESSID=` on first visit
+                if (
+                    "set-cookie" in response.headers
+                    and "PHPSESSID=" in response.headers["set-cookie"]
+                ):
                     self.headers["Cookie"] = response.headers["set-cookie"]
                     request_sucess = False
                     print("Set cookie to request header")
@@ -543,7 +549,9 @@ class ComickChecker(AbstractChapterChecker):
                 chapter_url = urlunparse(
                     urlparse(self.check_url)._replace(path=chapter_path)
                 )
-                chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
+                chapter_list.append(
+                    Chapter(title=chapter_title, url=chapter_url)
+                )
 
         # Reverse the list to get the latest chapter first
         return chapter_list[::-1]
