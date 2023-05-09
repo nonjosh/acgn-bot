@@ -37,7 +37,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 | syosetu   | <https://ncode.syosetu.com/n6621fl>                            | novel      |
 | 99wx      | <https://www.99wx.cc/wanxiangzhiwang>                          | novel/comic|
 | manhuagui | <https://m.manhuagui.com/comic/30903/>                         | comic      |
-| qiman     | <http://qiman57.com/19827/>                                    | comic      |
+| qiman     | <http://qiman59.com/19827/>                                    | comic      |
 | baozimh   | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e> | comic      |
 | xbiquge   | <https://www.xbiquge.so/book/53099/>                           | comic      |
 | dashuhuwai| <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |

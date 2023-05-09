@@ -52,19 +52,26 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.99wx.cc/wanxiangzhiwang/",
         )
 
+    def test_69shu_checker(self) -> None:
+        """69shu"""
+        self.universal_checking(
+            test_checker=checkers.SixNineShuChecker,
+            check_url="https://www.69shu.com/txt/40423.htm",
+        )
+
     # Comic Checkers
     def test_manhuagui_checker(self) -> None:
         """Manhuagui"""
         self.universal_checking(
-            test_checker=checkers.ManhuaguiChecker,
-            check_url="https://m.manhuagui.com/comic/30903/",
+            test_checker=checkers.SixNineShuChecker,
+            check_url="https://www.69shu.com/txt/40423.htm",
         )
 
     def test_qiman_checker(self) -> None:
         """Qiman6"""
         self.universal_checking(
             test_checker=checkers.QimanChecker,
-            check_url="http://qiman57.com/19827/",
+            check_url="http://qiman59.com/19827/",
         )
 
     def test_baozimh_checker(self) -> None:
@@ -103,6 +110,6 @@ class TestCheckers(unittest.TestCase):
         self.universal_checking(
             test_checker=checkers.ComickChecker,
             check_url=(
-                "https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw"
+                "https://comick.top/mushoku-tensei-jobless-reincarnation"
             ),
         )

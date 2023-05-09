@@ -11,8 +11,8 @@ class TestMediaHelper(unittest.TestCase):
         """Test if can get chapter list change in ChapterHelper"""
         # Initialize helper
         my_helper = MediaHelper(
-            name="test",
-            urls=["http://qiman57.com/24583/"],
+            name="大樹漫",
+            urls=["https://www.dashuhuwai.com/comic/fangkainagenvwu/"],
             media_type="comic",
         )
 
