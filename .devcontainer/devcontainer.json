@@ -65,8 +65,8 @@
 		"docker-in-docker": "20.10"
 	},
 
-	"runArgs": [
-		"--name=${localWorkspaceFolderBasename}_devcontainer",
-		"--rm"
-	]
+	// "runArgs": [
+	// 	"--name=${localWorkspaceFolderBasename}_devcontainer",
+	// 	"--rm"
+	// ]
 }
