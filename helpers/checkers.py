@@ -81,6 +81,19 @@ class AbstractChapterChecker(ABC):
                     request_sucess = True
                 else:
                     time.sleep(self.retry_interval)
+
+                # Check if response headers contains set-cookie PHPSESSID
+                # If yes, set the cookie to the request header for the next request
+                #
+                # now syosetu and mn4u both have `set-cookie` in response headers,
+                # but only mn4u have the string `PHPSESSID=` on first visit
+                if (
+                    "set-cookie" in response.headers
+                    and "PHPSESSID=" in response.headers["set-cookie"]
+                ):
+                    self.headers["Cookie"] = response.headers["set-cookie"]
+                    request_sucess = False
+                    print("Set cookie to request header")
             except requests.exceptions.ConnectionError:
                 return None
             except requests.exceptions.RequestException:
@@ -287,6 +300,29 @@ class SyosetuChecker(AbstractChapterChecker):
         return chapter_list
 
 
+class SixNineShuChecker(AbstractChapterChecker):
+    """69shu checker class"""
+
+    def get_latest_chapter_list(self) -> List[Chapter]:
+        """Get latest chapter list
+
+        Returns:
+            List[Chapter]: latest chapter list
+        """
+        soup = self.get_latest_soup()
+        if not soup:
+            return []
+
+        dl_list = list(soup.find("div", {"class": "qustime"}).findAll("a"))
+        chapter_list = []
+        for chapter_tag in dl_list:
+            chapter_title = chapter_tag.find("span").text
+            chapter_url = chapter_tag["href"]
+            chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
+
+        return chapter_list
+
+
 class ManhuaguiChecker(AbstractChapterChecker):
     """Manhuagui chapter list"""
 
@@ -374,7 +410,8 @@ class QimanChecker(AbstractChapterChecker):
                     Chapter(title=chapter_obj["name"], url=chapter_url)
                 )
             return chapter_list[::-1]
-
+        except AttributeError:
+            return []
         except json.decoder.JSONDecodeError:
             return []
 
@@ -506,12 +543,15 @@ class ComickChecker(AbstractChapterChecker):
         a_list = list(soup.find("div", id="list-chapter").findAll("a"))
         chapter_list = []
         for chapter_tag in a_list:
-            chapter_title = chapter_tag["title"]
-            chapter_path = chapter_tag["href"]
-            chapter_url = urlunparse(
-                urlparse(self.check_url)._replace(path=chapter_path)
-            )
-            chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
+            if chapter_tag.get("title"):
+                chapter_title = chapter_tag["title"]
+                chapter_path = chapter_tag["href"]
+                chapter_url = urlunparse(
+                    urlparse(self.check_url)._replace(path=chapter_path)
+                )
+                chapter_list.append(
+                    Chapter(title=chapter_title, url=chapter_url)
+                )
 
         # Reverse the list to get the latest chapter first
         return chapter_list[::-1]
