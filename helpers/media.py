@@ -17,6 +17,7 @@ CHECKER_DICT = {
     "dashuhuwai": checkers.DashuhuwaiChecker,
     "mn4u": checkers.Mn4uChecker,
     "comick": checkers.ComickChecker,
+    "ptwxz": checkers.PtwxzChecker
 }
 
 MediaTypes = Literal["novel", "comic"]
