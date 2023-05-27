@@ -35,6 +35,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 |-----------|----------------------------------------------------------------|------------|
 | wutuxs    | <http://www.wutuxs.com/html/9/9715/>                           | novel      |
 | syosetu   | <https://ncode.syosetu.com/n6621fl>                            | novel      |
+| ptwxz     | <https://www.ptwxz.com/html/14/14565/>                         | novel      |
 | 99wx      | <https://www.99wx.cc/wanxiangzhiwang>                          | novel/comic|
 | manhuagui | <https://m.manhuagui.com/comic/30903/>                         | comic      |
 | qiman     | <http://qiman59.com/19827/>                                    | comic      |
