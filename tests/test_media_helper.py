@@ -2,6 +2,7 @@
 import unittest
 from helpers.chapter import Chapter
 from helpers.media import MediaHelper
+from helpers.utils import check_url_valid
 
 
 class TestMediaHelper(unittest.TestCase):
@@ -9,10 +10,15 @@ class TestMediaHelper(unittest.TestCase):
 
     def test_chapter_list_change(self) -> None:
         """Test if can get chapter list change in ChapterHelper"""
+        url = "https://www.dashuhuwai.com/comic/fangkainagenvwu/"
+
+        if not check_url_valid(url=url):
+            self.skipTest(f"{url} is not healthy")
+
         # Initialize helper
         my_helper = MediaHelper(
             name="大樹漫",
-            urls=["https://www.dashuhuwai.com/comic/fangkainagenvwu/"],
+            urls=[url],
             media_type="comic",
         )
 
