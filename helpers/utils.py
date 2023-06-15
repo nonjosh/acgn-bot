@@ -119,6 +119,9 @@ def check_url_valid(url: str, verbose: bool = False) -> bool:
         )
         if response.status_code != 200:
             return False
+        # Handle redirect
+        if response.url != url:
+            return False
     except requests.exceptions.HTTPError as errh:
         if verbose:
             print("Http Error:", errh)
