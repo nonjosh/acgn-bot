@@ -274,8 +274,8 @@ class SyosetuChecker(AbstractChapterChecker):
         return chapter_list
 
 
-class PtwxzChecker(AbstractChapterChecker):
-    """Ptwxz checker class"""
+class PiaotianChecker(AbstractChapterChecker):
+    """Piaotian novel checker class"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list
@@ -297,9 +297,6 @@ class PtwxzChecker(AbstractChapterChecker):
 
         return chapter_list
 
-class PiaotianChecker(PtwxzChecker):
-    """Piaotian checker class, which is same as PtwxzChecker"""
-    pass # pylint: disable=unnecessary-pass
 
 class SixNineShuChecker(AbstractChapterChecker):
     """69shu checker class"""

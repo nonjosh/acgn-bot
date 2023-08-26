@@ -38,13 +38,6 @@ class TestCheckers(unittest.TestCase):
             check_url="https://ncode.syosetu.com/n6621fl",
         )
 
-    def test_ptwxz_checker(self) -> None:
-        """Ptwxz"""
-        self.universal_checking(
-            test_checker=checkers.PtwxzChecker,
-            check_url="https://www.ptwxz.com/html/14/14565/",
-        )
-
     def test_piaotian_checker(self) -> None:
         """Piaotian"""
         self.universal_checking(
