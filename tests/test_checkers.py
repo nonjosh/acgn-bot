@@ -38,13 +38,6 @@ class TestCheckers(unittest.TestCase):
             check_url="https://ncode.syosetu.com/n6621fl",
         )
 
-    def test_wutuxs_checker(self) -> None:
-        """Wutuxs"""
-        self.universal_checking(
-            test_checker=checkers.WutuxsChecker,
-            check_url="http://www.wutuxs.com/html/9/9715/",
-        )
-
     def test_ptwxz_checker(self) -> None:
         """Ptwxz"""
         self.universal_checking(
