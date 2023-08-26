@@ -169,9 +169,7 @@ class AbstractChapterChecker(ABC):
         Returns:
             BeautifulSoup: latest soup
         """
-        response = self.get_latest_response(
-            apparent_encoding=apparent_encoding
-        )
+        response = self.get_latest_response(apparent_encoding=apparent_encoding)
         if response is None:
             return None
         return BeautifulSoup(response.text, "html.parser")
@@ -349,9 +347,7 @@ class ManhuaguiChecker(AbstractChapterChecker):
                     chapter_url = urlunparse(
                         urlparse(self.check_url)._replace(path=chapter_path)
                     )
-                    chapter_list.append(
-                        Chapter(title=chapter_title, url=chapter_url)
-                    )
+                    chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
             except KeyError:
                 pass
 
@@ -404,9 +400,7 @@ class QimanChecker(AbstractChapterChecker):
                 chapter_url = urlunparse(
                     url_parse._replace(path=f"/{comic_id}/{chapter_id}.html")
                 )
-                chapter_list.append(
-                    Chapter(title=chapter_obj["name"], url=chapter_url)
-                )
+                chapter_list.append(Chapter(title=chapter_obj["name"], url=chapter_url))
             return chapter_list[::-1]
         except AttributeError:
             return []
@@ -443,9 +437,7 @@ class BaozimhChecker(AbstractChapterChecker):
                     chapter_url = urlunparse(
                         urlparse(self.check_url)._replace(path=chapter_path)
                     )
-                    chapter_list.append(
-                        Chapter(title=chapter_title, url=chapter_url)
-                    )
+                    chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
                 return chapter_list[::-1]
         return []
@@ -491,9 +483,7 @@ class DashuhuwaiChecker(AbstractChapterChecker):
         soup = self.get_latest_soup()
         if soup is None:
             return []
-        a_list = [
-            li.find("a") for li in soup.find(id="ul_chapter1").find_all("li")
-        ]
+        a_list = [li.find("a") for li in soup.find(id="ul_chapter1").find_all("li")]
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text
@@ -521,9 +511,7 @@ class Mn4uChecker(AbstractChapterChecker):
         a_list = list(soup.find("ul", {"class": "list-chapters"}).findAll("a"))
         chapter_list = []
         for chapter_tag in a_list:
-            chapter_title = chapter_tag.find(
-                "div", {"class": "chapter-name"}
-            ).text
+            chapter_title = chapter_tag.find("div", {"class": "chapter-name"}).text
             chapter_path = chapter_tag["href"]
             chapter_url = urlunparse(
                 urlparse(self.check_url)._replace(path=chapter_path)
@@ -555,9 +543,7 @@ class KlmanagaChecker(AbstractChapterChecker):
                 chapter_url = urlunparse(
                     urlparse(self.check_url)._replace(path=chapter_path)
                 )
-                chapter_list.append(
-                    Chapter(title=chapter_title, url=chapter_url)
-                )
+                chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
         # Reverse the list to get the latest chapter first
         return chapter_list[::-1]

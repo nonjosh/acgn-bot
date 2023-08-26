@@ -78,9 +78,7 @@ class TestCheckers(unittest.TestCase):
         """Baozimh"""
         self.universal_checking(
             test_checker=checkers.BaozimhChecker,
-            check_url=(
-                "https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e"
-            ),
+            check_url="https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e",
         )
 
     def test_xbiquge_checker(self) -> None:
@@ -109,7 +107,5 @@ class TestCheckers(unittest.TestCase):
         """Klmanga"""
         self.universal_checking(
             test_checker=checkers.KlmanagaChecker,
-            check_url=(
-                "https://klmanga.top/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw"
-            ),
+            check_url="https://klmanga.top/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw",
         )
