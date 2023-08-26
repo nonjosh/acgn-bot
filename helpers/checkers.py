@@ -35,6 +35,7 @@ class AbstractChapterChecker(ABC):
         check_url: str,
     ) -> None:
         self.check_url = check_url
+        self.params = {}
         self.request_timeout = DEFAULT_REQUEST_TIMEOUT
         self.headers = DEFAULT_HEADERS
         self.retry_interval = 5
@@ -71,6 +72,7 @@ class AbstractChapterChecker(ABC):
                 # Send with GET method
                 response = requests.get(
                     url=url,
+                    params=self.params,
                     headers=self.headers,
                     timeout=self.request_timeout,
                 )
@@ -498,6 +500,13 @@ class DashuhuwaiChecker(AbstractChapterChecker):
 
 class Mn4uChecker(AbstractChapterChecker):
     """Mn4u checker"""
+
+    def __init__(self, check_url: str) -> None:
+        super().__init__(check_url)
+        self.headers["referer"] = self.check_url
+        mid = urlparse(self.check_url).path.strip("/").split("-")[1]
+        self.params = {"mid": mid}
+        self.check_url = "https://mn4u.net/app/manga/controllers/cont.listChapter.php"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from mn4u
