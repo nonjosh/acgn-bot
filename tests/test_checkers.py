@@ -52,6 +52,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.ptwxz.com/html/14/14565/",
         )
 
+    def test_piaotian_checker(self) -> None:
+        """Piaotian"""
+        self.universal_checking(
+            test_checker=checkers.PiaotianChecker,
+            check_url="https://www.piaotian.com/html/14/14565/",
+        )
+
     def test_wx_checker(self) -> None:
         """99wx"""
         self.universal_checking(
