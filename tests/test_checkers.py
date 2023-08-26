@@ -52,11 +52,11 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.99wx.cc/wanxiangzhiwang/",
         )
 
-    def test_69shu_checker(self) -> None:
+    def test_69shuba_checker(self) -> None:
         """69shu"""
         self.universal_checking(
-            test_checker=checkers.SixNineShuChecker,
-            check_url="https://www.69shu.com/txt/40423.htm",
+            test_checker=checkers.SixNineShuBaChecker,
+            check_url="https://www.69shuba.com/book/43616.htm",
         )
 
     # Comic Checkers

@@ -7,7 +7,7 @@ from helpers.utils import get_main_domain_name, check_url_valid
 
 CHECKER_DICT = {
     "syosetu": checkers.SyosetuChecker,
-    "69shu": checkers.SixNineShuChecker,
+    "69shuba": checkers.SixNineShuBaChecker,
     "99wx": checkers.WxChecker,
     "manhuagui": checkers.ManhuaguiChecker,
     "qiman59": checkers.QimanChecker,

@@ -298,7 +298,7 @@ class PiaotianChecker(AbstractChapterChecker):
         return chapter_list
 
 
-class SixNineShuChecker(AbstractChapterChecker):
+class SixNineShuBaChecker(AbstractChapterChecker):
     """69shu checker class"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
