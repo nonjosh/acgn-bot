@@ -105,11 +105,11 @@ class TestCheckers(unittest.TestCase):
             check_url="https://mn4u.net/zgm-2149/",
         )
 
-    def test_comick_checker(self) -> None:
-        """Comick"""
+    def test_klmanga_checker(self) -> None:
+        """Klmanga"""
         self.universal_checking(
-            test_checker=checkers.ComickChecker,
+            test_checker=checkers.KlmanagaChecker,
             check_url=(
-                "https://comick.top/mushoku-tensei-jobless-reincarnation"
+                "https://klmanga.top/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw"
             ),
         )

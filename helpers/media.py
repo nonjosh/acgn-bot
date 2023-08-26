@@ -15,7 +15,7 @@ CHECKER_DICT = {
     "xbiquge": checkers.XbiqugeChecker,
     "dashuhuwai": checkers.DashuhuwaiChecker,
     "mn4u": checkers.Mn4uChecker,
-    "comick": checkers.ComickChecker,
+    "klmanga": checkers.KlmanagaChecker,
     "piaotian": checkers.PiaotianChecker,
 }
 

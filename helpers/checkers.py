@@ -534,11 +534,11 @@ class Mn4uChecker(AbstractChapterChecker):
         return chapter_list[::-1]
 
 
-class ComickChecker(AbstractChapterChecker):
-    """Comick checker"""
+class KlmanagaChecker(AbstractChapterChecker):
+    """Klmanaga checker"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
-        """Get latest chapter list from comick
+        """Get latest chapter list from klmanga
 
         Returns:
             List[Chapter]: latest chapter list
