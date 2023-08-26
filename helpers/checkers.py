@@ -323,6 +323,9 @@ class PtwxzChecker(AbstractChapterChecker):
 
         return chapter_list
 
+class PiaotianChecker(PtwxzChecker):
+    """Piaotian checker class, which is same as PtwxzChecker"""
+    pass # pylint: disable=unnecessary-pass
 
 class SixNineShuChecker(AbstractChapterChecker):
     """69shu checker class"""
