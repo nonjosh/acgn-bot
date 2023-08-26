@@ -63,8 +63,8 @@ class TestCheckers(unittest.TestCase):
     def test_manhuagui_checker(self) -> None:
         """Manhuagui"""
         self.universal_checking(
-            test_checker=checkers.SixNineShuChecker,
-            check_url="https://www.69shu.com/txt/40423.htm",
+            test_checker=checkers.ManhuaguiChecker,
+            check_url="https://m.manhuagui.com/comic/17165/",
         )
 
     def test_qiman_checker(self) -> None:
