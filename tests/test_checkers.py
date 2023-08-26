@@ -68,10 +68,10 @@ class TestCheckers(unittest.TestCase):
         )
 
     def test_qiman_checker(self) -> None:
-        """Qiman6"""
+        """Qiman"""
         self.universal_checking(
             test_checker=checkers.QimanChecker,
-            check_url="http://qiman59.com/19827/",
+            check_url="http://qiman51.com/19827/",
         )
 
     def test_baozimh_checker(self) -> None:
