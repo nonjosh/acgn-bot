@@ -45,6 +45,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.piaotian.com/html/14/14565/",
         )
 
+    # FIXME: Need JS cookies but postman can access?
     def test_wx_checker(self) -> None:
         """99wx"""
         self.universal_checking(
@@ -89,6 +90,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.xbiquge.so/book/53099/",
         )
 
+    # FIXME: Need JS cookies but postman can access?
     def test_dashuhuwai_checker(self) -> None:
         """Dashuhuwai"""
         self.universal_checking(
