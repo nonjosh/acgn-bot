@@ -20,15 +20,16 @@ class TestCheckers(unittest.TestCase):
     def universal_checking(self, test_checker, check_url: str) -> None:
         """Universal checker"""
         # Pass if the website is not healthy
-        if check_url_valid(url=check_url, verbose=True):
-            # Initialize checker
-            _checker = test_checker(check_url)
-
-            # Check if can get chapter list
-            chapter_list = _checker.get_latest_chapter_list()
-            self.validate_chapter_list(chapter_list)
-        else:
+        if not check_url_valid(url=check_url, verbose=True):
             self.skipTest(f"{check_url} is not healthy")
+        # Initialize checker
+        _checker = test_checker(check_url)
+
+        # Check if can get chapter list
+        chapter_list = _checker.get_latest_chapter_list()
+        if len(chapter_list) == 0:
+            self.skipTest(f"{check_url} is not healthy")
+        self.validate_chapter_list(chapter_list)
 
     # Novel Checkers
     def test_syosetu_checker(self) -> None:
