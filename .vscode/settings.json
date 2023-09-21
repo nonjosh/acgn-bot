@@ -7,7 +7,6 @@
   },
   "python.testing.unittestArgs": [
     "-v",
-    "--start-directory=./tests",
     "--pattern=test*.py"
   ],
   "python.testing.pytestEnabled": false,
