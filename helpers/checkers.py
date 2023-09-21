@@ -35,6 +35,7 @@ class AbstractChapterChecker(ABC):
         check_url: str,
     ) -> None:
         self.check_url = check_url
+        self.params = {}
         self.request_timeout = DEFAULT_REQUEST_TIMEOUT
         self.headers = DEFAULT_HEADERS
         self.retry_interval = 5
@@ -71,6 +72,7 @@ class AbstractChapterChecker(ABC):
                 # Send with GET method
                 response = requests.get(
                     url=url,
+                    params=self.params,
                     headers=self.headers,
                     timeout=self.request_timeout,
                 )
@@ -169,9 +171,7 @@ class AbstractChapterChecker(ABC):
         Returns:
             BeautifulSoup: latest soup
         """
-        response = self.get_latest_response(
-            apparent_encoding=apparent_encoding
-        )
+        response = self.get_latest_response(apparent_encoding=apparent_encoding)
         if response is None:
             return None
         return BeautifulSoup(response.text, "html.parser")
@@ -217,32 +217,6 @@ class AbstractChapterChecker(ABC):
         if len(self.chapter_list) > 0:
             return self.chapter_list[-1]
         return None
-
-
-class WutuxsChecker(AbstractChapterChecker):
-    """Wutuxs checker class"""
-
-    def get_latest_chapter_list(self) -> List[Chapter]:
-        """Get latest chapter list
-
-        Returns:
-            List[Chapter]: latest chapter list
-        """
-        soup = self.get_latest_soup()
-        if not soup:
-            return []
-
-        a_list = list(soup.find("table", id="at").findAll("a"))
-        chapter_list = []
-        for chapter_tag in a_list:
-            chapter_title = chapter_tag.text
-            chapter_path = chapter_tag["href"]
-            chapter_url = urlunparse(
-                urlparse(self.check_url)._replace(path=chapter_path)
-            )
-            chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
-
-        return chapter_list
 
 
 class WxChecker(AbstractChapterChecker):
@@ -300,8 +274,8 @@ class SyosetuChecker(AbstractChapterChecker):
         return chapter_list
 
 
-class PtwxzChecker(AbstractChapterChecker):
-    """Ptwxz checker class"""
+class PiaotianChecker(AbstractChapterChecker):
+    """Piaotian novel checker class"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list
@@ -323,11 +297,8 @@ class PtwxzChecker(AbstractChapterChecker):
 
         return chapter_list
 
-class PiaotianChecker(PtwxzChecker):
-    """Piaotian checker class, which is same as PtwxzChecker"""
-    pass # pylint: disable=unnecessary-pass
 
-class SixNineShuChecker(AbstractChapterChecker):
+class SixNineShuBaChecker(AbstractChapterChecker):
     """69shu checker class"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
@@ -378,9 +349,7 @@ class ManhuaguiChecker(AbstractChapterChecker):
                     chapter_url = urlunparse(
                         urlparse(self.check_url)._replace(path=chapter_path)
                     )
-                    chapter_list.append(
-                        Chapter(title=chapter_title, url=chapter_url)
-                    )
+                    chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
             except KeyError:
                 pass
 
@@ -433,9 +402,7 @@ class QimanChecker(AbstractChapterChecker):
                 chapter_url = urlunparse(
                     url_parse._replace(path=f"/{comic_id}/{chapter_id}.html")
                 )
-                chapter_list.append(
-                    Chapter(title=chapter_obj["name"], url=chapter_url)
-                )
+                chapter_list.append(Chapter(title=chapter_obj["name"], url=chapter_url))
             return chapter_list[::-1]
         except AttributeError:
             return []
@@ -472,9 +439,7 @@ class BaozimhChecker(AbstractChapterChecker):
                     chapter_url = urlunparse(
                         urlparse(self.check_url)._replace(path=chapter_path)
                     )
-                    chapter_list.append(
-                        Chapter(title=chapter_title, url=chapter_url)
-                    )
+                    chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
                 return chapter_list[::-1]
         return []
@@ -520,9 +485,7 @@ class DashuhuwaiChecker(AbstractChapterChecker):
         soup = self.get_latest_soup()
         if soup is None:
             return []
-        a_list = [
-            li.find("a") for li in soup.find(id="ul_chapter1").find_all("li")
-        ]
+        a_list = [li.find("a") for li in soup.find(id="ul_chapter1").find_all("li")]
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text
@@ -538,6 +501,13 @@ class DashuhuwaiChecker(AbstractChapterChecker):
 class Mn4uChecker(AbstractChapterChecker):
     """Mn4u checker"""
 
+    def __init__(self, check_url: str) -> None:
+        super().__init__(check_url)
+        self.headers["referer"] = self.check_url
+        mid = urlparse(self.check_url).path.strip("/").split("-")[1]
+        self.params = {"mid": mid}
+        self.check_url = "https://mn4u.net/app/manga/controllers/cont.listChapter.php"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from mn4u
 
@@ -550,9 +520,7 @@ class Mn4uChecker(AbstractChapterChecker):
         a_list = list(soup.find("ul", {"class": "list-chapters"}).findAll("a"))
         chapter_list = []
         for chapter_tag in a_list:
-            chapter_title = chapter_tag.find(
-                "div", {"class": "chapter-name"}
-            ).text
+            chapter_title = chapter_tag.find("div", {"class": "chapter-name"}).text
             chapter_path = chapter_tag["href"]
             chapter_url = urlunparse(
                 urlparse(self.check_url)._replace(path=chapter_path)
@@ -563,11 +531,11 @@ class Mn4uChecker(AbstractChapterChecker):
         return chapter_list[::-1]
 
 
-class ComickChecker(AbstractChapterChecker):
-    """Comick checker"""
+class KlmanagaChecker(AbstractChapterChecker):
+    """Klmanaga checker"""
 
     def get_latest_chapter_list(self) -> List[Chapter]:
-        """Get latest chapter list from comick
+        """Get latest chapter list from klmanga
 
         Returns:
             List[Chapter]: latest chapter list
@@ -584,9 +552,7 @@ class ComickChecker(AbstractChapterChecker):
                 chapter_url = urlunparse(
                     urlparse(self.check_url)._replace(path=chapter_path)
                 )
-                chapter_list.append(
-                    Chapter(title=chapter_title, url=chapter_url)
-                )
+                chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
         # Reverse the list to get the latest chapter first
         return chapter_list[::-1]

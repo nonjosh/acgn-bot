@@ -38,20 +38,6 @@ class TestCheckers(unittest.TestCase):
             check_url="https://ncode.syosetu.com/n6621fl",
         )
 
-    def test_wutuxs_checker(self) -> None:
-        """Wutuxs"""
-        self.universal_checking(
-            test_checker=checkers.WutuxsChecker,
-            check_url="http://www.wutuxs.com/html/9/9715/",
-        )
-
-    def test_ptwxz_checker(self) -> None:
-        """Ptwxz"""
-        self.universal_checking(
-            test_checker=checkers.PtwxzChecker,
-            check_url="https://www.ptwxz.com/html/14/14565/",
-        )
-
     def test_piaotian_checker(self) -> None:
         """Piaotian"""
         self.universal_checking(
@@ -59,6 +45,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.piaotian.com/html/14/14565/",
         )
 
+    # FIXME: Need JS cookies but postman can access?
     def test_wx_checker(self) -> None:
         """99wx"""
         self.universal_checking(
@@ -66,35 +53,33 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.99wx.cc/wanxiangzhiwang/",
         )
 
-    def test_69shu_checker(self) -> None:
+    def test_69shuba_checker(self) -> None:
         """69shu"""
         self.universal_checking(
-            test_checker=checkers.SixNineShuChecker,
-            check_url="https://www.69shu.com/txt/40423.htm",
+            test_checker=checkers.SixNineShuBaChecker,
+            check_url="https://www.69shuba.com/book/43616.htm",
         )
 
     # Comic Checkers
     def test_manhuagui_checker(self) -> None:
         """Manhuagui"""
         self.universal_checking(
-            test_checker=checkers.SixNineShuChecker,
-            check_url="https://www.69shu.com/txt/40423.htm",
+            test_checker=checkers.ManhuaguiChecker,
+            check_url="https://m.manhuagui.com/comic/17165/",
         )
 
     def test_qiman_checker(self) -> None:
-        """Qiman6"""
+        """Qiman"""
         self.universal_checking(
             test_checker=checkers.QimanChecker,
-            check_url="http://qiman59.com/19827/",
+            check_url="http://qiman51.com/19827/",
         )
 
     def test_baozimh_checker(self) -> None:
         """Baozimh"""
         self.universal_checking(
             test_checker=checkers.BaozimhChecker,
-            check_url=(
-                "https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e"
-            ),
+            check_url="https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e",
         )
 
     def test_xbiquge_checker(self) -> None:
@@ -105,6 +90,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.xbiquge.so/book/53099/",
         )
 
+    # FIXME: Need JS cookies but postman can access?
     def test_dashuhuwai_checker(self) -> None:
         """Dashuhuwai"""
         self.universal_checking(
@@ -119,11 +105,9 @@ class TestCheckers(unittest.TestCase):
             check_url="https://mn4u.net/zgm-2149/",
         )
 
-    def test_comick_checker(self) -> None:
-        """Comick"""
+    def test_klmanga_checker(self) -> None:
+        """Klmanga"""
         self.universal_checking(
-            test_checker=checkers.ComickChecker,
-            check_url=(
-                "https://comick.top/mushoku-tensei-jobless-reincarnation"
-            ),
+            test_checker=checkers.KlmanagaChecker,
+            check_url="https://klmanga.top/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw",
         )
