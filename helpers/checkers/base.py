@@ -5,24 +5,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from helpers.chapter import Chapter
-from helpers.utils import DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT
-
-
-def get_chapter_list_diff(new_list: List, old_list: List) -> List[Chapter]:
-    """Get list of new chapters that not in old list
-
-    Args:
-        new_list (List[Chapter]): new chapter list
-        old_list (List[Chapter]): old chapter list
-
-    Returns:
-        List[Chapter]: list of new chapters that not in old list
-    """
-    diff_list = []
-    for new_chp in new_list:
-        if new_chp not in old_list:
-            diff_list.append(new_chp)
-    return diff_list
+from helpers.utils import DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT, get_list_diff
 
 
 class AbstractChapterChecker(ABC):
@@ -187,7 +170,7 @@ class AbstractChapterChecker(ABC):
 
         # Get list of updated chapters if new chapter list is valid (not empty)
         if len(latest_chapter_list) > 0:
-            self.updated_chapter_list = get_chapter_list_diff(
+            self.updated_chapter_list = get_list_diff(
                 latest_chapter_list, self.chapter_list
             )
             # Update chapter list
