@@ -1,5 +1,6 @@
 from typing import List
 from urllib.parse import urljoin
+from bs4.element import Tag
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
@@ -19,7 +20,7 @@ class PiaotianChecker(AbstractChapterChecker):
         if not soup:
             return []
 
-        dl_list = list(soup.find("div", {"class": "centent"}).findAll("a"))
+        dl_list: List[Tag] = list(soup.find("div", {"class": "centent"}).findAll("a"))
         chapter_list = []
         for chapter_tag in dl_list:
             chapter_title = chapter_tag.text

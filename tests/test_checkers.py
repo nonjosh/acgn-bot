@@ -115,3 +115,10 @@ class TestCheckers(unittest.TestCase):
             test_checker=checkers.KlmanagaChecker,
             check_url="https://mangakl.su/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw",
         )
+
+    def test_kunmanga_checker(self) -> None:
+        """Kunmanga"""
+        self.universal_checking(
+            test_checker=checkers.KunmangaChecker,
+            check_url="https://kunmanga.com/manga/sss-class-suicide-hunter/",
+        )

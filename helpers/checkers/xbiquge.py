@@ -1,5 +1,6 @@
 from typing import List
 from urllib.parse import urljoin
+from bs4.element import Tag
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
@@ -18,7 +19,7 @@ class XbiqugeChecker(AbstractChapterChecker):
         soup = self.get_latest_soup()
         if soup is None:
             return []
-        a_list = list(soup.find("div", id="list").findAll("a"))
+        a_list: List[Tag] = list(soup.find("div", id="list").findAll("a"))
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text

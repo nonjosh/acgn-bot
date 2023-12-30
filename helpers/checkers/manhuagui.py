@@ -1,5 +1,6 @@
 from typing import List
 from urllib.parse import urlparse, urlunparse
+from bs4.element import Tag
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
@@ -25,7 +26,7 @@ class ManhuaguiChecker(AbstractChapterChecker):
 
         chapter_list = []
         for i in range(0, len(a_tags) - 1):  # 'a' tags are for links
-            one_a_tag = a_tags[i]
+            one_a_tag: Tag = a_tags[i]
 
             try:
                 chapter_path = one_a_tag["href"]
