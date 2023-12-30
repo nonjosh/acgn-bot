@@ -1,15 +1,17 @@
 """Test webscrapping function of the checker classes,
 will skip if the url is not available."""
 import unittest
+from typing import List
 from helpers.chapter import Chapter
 from helpers import checkers
+from helpers.checkers import AbstractChapterChecker
 from helpers.utils import check_url_valid
 
 
 class TestCheckers(unittest.TestCase):
     """Check if can get chapter list for each Checker"""
 
-    def validate_chapter_list(self, chapter_list: list) -> None:
+    def validate_chapter_list(self, chapter_list: List[Chapter]) -> None:
         """Validate chapter list"""
         # Check if the list item is an Chapter object
         self.assertIsInstance(chapter_list[0], Chapter)
@@ -17,7 +19,9 @@ class TestCheckers(unittest.TestCase):
         # Check if the chapter list is not empty
         self.assertGreater(len(chapter_list), 0)
 
-    def universal_checking(self, test_checker, check_url: str) -> None:
+    def universal_checking(
+        self, test_checker: AbstractChapterChecker, check_url: str
+    ) -> None:
         """Universal checker"""
         # Pass if the website is not healthy
         if not check_url_valid(url=check_url, verbose=True):
@@ -43,7 +47,7 @@ class TestCheckers(unittest.TestCase):
         """Piaotian"""
         self.universal_checking(
             test_checker=checkers.PiaotianChecker,
-            check_url="https://www.piaotian.com/html/14/14565/",
+            check_url="https://www.piaotia.com/html/14/14565/",
         )
 
     # FIXME: Need JS cookies but postman can access?
@@ -73,7 +77,7 @@ class TestCheckers(unittest.TestCase):
         """Qiman"""
         self.universal_checking(
             test_checker=checkers.QimanChecker,
-            check_url="http://qiman52.com/19827/",
+            check_url="http://qiremanhua.com/19827/",
         )
 
     def test_baozimh_checker(self) -> None:
@@ -87,16 +91,15 @@ class TestCheckers(unittest.TestCase):
         """Xbiquge"""
         self.universal_checking(
             test_checker=checkers.XbiqugeChecker,
-            # check_url="https://www.xbiquge.la/55/55945/",
-            check_url="https://www.xbiquge.so/book/53099/",
+            check_url="https://www.xbiquge.bz/book/53099/",
         )
 
     # FIXME: Need JS cookies but postman can access?
-    def test_dashuhuwai_checker(self) -> None:
-        """Dashuhuwai"""
+    def test_dashumanhua_checker(self) -> None:
+        """Dashumanhua"""
         self.universal_checking(
-            test_checker=checkers.DashuhuwaiChecker,
-            check_url="https://www.dashuhuwai.com/comic/fangkainagenvwu/",
+            test_checker=checkers.DashumanhuaChecker,
+            check_url="https://www.dashumanhua.com/comic/fangkainagenvwu/",
         )
 
     def test_mn4u_checker(self) -> None:
@@ -110,5 +113,5 @@ class TestCheckers(unittest.TestCase):
         """Klmanga"""
         self.universal_checking(
             test_checker=checkers.KlmanagaChecker,
-            check_url="https://klmanga.top/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw",
+            check_url="https://mangakl.su/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw",
         )

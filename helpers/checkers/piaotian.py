@@ -7,7 +7,7 @@ from helpers.checkers.base import AbstractChapterChecker
 class PiaotianChecker(AbstractChapterChecker):
     """Piaotian novel checker class"""
 
-    URL_SUBSTRING = "piaotian"
+    URL_SUBSTRING = "piaotia"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list
