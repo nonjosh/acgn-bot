@@ -29,7 +29,7 @@ class MediaHelper:
         # Set check_url, main_domain_name and checker
         # Check if first url is valid, if not, use the next one
         for url in self.urls:
-            if check_url_valid(url):
+            if check_url_valid(url, request=False):
                 self.check_url = url
                 self.main_domain_name = get_main_domain_name(self.check_url)
                 # Set checker
