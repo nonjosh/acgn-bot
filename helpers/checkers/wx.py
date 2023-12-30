@@ -7,6 +7,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class WxChecker(AbstractChapterChecker):
     """99wx checker class"""
 
+    URL_SUBSTRING = "99wx"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list
 

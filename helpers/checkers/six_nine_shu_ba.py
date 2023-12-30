@@ -6,6 +6,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class SixNineShuBaChecker(AbstractChapterChecker):
     """69shu checker class"""
 
+    URL_SUBSTRING = "69shu"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list
 

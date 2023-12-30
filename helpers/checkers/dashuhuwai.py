@@ -7,6 +7,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class DashuhuwaiChecker(AbstractChapterChecker):
     """Dashuhuwai checker"""
 
+    URL_SUBSTRING = "dashuhuwai"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from dashuhuwai
 

@@ -7,6 +7,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class XbiqugeChecker(AbstractChapterChecker):
     """Xbiquge checker"""
 
+    URL_SUBSTRING = "xbiquge"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from xbiquge
 

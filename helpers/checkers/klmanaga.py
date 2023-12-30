@@ -7,6 +7,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class KlmanagaChecker(AbstractChapterChecker):
     """Klmanaga checker"""
 
+    URL_SUBSTRING = "klmanaga"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from klmanga
 

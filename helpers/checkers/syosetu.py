@@ -7,6 +7,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class SyosetuChecker(AbstractChapterChecker):
     """Syosetu checker class"""
 
+    URL_SUBSTRING = "syosetu"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list
 

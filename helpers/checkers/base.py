@@ -11,6 +11,8 @@ from helpers.utils import DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT, get_list_dif
 class AbstractChapterChecker(ABC):
     """Abstract checker class"""
 
+    URL_SUBSTRING: str = ""
+
     def __init__(
         self,
         check_url: str,

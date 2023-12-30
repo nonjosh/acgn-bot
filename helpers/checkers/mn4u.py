@@ -7,6 +7,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class Mn4uChecker(AbstractChapterChecker):
     """Mn4u checker"""
 
+    URL_SUBSTRING = "mn4u"
+
     def __init__(self, check_url: str) -> None:
         super().__init__(check_url)
         self.headers["referer"] = self.check_url

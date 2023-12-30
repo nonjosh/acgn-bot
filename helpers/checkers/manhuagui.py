@@ -7,6 +7,8 @@ from helpers.checkers.base import AbstractChapterChecker
 class ManhuaguiChecker(AbstractChapterChecker):
     """Manhuagui chapter list"""
 
+    URL_SUBSTRING = "manhuagui"
+
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from manhuagui
 
