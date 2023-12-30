@@ -62,7 +62,7 @@ class TgHelper:
         """
 
         # Set parse_mode to HTML if html is True
-        parse_mode = telegram.ParseMode.HTML if html else None
+        parse_mode = telegram.constants.ParseMode.HTML if html else None
 
         # Construct reply button if url_text and url are given
         reply_markup = None
@@ -85,25 +85,25 @@ class TgHelper:
                     reply_markup=reply_markup,
                 )
                 success = True
-            except telegram.TelegramError as err:
+            except telegram.error.TelegramError as err:
                 wait = retries * 30
                 logger.error("Error occurs for %s: %s", content, err)
                 logger.error("Waiting %i secs and re-trying...", wait)
                 time.sleep(wait * 1000)
                 retries += 1
 
-    def list_config(self, update: Update, _: CallbackContext) -> None:
+    async def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
 
         html_response = MessageHelper().get_config_list_html_message()
-        update.message.reply_html(html_response, disable_web_page_preview=True)
+        await update.message.reply_html(html_response, disable_web_page_preview=True)
 
-    def list_latest(self, update: Update, _: CallbackContext) -> None:
+    async def list_latest(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_latest is issued."""
         html_response = MessageHelper().get_latest_chapter_list_html_message()
-        update.message.reply_html(html_response, disable_web_page_preview=True)
+        await update.message.reply_html(html_response, disable_web_page_preview=True)
 
-    def list_last_check(self, update: Update, _: CallbackContext) -> None:
+    async def list_last_check(self, update: Update, _: CallbackContext) -> None:
         """List last check time of each helper when the command /list_last_check is issued."""
         html_response = MessageHelper().get_last_check_time_list_html_message()
-        update.message.reply_html(html_response, disable_web_page_preview=True)
+        await update.message.reply_html(html_response, disable_web_page_preview=True)
