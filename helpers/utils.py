@@ -1,4 +1,5 @@
 """Utility functions"""
+from typing import List
 from datetime import datetime
 from urllib.parse import urlparse
 import logging
@@ -137,3 +138,20 @@ def check_url_valid(url: str, verbose: bool = False) -> bool:
     else:
         return True
     return False
+
+
+def get_list_diff(new_list: List, old_list: List) -> List:
+    """Get list of items that not in old list
+
+    Args:
+        new_list (List[]): new list
+        old_list (List[]): old list
+
+    Returns:
+        List[]: list of items that not in old list
+    """
+    diff_list = []
+    for item in new_list:
+        if item not in old_list:
+            diff_list.append(item)
+    return diff_list

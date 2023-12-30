@@ -2,22 +2,10 @@
 
 import logging
 from typing import List, Literal
-from helpers import checkers
+from helpers.checkers import get_checker_for_url
+from helpers.checkers.base import AbstractChapterChecker
 from helpers.utils import get_main_domain_name, check_url_valid
 
-CHECKER_DICT = {
-    "syosetu": checkers.SyosetuChecker,
-    "69shuba": checkers.SixNineShuBaChecker,
-    "99wx": checkers.WxChecker,
-    "manhuagui": checkers.ManhuaguiChecker,
-    "qiman59": checkers.QimanChecker,
-    "baozimh": checkers.BaozimhChecker,
-    "xbiquge": checkers.XbiqugeChecker,
-    "dashuhuwai": checkers.DashuhuwaiChecker,
-    "mn4u": checkers.Mn4uChecker,
-    "klmanga": checkers.KlmanagaChecker,
-    "piaotian": checkers.PiaotianChecker,
-}
 
 MediaTypes = Literal["novel", "comic"]
 
@@ -39,7 +27,7 @@ class MediaHelper:
         self.media_type = media_type
         assert self.media_type in ["novel", "comic"]
 
-        self.checker = None
+        self.checker: AbstractChapterChecker = None
 
         # Set check_url, main_domain_name and checker
         # Check if first url is valid, if not, use the next one
@@ -63,10 +51,11 @@ class MediaHelper:
         """
 
         # Check if domain name is in checker_dict
-        if self.main_domain_name in CHECKER_DICT:
-            self.checker = CHECKER_DICT[self.main_domain_name](check_url=self.check_url)
+        self.checker = get_checker_for_url(self.check_url)
+        if self.checker:
+            self.logger.info("Checker %s is set for %s", self.checker, self.check_url)
             return True
-        self.logger.error("Domain name %s is not supported", self.main_domain_name)
+        self.logger.info("No checker is set for %s", self.check_url)
         return False
 
     def get_urls_text(self) -> str:

@@ -31,44 +31,42 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 
 ### Supported websites
 
-| Name      | Example Url                                                    | Media Type |
-|-----------|----------------------------------------------------------------|------------|
-| wutuxs    | <http://www.wutuxs.com/html/9/9715/>                           | novel      |
-| syosetu   | <https://ncode.syosetu.com/n6621fl>                            | novel      |
-| ptwxz     | <https://www.ptwxz.com/html/14/14565/>                         | novel      |
-| 99wx      | <https://www.99wx.cc/wanxiangzhiwang>                          | novel/comic|
-| manhuagui | <https://m.manhuagui.com/comic/30903/>                         | comic      |
-| qiman     | <http://qiman59.com/19827/>                                    | comic      |
-| baozimh   | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e> | comic      |
-| xbiquge   | <https://www.xbiquge.so/book/53099/>                           | comic      |
-| dashuhuwai| <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |
-| mn4u      | <https://mn4u.net/zgm-2149/>                                   | comic      |
-| comick    | <https://comick.top/yuujin-chara-wa-taihen-desu-ka-manga-raw>  | comic      |
+| Name       | Example Url                                                    | Media Type |
+| ---------- | -------------------------------------------------------------- | ---------- |
+| syosetu    | <https://ncode.syosetu.com/n6621fl>                            | novel      |
+| piaotian   | <https://www.piaotia.com/html/14/14565/>                       | novel      |
+| 69shu      | <https://www.69shu.com/2108/>                                  | novel      |
+| manhuagui  | <https://m.manhuagui.com/comic/30903/>                         | comic      |
+| baozimh    | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e> | comic      |
+| xbiquge    | <https://www.xbiquge.so/book/53099/>                           | comic      |
+| dashuhuwai | <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |
+| mn4u       | <https://mn4u.net/zgm-2149/>                                   | comic      |
+| klmanga    | <https://mangakl.su/one-piece-raw-1058>                        | comic      |
 
 ### Default Settings
 
 | Setting              | Default value   |
-|----------------------|-----------------|
+| -------------------- | --------------- |
 | Checking Interval    | **_30~60 min_** |
 | Retry Interval       | 5 min           |
 | Maximum Retry Number | 5               |
 
 ### Supported Telegram Commands
 
-| Command           | Description                    |
-|-------------------|--------------------------------|
-| /list_config      | List all valid config websites |
-| /list_latest      | List latest chapters           |
-| /list_last_check  | List last check time           |
+| Command          | Description                    |
+| ---------------- | ------------------------------ |
+| /list_config     | List all valid config websites |
+| /list_latest     | List latest chapters           |
+| /list_last_check | List last check time           |
 
 ### Environment Variables
 
-| Name               | Default value   | Description                                                         |
-|--------------------|-----------------|---------------------------------------------------------------------|
-| TOKEN              |                 |Telegram Bot Token                                                   |
-| CHAT_ID            |                 |Telegram Chat ID                                                     |
-| CONFIG_YML_URL     |                 |Config file url (Optional)                                           |
-| CONFIG_YML_FILEPATH|config/list.yaml |Config file path (Optional, only used when CONFIG_YML_URL is not set)|
+| Name                | Default value    | Description                                                           |
+| ------------------- | ---------------- | --------------------------------------------------------------------- |
+| TOKEN               |                  | Telegram Bot Token                                                    |
+| CHAT_ID             |                  | Telegram Chat ID                                                      |
+| CONFIG_YML_URL      |                  | Config file url (Optional)                                            |
+| CONFIG_YML_FILEPATH | config/list.yaml | Config file path (Optional, only used when CONFIG_YML_URL is not set) |
 
 ## How to use
 
