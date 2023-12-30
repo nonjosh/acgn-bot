@@ -22,7 +22,7 @@ class KunmangaChecker(AbstractChapterChecker):
         a_list = [li.find("a") for li in li_list]
         chapter_list = []
         for chapter_tag in a_list:
-            chapter_title = chapter_tag.text
+            chapter_title = chapter_tag.text.strip()
             chapter_path = chapter_tag["href"]
             chapter_url = urlunparse(
                 urlparse(self.check_url)._replace(path=chapter_path)
