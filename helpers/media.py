@@ -2,8 +2,8 @@
 
 import logging
 from typing import List, Literal
-from helpers import checkers
 from helpers.checkers import get_checker_for_url
+from helpers.checkers.base import AbstractChapterChecker
 from helpers.utils import get_main_domain_name, check_url_valid
 
 
@@ -27,7 +27,7 @@ class MediaHelper:
         self.media_type = media_type
         assert self.media_type in ["novel", "comic"]
 
-        self.checker = None
+        self.checker: AbstractChapterChecker = None
 
         # Set check_url, main_domain_name and checker
         # Check if first url is valid, if not, use the next one
@@ -55,6 +55,7 @@ class MediaHelper:
         if self.checker:
             self.logger.info("Checker %s is set for %s", self.checker, self.check_url)
             return True
+        self.logger.info("No checker is set for %s", self.check_url)
         return False
 
     def get_urls_text(self) -> str:
