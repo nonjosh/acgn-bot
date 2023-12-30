@@ -87,6 +87,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e",
         )
 
+    def test_baozimh2_checker(self) -> None:
+        """another Baozimh"""
+        self.universal_checking(
+            test_checker=checkers.Baozimh2Checker,
+            check_url="https://baozimh.org/manga/xiaoshimeimingmingchaoqiangqueguofenshadiao",
+        )
+
     def test_xbiquge_checker(self) -> None:
         """Xbiquge"""
         self.universal_checking(

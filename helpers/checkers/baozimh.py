@@ -7,7 +7,7 @@ from helpers.checkers.base import AbstractChapterChecker
 class BaozimhChecker(AbstractChapterChecker):
     """Baozimh checker"""
 
-    URL_SUBSTRING = "baozimh"
+    URL_SUBSTRING = "baozimh.com"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from baozimh

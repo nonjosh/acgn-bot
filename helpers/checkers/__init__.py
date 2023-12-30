@@ -9,6 +9,7 @@ from helpers.checkers.six_nine_shu_ba import SixNineShuBaChecker
 from helpers.checkers.manhuagui import ManhuaguiChecker
 from helpers.checkers.qiman import QimanChecker
 from helpers.checkers.baozimh import BaozimhChecker
+from helpers.checkers.baozimh2 import Baozimh2Checker
 from helpers.checkers.dashuhuwai import DashumanhuaChecker
 from helpers.checkers.mn4u import Mn4uChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
@@ -23,6 +24,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     ManhuaguiChecker,
     QimanChecker,
     BaozimhChecker,
+    Baozimh2Checker,
     DashumanhuaChecker,
     Mn4uChecker,
     XbiqugeChecker,
