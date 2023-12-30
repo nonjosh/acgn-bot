@@ -77,7 +77,7 @@ class TestCheckers(unittest.TestCase):
         """Qiman"""
         self.universal_checking(
             test_checker=checkers.QimanChecker,
-            check_url="http://qiremanhua.com/19827/",
+            check_url="http://qmanwu2.com/19827/",
         )
 
     def test_baozimh_checker(self) -> None:

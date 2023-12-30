@@ -1,10 +1,8 @@
 """Media Helper class"""
-
-import logging
 from typing import List, Literal
 from helpers.checkers import get_checker_for_url
 from helpers.checkers.base import AbstractChapterChecker
-from helpers.utils import get_main_domain_name, check_url_valid
+from helpers.utils import get_logger, get_main_domain_name, check_url_valid
 
 
 MediaTypes = Literal["novel", "comic"]
@@ -20,7 +18,7 @@ class MediaHelper:
         media_type: MediaTypes,
         logger_name="dev",
     ) -> None:
-        self.logger = logging.getLogger(logger_name)
+        self.logger = get_logger(logger_name)
 
         self.name = name
         self.urls = urls
@@ -53,7 +51,7 @@ class MediaHelper:
         # Check if domain name is in checker_dict
         self.checker = get_checker_for_url(self.check_url)
         if self.checker:
-            self.logger.info("Checker %s is set for %s", self.checker, self.check_url)
+            self.logger.info("Checker is set for %s", self.check_url)
             return True
         self.logger.info("No checker is set for %s", self.check_url)
         return False

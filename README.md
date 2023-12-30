@@ -37,6 +37,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 | piaotian   | <https://www.piaotia.com/html/14/14565/>                       | novel      |
 | 69shu      | <https://www.69shu.com/2108/>                                  | novel      |
 | manhuagui  | <https://m.manhuagui.com/comic/30903/>                         | comic      |
+| qimanhu    | <http://m.qmanwu2.com/12235/>                                  | comic      |
 | baozimh    | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e> | comic      |
 | xbiquge    | <https://www.xbiquge.so/book/53099/>                           | comic      |
 | dashuhuwai | <https://www.dashuhuwai.com/comic/fangkainagenvwu/>            | comic      |

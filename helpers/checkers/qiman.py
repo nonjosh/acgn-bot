@@ -9,7 +9,7 @@ from helpers.checkers.base import AbstractChapterChecker
 class QimanChecker(AbstractChapterChecker):
     """QimanChecker"""
 
-    URL_SUBSTRING = "qiman"
+    URL_SUBSTRING = "qmanwu2"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from qiman
