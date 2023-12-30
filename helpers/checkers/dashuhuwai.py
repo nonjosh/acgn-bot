@@ -1,5 +1,6 @@
 from typing import List
 from urllib.parse import urlparse, urlunparse
+from bs4.element import Tag
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
@@ -18,7 +19,8 @@ class DashumanhuaChecker(AbstractChapterChecker):
         soup = self.get_latest_soup()
         if soup is None:
             return []
-        a_list = [li.find("a") for li in soup.find(id="ul_chapter1").find_all("li")]
+        li_list: List[Tag] = soup.find(id="ul_chapter1").find_all("li")
+        a_list: List[Tag] = [li.find("a") for li in li_list if li.find("a") is not None]
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text
