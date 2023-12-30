@@ -4,13 +4,13 @@ from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
 
-class DashuhuwaiChecker(AbstractChapterChecker):
-    """Dashuhuwai checker"""
+class DashumanhuaChecker(AbstractChapterChecker):
+    """Dashumanhua checker"""
 
-    URL_SUBSTRING = "dashuhuwai"
+    URL_SUBSTRING = "dashumanhua"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
-        """Get latest chapter list from dashuhuwai
+        """Get latest chapter list from dashumanhua
 
         Returns:
             List[Chapter]: latest chapter list

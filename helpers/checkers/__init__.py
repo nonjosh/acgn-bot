@@ -9,7 +9,7 @@ from helpers.checkers.six_nine_shu_ba import SixNineShuBaChecker
 from helpers.checkers.manhuagui import ManhuaguiChecker
 from helpers.checkers.qiman import QimanChecker
 from helpers.checkers.baozimh import BaozimhChecker
-from helpers.checkers.dashuhuwai import DashuhuwaiChecker
+from helpers.checkers.dashuhuwai import DashumanhuaChecker
 from helpers.checkers.mn4u import Mn4uChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
 from helpers.checkers.klmanaga import KlmanagaChecker
@@ -22,7 +22,7 @@ ALL_CHECKERS = [
     ManhuaguiChecker,
     QimanChecker,
     BaozimhChecker,
-    DashuhuwaiChecker,
+    DashumanhuaChecker,
     Mn4uChecker,
     XbiqugeChecker,
     KlmanagaChecker,
