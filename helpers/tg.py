@@ -3,8 +3,8 @@ import os
 import time
 import telegram
 from telegram import Update
-from telegram.ext import Updater, CommandHandler
-from telegram.ext.callbackcontext import CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram.ext import CallbackContext
 from dotenv import load_dotenv
 from helpers.utils import get_logger
 from helpers.message import MessageHelper
@@ -20,7 +20,6 @@ class TgHelper:
     """Telegram helper"""
 
     def __init__(self, token: str = TOKEN, chat_id: str = CHAT_ID) -> None:
-
         if token is None:
             raise ValueError("Telegram bot token is not given")
         if chat_id is None:
@@ -31,28 +30,20 @@ class TgHelper:
         self.bot = telegram.Bot(token=self.token)
 
         # Create the Updater and pass it your bot's token.
-        # Make sure to set use_context=True to use the new context based callbacks
-        # Post version 12 this will no longer be necessary
-        self.updater = Updater(self.token, use_context=True)
 
-        # Get the dispatcher to register handlers
-        self.dispatcher = self.updater.dispatcher
+        self.application = ApplicationBuilder().token(self.token).build()
 
         # on different commands - answer in Telegram
-        self.dispatcher.add_handler(
-            CommandHandler("list_config", self.list_config)
-        )
-        self.dispatcher.add_handler(
-            CommandHandler("list_latest", self.list_latest)
-        )
-        self.dispatcher.add_handler(
+        self.application.add_handler(CommandHandler("list_config", self.list_config))
+        self.application.add_handler(CommandHandler("list_latest", self.list_latest))
+        self.application.add_handler(
             CommandHandler("list_last_check", self.list_last_check)
         )
 
     def run(self) -> None:
         """Start the bot."""
         # Start the Bot
-        self.updater.start_polling()
+        self.application.run_polling()
 
     def send_msg(
         self,
