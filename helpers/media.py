@@ -7,6 +7,8 @@ from helpers.utils import get_logger, get_main_domain_name, check_url_valid
 
 MediaTypes = Literal["novel", "comic"]
 
+logger = get_logger(__name__)
+
 
 class MediaHelper:
     """Abstract helper class"""
@@ -16,10 +18,7 @@ class MediaHelper:
         name: str,
         urls: List,
         media_type: MediaTypes,
-        logger_name="dev",
     ) -> None:
-        self.logger = get_logger(logger_name)
-
         self.name = name
         self.urls = urls
         self.media_type = media_type
@@ -51,9 +50,9 @@ class MediaHelper:
         # Check if domain name is in checker_dict
         self.checker = get_checker_for_url(self.check_url)
         if self.checker:
-            self.logger.info("Checker is set for %s", self.check_url)
+            logger.info("Checker is set for %s", self.check_url)
             return True
-        self.logger.info("No checker is set for %s", self.check_url)
+        logger.info("No checker is set for %s", self.check_url)
         return False
 
     def get_urls_text(self) -> str:
