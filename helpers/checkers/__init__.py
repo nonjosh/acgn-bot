@@ -13,6 +13,7 @@ from helpers.checkers.dashuhuwai import DashumanhuaChecker
 from helpers.checkers.mn4u import Mn4uChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
 from helpers.checkers.klmanaga import KlmanagaChecker
+from helpers.checkers.kunmanga import KunmangaChecker
 
 ALL_CHECKERS: List[AbstractChapterChecker] = [
     WxChecker,
@@ -26,6 +27,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     Mn4uChecker,
     XbiqugeChecker,
     KlmanagaChecker,
+    KunmangaChecker,
 ]
 
 
