@@ -29,5 +29,4 @@ class Baozimh2Checker(AbstractChapterChecker):
             chapter_url = chapter_tag["href"]
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
-            return chapter_list[::-1]
-        return []
+        return chapter_list[::-1]
