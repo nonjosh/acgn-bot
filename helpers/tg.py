@@ -95,7 +95,12 @@ class TgHelper:
             except telegram.error.TelegramError as err:
                 wait = retries * 30
                 logger.error("Error occurs for %s: %s", content, err)
-                logger.error("Waiting %i secs and re-trying...", wait)
+                logger.error(
+                    "Waiting %i secs and re-trying... (%i/%i)",
+                    wait,
+                    retries,
+                    MAX_RETRIES,
+                )
                 time.sleep(wait * 1000)
                 retries += 1
             finally:
