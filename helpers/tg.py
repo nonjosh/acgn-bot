@@ -1,6 +1,7 @@
 """Telegram Helper"""
 import os
 import time
+import asyncio
 import telegram
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler
@@ -78,11 +79,15 @@ class TgHelper:
         success = False
         while not success:
             try:
-                self.bot.send_message(
-                    chat_id=self.chat_id,
-                    text=content,
-                    parse_mode=parse_mode,
-                    reply_markup=reply_markup,
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                loop.run_until_complete(
+                    self.bot.send_message(
+                        chat_id=self.chat_id,
+                        text=content,
+                        parse_mode=parse_mode,
+                        reply_markup=reply_markup,
+                    )
                 )
                 success = True
             except telegram.error.TelegramError as err:
@@ -91,6 +96,8 @@ class TgHelper:
                 logger.error("Waiting %i secs and re-trying...", wait)
                 time.sleep(wait * 1000)
                 retries += 1
+            finally:
+                loop.close()
 
     async def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
