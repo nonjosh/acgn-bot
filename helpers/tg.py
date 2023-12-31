@@ -3,9 +3,8 @@ import os
 import time
 import asyncio
 import telegram
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler
-from telegram.ext import CallbackContext
+from telegram import Update, Bot
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackContext
 from dotenv import load_dotenv
 from helpers.utils import get_logger
 from helpers.message import MessageHelper
@@ -30,11 +29,9 @@ class TgHelper:
 
         self.token = token
         self.chat_id = chat_id
-        self.bot = telegram.Bot(token=self.token)
-
-        # Create the Updater and pass it your bot's token.
 
         self.application = ApplicationBuilder().token(self.token).build()
+        self.bot: Bot = self.application.bot
 
         # on different commands - answer in Telegram
         self.application.add_handler(CommandHandler("list_config", self.list_config))
