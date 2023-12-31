@@ -16,6 +16,8 @@ CHAT_ID = os.environ.get("CHAT_ID")
 
 logger = get_logger(__name__)
 
+MAX_RETRIES = 3
+
 
 class TgHelper:
     """Telegram helper"""
@@ -77,7 +79,7 @@ class TgHelper:
         # Send message
         retries = 1
         success = False
-        while not success:
+        while not success and retries <= MAX_RETRIES:
             try:
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
