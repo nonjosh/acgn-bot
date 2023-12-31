@@ -10,7 +10,7 @@ class TestMediaHelper(unittest.TestCase):
 
     def test_chapter_list_change(self) -> None:
         """Test if can get chapter list change in ChapterHelper"""
-        url = "https://www.dashuhuwai.com/comic/fangkainagenvwu/"
+        url = "https://www.dashumanhua.com/comic/fangkainagenvwu/"
 
         if not check_url_valid(url=url):
             self.skipTest(f"{url} is not healthy")

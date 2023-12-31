@@ -1,4 +1,5 @@
 """main"""
+import threading
 from helpers.utils import get_logger
 from helpers.tg import TgHelper
 from helpers.config import ConfigHelper
@@ -19,12 +20,13 @@ def main() -> None:
     yml_data = config_helper.get_yml_data()
     schedule_helper = ScheduleHelper(yml_data=yml_data, tg_helper=tg_helper)
 
+    # Run the scheduler
+    schedule_thread = threading.Thread(target=schedule_helper.run)
+    schedule_thread.start()
+    logger.info("Scheduler started successfully.")
+
     # Telegram bot starts polling
     tg_helper.run()
-    logger.info("Telegram bot started polling successfully.")
-
-    # Run the scheduler
-    schedule_helper.run()
 
 
 if __name__ == "__main__":

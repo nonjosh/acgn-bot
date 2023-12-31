@@ -1,4 +1,5 @@
 """Utility functions"""
+from typing import List
 from datetime import datetime
 from urllib.parse import urlparse
 import logging
@@ -24,9 +25,7 @@ DEFAULT_HEADERS = {
 DEFAULT_REQUEST_TIMEOUT = 5
 
 
-def get_logger(
-    logger_name: str, log_level: int = logging.INFO
-) -> logging.Logger:
+def get_logger(logger_name: str, log_level: int = logging.INFO) -> logging.Logger:
     """Set logger
 
     Args:
@@ -94,7 +93,7 @@ def get_main_domain_name(url_str) -> str:
     return main_domain_name
 
 
-def check_url_valid(url: str, verbose: bool = False) -> bool:
+def check_url_valid(url: str, request: bool = True, verbose: bool = False) -> bool:
     """Check if url is valid
 
     Args:
@@ -111,6 +110,9 @@ def check_url_valid(url: str, verbose: bool = False) -> bool:
             return False
     except ValueError:
         return False
+
+    if not request:
+        return True
 
     # Check by requests
     try:
@@ -137,3 +139,20 @@ def check_url_valid(url: str, verbose: bool = False) -> bool:
     else:
         return True
     return False
+
+
+def get_list_diff(new_list: List, old_list: List) -> List:
+    """Get list of items that not in old list
+
+    Args:
+        new_list (List[]): new list
+        old_list (List[]): old list
+
+    Returns:
+        List[]: list of items that not in old list
+    """
+    diff_list = []
+    for item in new_list:
+        if item not in old_list:
+            diff_list.append(item)
+    return diff_list
