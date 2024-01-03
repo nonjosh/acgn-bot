@@ -45,7 +45,7 @@ class TgHelper:
         # Start the Bot
         self.application.run_polling()
 
-    def send_msg(
+    async def send_msg(
         self,
         content="No input content",
         url_text: str = None,
@@ -78,17 +78,14 @@ class TgHelper:
         success = False
         while not success and retries <= MAX_RETRIES:
             try:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                loop.run_until_complete(
-                    self.bot.send_message(
-                        chat_id=self.chat_id,
-                        text=content,
-                        parse_mode=parse_mode,
-                        reply_markup=reply_markup,
-                    )
+                self.bot.send_message(
+                    chat_id=self.chat_id,
+                    text=content,
+                    parse_mode=parse_mode,
+                    reply_markup=reply_markup,
                 )
                 success = True
+                return
             except telegram.error.TelegramError as err:
                 wait = retries * 30
                 logger.error("Error occurs for %s: %s", content, err)
@@ -100,8 +97,7 @@ class TgHelper:
                 )
                 time.sleep(wait * 1000)
                 retries += 1
-            finally:
-                loop.close()
+        logger.error("Failed to send message after %i retries", MAX_RETRIES)
 
     async def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
