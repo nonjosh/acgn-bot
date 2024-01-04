@@ -78,7 +78,7 @@ class TgHelper:
         success = False
         while not success and retries <= MAX_RETRIES:
             try:
-                self.bot.send_message(
+                await self.bot.send_message(
                     chat_id=self.chat_id,
                     text=content,
                     parse_mode=parse_mode,
@@ -95,7 +95,7 @@ class TgHelper:
                     retries,
                     MAX_RETRIES,
                 )
-                time.sleep(wait * 1000)
+                await asyncio.sleep(wait)
                 retries += 1
         logger.error("Failed to send message after %i retries", MAX_RETRIES)
 
