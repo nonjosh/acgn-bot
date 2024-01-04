@@ -15,6 +15,7 @@ from helpers.checkers.mn4u import Mn4uChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
 from helpers.checkers.klmanaga import KlmanagaChecker
 from helpers.checkers.kunmanga import KunmangaChecker
+from helpers.checkers.weixin import WeixinChecker
 
 ALL_CHECKERS: List[AbstractChapterChecker] = [
     WxChecker,
@@ -30,6 +31,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     XbiqugeChecker,
     KlmanagaChecker,
     KunmangaChecker,
+    WeixinChecker,
 ]
 
 
