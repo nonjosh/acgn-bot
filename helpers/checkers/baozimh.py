@@ -1,5 +1,7 @@
 from typing import List
 from urllib.parse import urlparse, urlunparse
+from chinese_converter import to_traditional
+from bs4.element import Tag
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
@@ -19,7 +21,7 @@ class BaozimhChecker(AbstractChapterChecker):
         if soup is None:
             return []
 
-        pure_g_div_list = soup.findAll("div", {"class": "pure-g"})
+        pure_g_div_list: List[Tag] = soup.findAll("div", {"class": "pure-g"})
 
         # Find which div contains chapter items
         for pure_g_div in pure_g_div_list:
@@ -30,7 +32,7 @@ class BaozimhChecker(AbstractChapterChecker):
                 ]
                 chapter_list = []
                 for chapter_tag in a_list:
-                    chapter_title = chapter_tag[0].text
+                    chapter_title = to_traditional(chapter_tag[0].text)
                     chapter_path = chapter_tag[0]["href"]
                     chapter_url = urlunparse(
                         urlparse(self.check_url)._replace(path=chapter_path)
