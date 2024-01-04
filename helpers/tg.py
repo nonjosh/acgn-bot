@@ -73,12 +73,15 @@ class TgHelper:
             )
             reply_markup = telegram.InlineKeyboardMarkup([[url_button]])
 
+        # Create a new instance of the telegram.Bot class
+        bot = telegram.Bot(token=self.token)
+
         # Send message
         retries = 1
         success = False
         while not success and retries <= MAX_RETRIES:
             try:
-                await self.bot.send_message(
+                await bot.send_message(
                     chat_id=self.chat_id,
                     text=content,
                     parse_mode=parse_mode,
@@ -102,15 +105,18 @@ class TgHelper:
     async def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
 
+        logger.info("The /list_config command is issued")
         html_response = MessageHelper().get_config_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
 
     async def list_latest(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_latest is issued."""
+        logger.info("The /list_latest command is issued")
         html_response = MessageHelper().get_latest_chapter_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
 
     async def list_last_check(self, update: Update, _: CallbackContext) -> None:
         """List last check time of each helper when the command /list_last_check is issued."""
+        logger.info("The /list_last_check command is issued")
         html_response = MessageHelper().get_last_check_time_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
