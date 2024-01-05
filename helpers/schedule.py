@@ -1,6 +1,7 @@
 """Schedule helper module."""
 import threading
 import time
+import asyncio
 import schedule
 from helpers.utils import get_logger
 from helpers.tg import TgHelper
@@ -51,9 +52,7 @@ class ScheduleHelper:
             for media_helper in MediaListState.media_helper_list:
                 self.add_schedule(media_helper)
             if len(schedule.jobs) > 0:
-                logger.info(
-                    "Scheduled %s checker(s) successfully.", len(schedule.jobs)
-                )
+                logger.info("Scheduled %s checker(s) successfully.", len(schedule.jobs))
             else:
                 logger.error("No checker scheduled.")
                 raise Exception("No checker scheduled.")
@@ -81,9 +80,7 @@ class ScheduleHelper:
             # Initialize checker chapter list if list is empty originally
             if len(media_helper.checker.chapter_list) == 0:
                 # Initialize checker chapter list
-                updated_chapter_list = (
-                    media_helper.checker.get_updated_chapter_list()
-                )
+                updated_chapter_list = media_helper.checker.get_updated_chapter_list()
 
                 # Print latest chapter if success
                 if len(updated_chapter_list) > 0:
@@ -108,11 +105,8 @@ class ScheduleHelper:
                 return
 
             # Check for update
-            updated_chapter_list = (
-                media_helper.checker.get_updated_chapter_list()
-            )
+            updated_chapter_list = media_helper.checker.get_updated_chapter_list()
             if len(updated_chapter_list) > 0:
-
                 # Print update message for each chapter in terminal
                 for updated_chapter in updated_chapter_list:
                     logger.info(
@@ -124,12 +118,19 @@ class ScheduleHelper:
                     )
 
                 # Send update message to telegram
-                content_html_text = (
-                    MessageHelper().get_update_chapters_html_message(
-                        media_helper=media_helper,
-                    )
+                content_html_text = MessageHelper().get_update_chapters_html_message(
+                    media_helper=media_helper,
                 )
-                self.tg_helper.send_msg(content=content_html_text)
+                try:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                    loop.run_until_complete(
+                        self.tg_helper.send_msg(content=content_html_text)
+                    )
+                except Exception as err:
+                    logger.error("Error occurs: %s", err)
+                finally:
+                    loop.close()
             else:
                 # Print no update message for each chapter in terminal (if enabled)
                 if show_no_update_msg:
@@ -139,8 +140,8 @@ class ScheduleHelper:
                         media_helper.name,
                     )
 
-        def init_helper_func() -> None:
-            # Initialize helper
+        # Define lambda function for job
+        def job_func() -> None:
             return job(media_helper)
 
         def run_threaded(job_func: callable) -> None:
@@ -156,12 +157,7 @@ class ScheduleHelper:
             # Run for the first time if not Manhuagui
             # because Manhuagui will block ip addresses with high frequency attampts
             if not isinstance(media_helper.checker, ManhuaguiChecker):
-                run_threaded(job_func=init_helper_func)
-
-            # Add schedule thread
-            # Define lambda function for job
-            def job_func() -> None:
-                return job(media_helper)
+                run_threaded(job_func=job_func)
 
             schedule.every(30).to(60).minutes.do(run_threaded, job_func)
         else:
