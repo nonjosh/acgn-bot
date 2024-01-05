@@ -38,7 +38,7 @@ jobs:
           push: true
           tags: |
             ${{ github.repository }}:${{ github.ref_name }}
-            ${{ github.ref == 'refs/heads/master' && github.repository + ':latest' || '' }}
+            ${{ github.ref == 'refs/heads/master' && format('{0}:latest', github.repository) || '' }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
