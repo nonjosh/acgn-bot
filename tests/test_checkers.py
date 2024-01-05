@@ -129,3 +129,10 @@ class TestCheckers(unittest.TestCase):
             test_checker=checkers.KunmangaChecker,
             check_url="https://kunmanga.com/manga/sss-class-suicide-hunter/",
         )
+
+    def test_weixin_checker(self) -> None:
+        """Weixin"""
+        self.universal_checking(
+            test_checker=checkers.WeixinChecker,
+            check_url="https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080",
+        )

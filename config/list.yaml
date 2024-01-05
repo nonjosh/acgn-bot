@@ -20,16 +20,16 @@
     - https://ncode.syosetu.com/n8440fe
     - https://masiro.me/admin/novelView?novel_id=9
 
-- name: 虛構推理
-  comic_urls:
-    - https://m.manhuagui.com/comic/17165/
-    - https://www.dm5.com/manhua-xugoutuili/
-- name: 石紀元
-  comic_urls:
-    - https://m.manhuagui.com/comic/23270/
-- name: 總之就是非常可愛
-  comic_urls:
-    - https://m.manhuagui.com/comic/27099/
+# - name: 虛構推理
+#   comic_urls:
+#     - https://m.manhuagui.com/comic/17165/
+#     - https://www.dm5.com/manhua-xugoutuili/
+# - name: 石紀元
+#   comic_urls:
+#     - https://m.manhuagui.com/comic/23270/
+# - name: 總之就是非常可愛
+#   comic_urls:
+#     - https://m.manhuagui.com/comic/27099/
 # - name: 獨自一人的異世界攻略
 #   comic_urls:
 #     - https://m.manhuagui.com/comic/30903/
@@ -39,9 +39,9 @@
 # - name: 戀愛禁止的世界
 #   comic_urls:
 #     - https://m.manhuagui.com/comic/14162/
-- name: 宅男腐女戀愛真難
-  comic_urls:
-    - https://m.manhuagui.com/comic/17217/
+# - name: 宅男腐女戀愛真難
+#   comic_urls:
+#     - https://m.manhuagui.com/comic/17217/
 # - name: 平凡职业成就世界最强 零
 #   comic_urls:
 #     - https://m.manhuagui.com/comic/28024/
@@ -80,6 +80,15 @@
   comic_urls:
     - https://m.manhuagui.com/comic/49573/
     - https://www.novelcool.com/novel/Saikyou-Tank-no-Meikyuu-Kouryaku.html
+- name: 这片难绷的大陆漫画
+  comic_urls:
+    - https://m.manhuagui.com/comic/50197/
+- name: 身为疲惫上班族的我，开始和7年未见的JK美少女同居了
+  comic_urls:
+    - https://m.manhuagui.com/comic/50808/
+- name: 油盐不进男vs疯狂颠勺女
+  comic_urls:
+    - https://m.manhuagui.com/comic/48481/
 
 - name: SSS級自殺獵人
   comic_urls:
@@ -94,14 +103,16 @@
 #     - https://www.baozimh.com/comic/yuanzun-weitianchuanmei_q3py2w
 #     - https://www.99wx.cc/manhua/yuanzun/
 #     - http://qiman59.com/12780/
-# - name: 萬相之王
-#   novel_urls:
-#     - https://www.99wx.cc/wanxiangzhiwang/
-#     - http://www.wutuxs.com/html/9/9715/
-#   comic_urls:
-#     - https://www.baozimh.com/comic/moxiangzhiwang-weitianchuanmei
-#     - https://www.99wx.cc/manhua/wanxiangzhiwang/
-#     - http://qiman59.com/24453/
+- name: 萬相之王
+  novel_urls:
+    - https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080
+    - https://www.99wx.cc/wanxiangzhiwang/
+    - http://www.wutuxs.com/html/9/9715/
+  # comic_urls:
+  #   - https://baozimh.org/manga/moxiangzhiwang-weitianchuanmei
+  #   - https://www.baozimh.com/comic/moxiangzhiwang-weitianchuanmei
+  #   - https://www.99wx.cc/manhua/wanxiangzhiwang/
+  #   - http://qiman59.com/24453/
 # - name: 仙帝歸来
 #   comic_urls:
 #     - http://qiman59.com/12235/
@@ -115,15 +126,17 @@
 # - name: 萬古神王
 #   comic_urls:
 #     - http://qiman59.com/17384/
-- name: 失業魔王
-  comic_urls:
-    - https://www.baozimh.com/comic/shiyemowang-sfqingxiaoshuo
-    - http://qiman59.com/16793/
+# - name: 失業魔王
+#   comic_urls:
+#     - https://baozimh.org/manga/shiyemowang-sfqingxiaoshuo
+#     - https://www.baozimh.com/comic/shiyemowang-sfqingxiaoshuo
+#     - http://qiman59.com/16793/
 # - name: 修真聊天群
 #   comic_urls:
 #     - http://qiman59.com/9454/
 - name: 我家大師兄腦子有坑
   comic_urls:
+    # - https://baozimh.org/manga/wojiadashixiongnaoziyoukeng-juxiangmanhua
     - https://www.baozimh.com/comic/wojiadashixiongnaoziyoukeng-juxiangmanhua_9c6rg8
     - http://qiman59.com/12624/
 # - name: 我的女徒弟們都是未來諸天大佬
@@ -132,11 +145,13 @@
 #     - http://qiman59.com/24583/
 - name: 史上最強男主角
   comic_urls:
+    - https://baozimh.org/manga/shishangzuiqiangnanzhujiao-taxuedongman
     - https://www.baozimh.com/comic/shishangzuiqiangnanzhujiao-taxuedongman
     - http://qiman59.com/24334/
     - https://www.colamanga.com/manga-rq384584/
 - name: 放開那個女巫
   comic_urls:
+    - https://baozimh.org/manga/fangkainagenuwu-yuewenmanhua
     - https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e
     - http://qiman59.com/15437/
     - https://www.colamanhua.com/manga-yi73804/
@@ -145,14 +160,17 @@
     - https://www.piaotia.com/html/14/14565/
 - name: 我家老婆来自一千年前
   comic_urls:
+    - https://baozimh.org/manga/wojialaopolaiziyiqiannianqian-yuewenmanhua
     - https://www.baozimh.com/comic/wojialaopolaiziyiqiannianqian-yuewenmanhua
     - https://www.colamanga.com/manga-ad81146/
 - name: 我真沒想重生啊
   comic_urls:
+    - https://baozimh.org/manga/wozhenmeixiangzhongshenga-pikapi
     - https://www.baozimh.com/comic/wozhenmeixiangzhongshenga-pikapi
     - https://www.colamanga.com/manga-mf955567/
 - name: 頂級氣運，悄悄修煉千年
   comic_urls:
+    - https://baozimh.org/manga/dingjiqiyunqiaoqiaoxiulianqiannian-yuewenmanhua
     - https://www.baozimh.com/comic/dingjiqiyunqiaoqiaoxiulianqiannian-yuewenmanhua
     - https://www.colamanga.com/manga-rl19867/
 - name: 小师妹明明超强却过分沙雕
@@ -167,3 +185,7 @@
   comic_urls:
     - https://baozimh.org/manga/nvzhucongshulipaochulailezenmeban
     - https://www.colamanga.com/manga-oh587803/
+- name: 娘子竟是未来暴君女帝
+  comic_urls:
+    - https://baozimh.org/manga/niangzijingshiweilaibaojunnudi-zuozhemanhuixinfeng
+    - https://www.colamanga.com/manga-kz08652/

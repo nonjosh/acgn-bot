@@ -3,9 +3,8 @@ import os
 import time
 import asyncio
 import telegram
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler
-from telegram.ext import CallbackContext
+from telegram import Update, Bot
+from telegram.ext import ApplicationBuilder, CommandHandler, CallbackContext
 from dotenv import load_dotenv
 from helpers.utils import get_logger
 from helpers.message import MessageHelper
@@ -15,6 +14,8 @@ TOKEN = os.environ.get("TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 
 logger = get_logger(__name__)
+
+MAX_RETRIES = 3
 
 
 class TgHelper:
@@ -28,11 +29,9 @@ class TgHelper:
 
         self.token = token
         self.chat_id = chat_id
-        self.bot = telegram.Bot(token=self.token)
-
-        # Create the Updater and pass it your bot's token.
 
         self.application = ApplicationBuilder().token(self.token).build()
+        self.bot: Bot = self.application.bot
 
         # on different commands - answer in Telegram
         self.application.add_handler(CommandHandler("list_config", self.list_config))
@@ -46,7 +45,7 @@ class TgHelper:
         # Start the Bot
         self.application.run_polling()
 
-    def send_msg(
+    async def send_msg(
         self,
         content="No input content",
         url_text: str = None,
@@ -74,43 +73,50 @@ class TgHelper:
             )
             reply_markup = telegram.InlineKeyboardMarkup([[url_button]])
 
+        # Create a new instance of the telegram.Bot class
+        bot = telegram.Bot(token=self.token)
+
         # Send message
         retries = 1
         success = False
-        while not success:
+        while not success and retries <= MAX_RETRIES:
             try:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                loop.run_until_complete(
-                    self.bot.send_message(
-                        chat_id=self.chat_id,
-                        text=content,
-                        parse_mode=parse_mode,
-                        reply_markup=reply_markup,
-                    )
+                await bot.send_message(
+                    chat_id=self.chat_id,
+                    text=content,
+                    parse_mode=parse_mode,
+                    reply_markup=reply_markup,
                 )
                 success = True
+                return
             except telegram.error.TelegramError as err:
                 wait = retries * 30
                 logger.error("Error occurs for %s: %s", content, err)
-                logger.error("Waiting %i secs and re-trying...", wait)
-                time.sleep(wait * 1000)
+                logger.error(
+                    "Waiting %i secs and re-trying... (%i/%i)",
+                    wait,
+                    retries,
+                    MAX_RETRIES,
+                )
+                await asyncio.sleep(wait)
                 retries += 1
-            finally:
-                loop.close()
+        logger.error("Failed to send message after %i retries", MAX_RETRIES)
 
     async def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
 
+        logger.info("The /list_config command is issued")
         html_response = MessageHelper().get_config_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
 
     async def list_latest(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_latest is issued."""
+        logger.info("The /list_latest command is issued")
         html_response = MessageHelper().get_latest_chapter_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
 
     async def list_last_check(self, update: Update, _: CallbackContext) -> None:
         """List last check time of each helper when the command /list_last_check is issued."""
+        logger.info("The /list_last_check command is issued")
         html_response = MessageHelper().get_last_check_time_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)

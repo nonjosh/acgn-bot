@@ -24,10 +24,7 @@ class DashumanhuaChecker(AbstractChapterChecker):
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text
-            chapter_path = chapter_tag["href"]
-            chapter_url = urlunparse(
-                urlparse(self.check_url)._replace(path=chapter_path)
-            )
+            chapter_url = chapter_tag["href"]
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
-        return chapter_list
+        return chapter_list[::-1]

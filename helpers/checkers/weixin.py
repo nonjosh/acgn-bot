@@ -4,10 +4,10 @@ from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
 
-class Baozimh2Checker(AbstractChapterChecker):
-    """Baozimh checker"""
+class WeixinChecker(AbstractChapterChecker):
+    """Weixin checker"""
 
-    URL_SUBSTRING = "baozimh.org"
+    URL_SUBSTRING = "weixin.qq.com"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from baozimh
@@ -15,18 +15,17 @@ class Baozimh2Checker(AbstractChapterChecker):
         Returns:
             List[Chapter]: latest chapter list
         """
-        soup = self.get_latest_soup()
+        soup = self.get_latest_soup(apparent_encoding=False)
         if soup is None:
             return []
 
-        li_list: List[Tag] = soup.find_all("div", {"class": "chapteritem"})
-        a_list = [li.find("a") for li in li_list]
+        li_list: Tag = soup.find_all("li", {"class": "album__list-item"})
         chapter_list = []
-        for chapter_tag in a_list:
-            chapter_title = chapter_tag.find(
-                "span", {"class": "chaptertitle"}
-            ).text.strip()
-            chapter_url = chapter_tag["href"]
+
+        # Find which div contains chapter items
+        for li in li_list:
+            chapter_title = li.attrs["data-title"]
+            chapter_url = li.attrs["data-link"]
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
         return chapter_list[::-1]
