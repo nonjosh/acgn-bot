@@ -1,6 +1,6 @@
 from typing import List
 from urllib.parse import urlparse, urlunparse
-from chinese_converter import to_traditional
+from chinese_converter import to_simplified
 from bs4.element import Tag
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
@@ -32,7 +32,7 @@ class BaozimhChecker(AbstractChapterChecker):
                 ]
                 chapter_list = []
                 for chapter_tag in a_list:
-                    chapter_title = to_traditional(chapter_tag[0].text)
+                    chapter_title = to_simplified(chapter_tag[0].text)
                     chapter_path = chapter_tag[0]["href"]
                     chapter_url = urlunparse(
                         urlparse(self.check_url)._replace(path=chapter_path)
