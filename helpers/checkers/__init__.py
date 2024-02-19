@@ -1,4 +1,5 @@
 """Checkers"""
+
 from typing import List
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
@@ -16,6 +17,7 @@ from helpers.checkers.xbiquge import XbiqugeChecker
 from helpers.checkers.klmanaga import KlmanagaChecker
 from helpers.checkers.kunmanga import KunmangaChecker
 from helpers.checkers.weixin import WeixinChecker
+from helpers.checkers.laimanhua import LaimanhuaChecker
 
 ALL_CHECKERS: List[AbstractChapterChecker] = [
     WxChecker,
@@ -32,6 +34,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     KlmanagaChecker,
     KunmangaChecker,
     WeixinChecker,
+    LaimanhuaChecker,
 ]
 
 

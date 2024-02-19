@@ -1,5 +1,6 @@
 """Test webscrapping function of the checker classes,
 will skip if the url is not available."""
+
 import unittest
 from typing import List
 from helpers.chapter import Chapter
@@ -135,4 +136,11 @@ class TestCheckers(unittest.TestCase):
         self.universal_checking(
             test_checker=checkers.WeixinChecker,
             check_url="https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080",
+        )
+
+    def test_laimanhua_checker(self) -> None:
+        """Laimanhua"""
+        self.universal_checking(
+            test_checker=checkers.LaimanhuaChecker,
+            check_url="https://www.laimanhua8.com/kanmanhua/quanzhiduzheshijiao/",
         )
