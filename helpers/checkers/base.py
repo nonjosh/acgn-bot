@@ -78,7 +78,6 @@ class AbstractChapterChecker(ABC):
                 ):
                     self.headers["Cookie"] = response.headers["set-cookie"]
                     request_sucess = False
-                    print("Set cookie to request header")
             except requests.exceptions.ConnectionError:
                 return None
             except requests.exceptions.RequestException:
