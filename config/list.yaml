@@ -94,7 +94,7 @@
   comic_urls:
     - https://kunmanga.com/manga/sss-class-suicide-hunter/
     - https://www.baozimh.com/comic/sssjizishaxiren-shinnoahsinnoaneidaneidabillk_r
-    - https://kunmanga.com/manga/sss-class-suicide-hunter/
+    - https://www.colamanga.com/manga-yu283597/
 # - name: 元尊
 #   novel_urls:
 #     - https://www.99wx.cc/yuanzun/
@@ -136,7 +136,7 @@
 #     - http://qiman59.com/9454/
 - name: 我家大師兄腦子有坑
   comic_urls:
-    # - https://baozimh.org/manga/wojiadashixiongnaoziyoukeng-juxiangmanhua
+    - https://baozimh.org/manga/wojiadashixiongnaoziyoukeng-juxiangmanhua
     - https://www.baozimh.com/comic/wojiadashixiongnaoziyoukeng-juxiangmanhua_9c6rg8
     - http://qiman59.com/12624/
 # - name: 我的女徒弟們都是未來諸天大佬
@@ -189,3 +189,7 @@
   comic_urls:
     - https://baozimh.org/manga/niangzijingshiweilaibaojunnudi-zuozhemanhuixinfeng
     - https://www.colamanga.com/manga-kz08652/
+- name: 全知读者视角
+  comic_urls:
+    - https://www.laimanhua8.com/kanmanhua/quanzhiduzheshijiao/
+    - https://www.colamanga.com/manga-gs015814/
