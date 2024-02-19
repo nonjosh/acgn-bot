@@ -43,7 +43,8 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 | dashuhuwai | <https://www.dashuhuwai.com/comic/fangkainagenvwu/>                                                                           | comic      |
 | mn4u       | <https://mn4u.net/zgm-2149/>                                                                                                  | comic      |
 | klmanga    | <https://mangakl.su/one-piece-raw-1058>                                                                                       | comic      |
-| weixin     | <https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080&__biz=MzI5MjMwNjQxMw==#wechat_redirect> | novel      |
+| laimanhua  | <https://www.laimanhua8.com/kanmanhua/quanzhiduzheshijiao/>                                                                   | comic      |
+| weixin     | <https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080&__biz=MzI5MjMwNjQxMw==#wechat_redirect> | others     |
 
 ### Default Settings
 
