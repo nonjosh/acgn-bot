@@ -1,6 +1,5 @@
 """Telegram Helper"""
 import os
-import time
 import asyncio
 import telegram
 from telegram import Update, Bot
@@ -73,14 +72,13 @@ class TgHelper:
             )
             reply_markup = telegram.InlineKeyboardMarkup([[url_button]])
 
-        # Create a new instance of the telegram.Bot class
-        bot = telegram.Bot(token=self.token)
-
         # Send message
         retries = 1
         success = False
         while not success and retries <= MAX_RETRIES:
             try:
+                # Create a new instance of the telegram.Bot class
+                bot = telegram.Bot(token=self.token)
                 await bot.send_message(
                     chat_id=self.chat_id,
                     text=content,
