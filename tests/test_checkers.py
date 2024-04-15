@@ -2,7 +2,7 @@
 will skip if the url is not available."""
 
 import unittest
-from typing import List
+from typing import List, Type
 from helpers.chapter import Chapter
 from helpers import checkers
 from helpers.checkers import AbstractChapterChecker
@@ -21,7 +21,7 @@ class TestCheckers(unittest.TestCase):
         self.assertGreater(len(chapter_list), 0)
 
     def universal_checking(
-        self, test_checker: AbstractChapterChecker, check_url: str
+        self, test_checker: Type[AbstractChapterChecker], check_url: str
     ) -> None:
         """Universal checker"""
         # Pass if the website is not healthy
@@ -93,6 +93,13 @@ class TestCheckers(unittest.TestCase):
         self.universal_checking(
             test_checker=checkers.Baozimh2Checker,
             check_url="https://baozimh.org/manga/xiaoshimeimingmingchaoqiangqueguofenshadiao",
+        )
+
+    def test_biqu_checker(self) -> None:
+        """Biqu"""
+        self.universal_checking(
+            test_checker=checkers.BiquChecker,
+            check_url="http://m.biqu520.net/wapbook-147321/",
         )
 
     def test_xbiquge_checker(self) -> None:
