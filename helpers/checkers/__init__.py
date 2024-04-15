@@ -11,6 +11,7 @@ from helpers.checkers.manhuagui import ManhuaguiChecker
 from helpers.checkers.qiman import QimanChecker
 from helpers.checkers.baozimh import BaozimhChecker
 from helpers.checkers.baozimh2 import Baozimh2Checker
+from helpers.checkers.biqu import BiquChecker
 from helpers.checkers.dashuhuwai import DashumanhuaChecker
 from helpers.checkers.mn4u import Mn4uChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
@@ -28,6 +29,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     QimanChecker,
     BaozimhChecker,
     Baozimh2Checker,
+    BiquChecker,
     DashumanhuaChecker,
     Mn4uChecker,
     XbiqugeChecker,

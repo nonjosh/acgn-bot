@@ -95,6 +95,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://baozimh.org/manga/xiaoshimeimingmingchaoqiangqueguofenshadiao",
         )
 
+    def test_biqu_checker(self) -> None:
+        """Biqu"""
+        self.universal_checking(
+            test_checker=checkers.BiquChecker,
+            check_url="http://m.biqu520.net/wapbook-147321/",
+        )
+
     def test_xbiquge_checker(self) -> None:
         """Xbiquge"""
         self.universal_checking(
