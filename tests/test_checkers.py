@@ -3,8 +3,9 @@ will skip if the url is not available."""
 
 import unittest
 from typing import List, Type
-from helpers.chapter import Chapter
+
 from helpers import checkers
+from helpers.chapter import Chapter
 from helpers.checkers import AbstractChapterChecker
 from helpers.utils import check_url_valid
 

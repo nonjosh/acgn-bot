@@ -1,6 +1,8 @@
 from typing import List
+
 from bs4.element import Tag
 from chinese_converter import to_simplified
+
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 

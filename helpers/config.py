@@ -1,5 +1,6 @@
 """Config helper class"""
 import os
+
 from helpers.yml_parser import YmlParser
 
 DEFAULT_LIST_YAML_PATH = "config/list.yaml"

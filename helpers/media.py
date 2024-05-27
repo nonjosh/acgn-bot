@@ -1,9 +1,9 @@
 """Media Helper class"""
 from typing import List, Literal
+
 from helpers.checkers import get_checker_for_url
 from helpers.checkers.base import AbstractChapterChecker
-from helpers.utils import get_logger, get_main_domain_name, check_url_valid
-
+from helpers.utils import check_url_valid, get_logger, get_main_domain_name
 
 MediaTypes = Literal["novel", "comic"]
 

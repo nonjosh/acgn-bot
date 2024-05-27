@@ -1,9 +1,10 @@
 """Utility functions"""
-from typing import List
-from datetime import datetime
-from urllib.parse import urlparse
 import logging
+from datetime import datetime
 from logging.handlers import TimedRotatingFileHandler
+from typing import List
+from urllib.parse import urlparse
+
 import requests
 
 # Create logging formatter

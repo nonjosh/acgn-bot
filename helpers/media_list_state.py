@@ -1,5 +1,6 @@
 """MediaListState class for storing the state of the media list."""
 from typing import List
+
 from helpers.media import MediaHelper
 
 

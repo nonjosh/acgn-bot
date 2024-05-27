@@ -1,11 +1,14 @@
+import json
+import time
 from abc import ABC, abstractmethod
 from typing import List
-import time
-import json
+
 import requests
 from bs4 import BeautifulSoup
+
 from helpers.chapter import Chapter
-from helpers.utils import DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT, get_list_diff
+from helpers.utils import (DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT,
+                           get_list_diff)
 
 
 class AbstractChapterChecker(ABC):

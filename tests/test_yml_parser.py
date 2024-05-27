@@ -1,5 +1,6 @@
 """Testing YML Parser class"""
 import unittest
+
 from helpers.yml_parser import YmlParser
 
 
