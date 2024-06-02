@@ -7,8 +7,11 @@ import requests
 from bs4 import BeautifulSoup
 
 from helpers.chapter import Chapter
-from helpers.utils import (DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT,
-                           get_list_diff)
+from helpers.utils import (
+    DEFAULT_HEADERS,
+    DEFAULT_REQUEST_TIMEOUT,
+    get_chapter_list_diff,
+)
 
 
 class AbstractChapterChecker(ABC):
@@ -174,7 +177,7 @@ class AbstractChapterChecker(ABC):
 
         # Get list of updated chapters if new chapter list is valid (not empty)
         if len(latest_chapter_list) > 0:
-            self.updated_chapter_list = get_list_diff(
+            self.updated_chapter_list = get_chapter_list_diff(
                 latest_chapter_list, self.chapter_list
             )
             # Update chapter list
