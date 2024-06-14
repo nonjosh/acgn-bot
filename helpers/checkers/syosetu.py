@@ -25,7 +25,7 @@ class SyosetuChecker(AbstractChapterChecker):
         dl_list: List[Tag] = list(soup.find("div", {"class": "index_box"}).findAll("a"))
         chapter_list = []
         for chapter_tag in dl_list:
-            chapter_title = chapter_tag.text
+            chapter_title = chapter_tag.text.strip()
             chapter_path = chapter_tag["href"]
             chapter_url = urlunparse(
                 urlparse(self.check_url)._replace(path=chapter_path)
