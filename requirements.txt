@@ -5,5 +5,5 @@ chinese_converter==1.0.2
 python-dotenv==0.21.0
 schedule==1.1.0
 pyyaml==6.0
-setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
 tornado>=6.3.3 # not directly required, pinned by Snyk to avoid a vulnerability
