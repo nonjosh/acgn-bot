@@ -22,7 +22,7 @@ class SyosetuChecker(AbstractChapterChecker):
         if not soup:
             return []
 
-        dl_list: List[Tag] = list(soup.find("div", {"class": "index_box"}).findAll("a"))
+        dl_list: List[Tag] = list(soup.findAll("a", {"class": "p-eplist__subtitle"}))
         chapter_list = []
         for chapter_tag in dl_list:
             chapter_title = chapter_tag.text.strip()

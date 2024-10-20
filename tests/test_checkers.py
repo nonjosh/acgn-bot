@@ -42,7 +42,7 @@ class TestCheckers(unittest.TestCase):
         """Syosetu"""
         self.universal_checking(
             test_checker=checkers.SyosetuChecker,
-            check_url="https://ncode.syosetu.com/n6621fl",
+            check_url="https://ncode.syosetu.com/n6621fl/?p=2",
         )
 
     def test_piaotian_checker(self) -> None:
