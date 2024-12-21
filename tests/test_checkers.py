@@ -3,8 +3,9 @@ will skip if the url is not available."""
 
 import unittest
 from typing import List, Type
-from helpers.chapter import Chapter
+
 from helpers import checkers
+from helpers.chapter import Chapter
 from helpers.checkers import AbstractChapterChecker
 from helpers.utils import check_url_valid
 
@@ -41,7 +42,7 @@ class TestCheckers(unittest.TestCase):
         """Syosetu"""
         self.universal_checking(
             test_checker=checkers.SyosetuChecker,
-            check_url="https://ncode.syosetu.com/n6621fl",
+            check_url="https://ncode.syosetu.com/n6621fl/?p=2",
         )
 
     def test_piaotian_checker(self) -> None:
@@ -136,6 +137,13 @@ class TestCheckers(unittest.TestCase):
         self.universal_checking(
             test_checker=checkers.KunmangaChecker,
             check_url="https://kunmanga.com/manga/sss-class-suicide-hunter/",
+        )
+
+    def test_jmanga_checker(self) -> None:
+        """jmanga"""
+        self.universal_checking(
+            test_checker=checkers.JmangaChecker,
+            check_url="https://jmanga.so/read/%E3%83%A4%E3%83%B3%E3%83%87%E3%83%AC%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AF%E7%9F%B3%E5%83%8F%E3%81%AE%E4%B9%99%E5%A5%B3%E3%81%97%E3%81%8B%E6%84%9B%E3%81%9B%E3%81%AA%E3%81%84-%E9%AD%94%E5%A5%B3%E3%81%AF%E6%84%9B%E5%BC%9F%E5%AD%90%E3%81%AE%E7%86%B1%E3%81%84%E5%8F%A3%E3%81%A5%E3%81%91%E3%81%A7%E3%81%A8%E3%81%91%E3%82%8B-raw/",
         )
 
     def test_weixin_checker(self) -> None:

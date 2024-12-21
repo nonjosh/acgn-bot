@@ -1,5 +1,7 @@
 from typing import List
+
 from bs4.element import Tag
+
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 

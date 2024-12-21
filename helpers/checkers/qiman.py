@@ -1,7 +1,8 @@
-from typing import List
-import time
 import json
+import time
+from typing import List
 from urllib.parse import urlparse, urlunparse
+
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 

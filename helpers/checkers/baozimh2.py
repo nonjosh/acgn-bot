@@ -1,5 +1,8 @@
 from typing import List
+
 from bs4.element import Tag
+from chinese_converter import to_traditional
+
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 
@@ -26,6 +29,7 @@ class Baozimh2Checker(AbstractChapterChecker):
             chapter_title = chapter_tag.find(
                 "span", {"class": "chaptertitle"}
             ).text.strip()
+            chapter_title = to_traditional(chapter_title)
             chapter_url = chapter_tag["href"]
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 

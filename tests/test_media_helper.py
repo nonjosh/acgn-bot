@@ -1,5 +1,6 @@
 """Test basic flow of each job"""
 import unittest
+
 from helpers.chapter import Chapter
 from helpers.media import MediaHelper
 from helpers.utils import check_url_valid

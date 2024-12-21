@@ -1,7 +1,9 @@
 from typing import List
 from urllib.parse import urlparse, urlunparse
-from chinese_converter import to_simplified
+
 from bs4.element import Tag
+from chinese_converter import to_simplified
+
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
 

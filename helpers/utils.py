@@ -1,10 +1,14 @@
 """Utility functions"""
-from typing import List
-from datetime import datetime
-from urllib.parse import urlparse
+
 import logging
+from datetime import datetime
 from logging.handlers import TimedRotatingFileHandler
+from typing import List
+from urllib.parse import urlparse
+
 import requests
+
+from helpers.chapter import Chapter
 
 # Create logging formatter
 FORMATTER = logging.Formatter(
@@ -141,18 +145,18 @@ def check_url_valid(url: str, request: bool = True, verbose: bool = False) -> bo
     return False
 
 
-def get_list_diff(new_list: List, old_list: List) -> List:
+def get_chapter_list_diff(
+    new_list: List[Chapter], old_list: List[Chapter]
+) -> List[Chapter]:
     """Get list of items that not in old list
 
     Args:
-        new_list (List[]): new list
-        old_list (List[]): old list
+        new_list (List[Chapter]): new list
+        old_list (List[Chapter]): old list
 
     Returns:
-        List[]: list of items that not in old list
+        List[Chapter]: list of items that not in old list
     """
-    diff_list = []
-    for item in new_list:
-        if item not in old_list:
-            diff_list.append(item)
+    old_urls = {item.url for item in old_list}
+    diff_list = [item for item in new_list if item.url not in old_urls]
     return diff_list

@@ -1,6 +1,7 @@
 """YML Parser"""
-import yaml
 import requests
+import yaml
+
 from helpers.utils import DEFAULT_HEADERS, DEFAULT_REQUEST_TIMEOUT, get_logger
 
 logger = get_logger(__name__)
