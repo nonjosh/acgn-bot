@@ -1,7 +1,6 @@
 from typing import List
 from urllib.parse import urlparse, urlunparse
 
-from bs4.element import Tag
 from chinese_converter import to_traditional
 
 from helpers.chapter import Chapter
