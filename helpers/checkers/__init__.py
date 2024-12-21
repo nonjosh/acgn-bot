@@ -8,6 +8,7 @@ from helpers.checkers.baozimh2 import Baozimh2Checker
 from helpers.checkers.base import AbstractChapterChecker
 from helpers.checkers.biqu import BiquChecker
 from helpers.checkers.dashuhuwai import DashumanhuaChecker
+from helpers.checkers.jmanga import JmangaChecker
 from helpers.checkers.klmanaga import KlmanagaChecker
 from helpers.checkers.kunmanga import KunmangaChecker
 from helpers.checkers.laimanhua import LaimanhuaChecker
@@ -36,6 +37,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     XbiqugeChecker,
     KlmanagaChecker,
     KunmangaChecker,
+    JmangaChecker,
     WeixinChecker,
     LaimanhuaChecker,
 ]
