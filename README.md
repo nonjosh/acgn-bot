@@ -5,20 +5,20 @@
 ![unittest workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/python-test.yml/badge.svg)
 ![CodeQL workflow](https://github.com/nonjosh/acgn-bot/actions/workflows/codeql-analysis.yml/badge.svg)
 
-- [Telegram bot: Check anime/comic/game/novel websites update](#telegram-bot-check-animecomicgamenovel-websites-update)
-  - [Introduction](#introduction)
-    - [Screenshots](#screenshots)
-    - [Supported websites](#supported-websites)
-    - [Default Settings](#default-settings)
-    - [Supported Telegram Commands](#supported-telegram-commands)
-    - [Environment Variables](#environment-variables)
-  - [How to use](#how-to-use)
-    - [Setup](#setup)
-      - [Option 1: Python](#option-1-python)
-      - [Option 2: Docker Compose](#option-2-docker-compose)
-      - [Option 3: Kubernetes](#option-3-kubernetes)
-    - [Edit your list](#edit-your-list)
-  - [Features to add](#features-to-add)
+-   [Telegram bot: Check anime/comic/game/novel websites update](#telegram-bot-check-animecomicgamenovel-websites-update)
+    -   [Introduction](#introduction)
+        -   [Screenshots](#screenshots)
+        -   [Supported websites](#supported-websites)
+        -   [Default Settings](#default-settings)
+        -   [Supported Telegram Commands](#supported-telegram-commands)
+        -   [Environment Variables](#environment-variables)
+    -   [How to use](#how-to-use)
+        -   [Setup](#setup)
+            -   [Option 1: Python](#option-1-python)
+            -   [Option 2: Docker Compose](#option-2-docker-compose)
+            -   [Option 3: Kubernetes](#option-3-kubernetes)
+        -   [Edit your list](#edit-your-list)
+    -   [Features to add](#features-to-add)
 
 ## Introduction
 
@@ -31,21 +31,22 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 
 ### Supported websites
 
-| Name       | Example Url                                                                                                                   | Media Type |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| syosetu    | <https://ncode.syosetu.com/n6621fl>                                                                                           | novel      |
-| piaotian   | <https://www.piaotia.com/html/14/14565/>                                                                                      | novel      |
-| 69shu      | <https://www.69shu.com/2108/>                                                                                                 | novel      |
-| biqu       | <http://m.biqu520.net/wapbook-147321/>                                                                                        | novel      |
-| manhuagui  | <https://m.manhuagui.com/comic/30903/>                                                                                        | comic      |
-| qimanhu    | <http://m.qmanwu2.com/12235/>                                                                                                 | comic      |
-| baozimh    | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e>                                                                | comic      |
-| xbiquge    | <https://www.xbiquge.so/book/53099/>                                                                                          | comic      |
-| dashuhuwai | <https://www.dashuhuwai.com/comic/fangkainagenvwu/>                                                                           | comic      |
-| mn4u       | <https://mn4u.net/zgm-2149/>                                                                                                  | comic      |
-| klmanga    | <https://mangakl.su/one-piece-raw-1058>                                                                                       | comic      |
-| laimanhua  | <https://www.laimanhua8.com/kanmanhua/quanzhiduzheshijiao/>                                                                   | comic      |
-| weixin     | <https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080&__biz=MzI5MjMwNjQxMw==#wechat_redirect> | others     |
+| Name       | Example Url                                                                                                                                                                                                                                                                                                                                                         | Media Type |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| syosetu    | <https://ncode.syosetu.com/n6621fl>                                                                                                                                                                                                                                                                                                                                 | novel      |
+| piaotian   | <https://www.piaotia.com/html/14/14565/>                                                                                                                                                                                                                                                                                                                            | novel      |
+| 69shu      | <https://www.69shu.com/2108/>                                                                                                                                                                                                                                                                                                                                       | novel      |
+| biqu       | <http://m.biqu520.net/wapbook-147321/>                                                                                                                                                                                                                                                                                                                              | novel      |
+| manhuagui  | <https://m.manhuagui.com/comic/30903/>                                                                                                                                                                                                                                                                                                                              | comic      |
+| qimanhu    | <http://m.qmanwu2.com/12235/>                                                                                                                                                                                                                                                                                                                                       | comic      |
+| baozimh    | <https://www.baozimh.com/comic/fangkainagenuwu-yuewenmanhua_e>                                                                                                                                                                                                                                                                                                      | comic      |
+| xbiquge    | <https://www.xbiquge.so/book/53099/>                                                                                                                                                                                                                                                                                                                                | comic      |
+| dashuhuwai | <https://www.dashuhuwai.com/comic/fangkainagenvwu/>                                                                                                                                                                                                                                                                                                                 | comic      |
+| mn4u       | <https://mn4u.net/zgm-2149/>                                                                                                                                                                                                                                                                                                                                        | comic      |
+| klmanga    | <https://mangakl.su/one-piece-raw-1058>                                                                                                                                                                                                                                                                                                                             | comic      |
+| jmanga     | <https://jmanga.so/read/%E3%83%A4%E3%83%B3%E3%83%87%E3%83%AC%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AF%E7%9F%B3%E5%83%8F%E3%81%AE%E4%B9%99%E5%A5%B3%E3%81%97%E3%81%8B%E6%84%9B%E3%81%9B%E3%81%AA%E3%81%84-%E9%AD%94%E5%A5%B3%E3%81%AF%E6%84%9B%E5%BC%9F%E5%AD%90%E3%81%AE%E7%86%B1%E3%81%84%E5%8F%A3%E3%81%A5%E3%81%91%E3%81%A7%E3%81%A8%E3%81%91%E3%82%8B-raw/> | comic      |
+| laimanhua  | <https://www.laimanhua8.com/kanmanhua/quanzhiduzheshijiao/>                                                                                                                                                                                                                                                                                                         | comic      |
+| weixin     | <https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080&__biz=MzI5MjMwNjQxMw==#wechat_redirect>                                                                                                                                                                                                                                       | others     |
 
 ### Default Settings
 
@@ -137,6 +138,6 @@ Edit your list in the file `list.yaml`. Restart container to apply changes.
 
 ## Features to add
 
-- hack cocomanhua cloudflare DDOS protection
-- Support other IM bot other than Telegram (e.g. Signal, Discord)
-- Add back time range for checking
+-   hack cocomanhua cloudflare DDOS protection
+-   Support other IM bot other than Telegram (e.g. Signal, Discord)
+-   Add back time range for checking
