@@ -67,6 +67,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.69shuba.com/book/43616.htm",
         )
 
+    def test_linovelib_checker(self) -> None:
+        """linovelib"""
+        self.universal_checking(
+            test_checker=checkers.LinovelibChecker,
+            check_url="https://tw.linovelib.com/novel/3921/catalog",
+        )
+
     # Comic Checkers
     def test_manhuagui_checker(self) -> None:
         """Manhuagui"""

@@ -12,6 +12,7 @@ from helpers.checkers.jmanga import JmangaChecker
 from helpers.checkers.klmanaga import KlmanagaChecker
 from helpers.checkers.kunmanga import KunmangaChecker
 from helpers.checkers.laimanhua import LaimanhuaChecker
+from helpers.checkers.linovelib import LinovelibChecker
 from helpers.checkers.manhuagui import ManhuaguiChecker
 from helpers.checkers.mn4u import Mn4uChecker
 from helpers.checkers.piaotian import PiaotianChecker
@@ -40,6 +41,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     JmangaChecker,
     WeixinChecker,
     LaimanhuaChecker,
+    LinovelibChecker,
 ]
 
 
