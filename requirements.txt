@@ -1,5 +1,5 @@
 beautifulsoup4==4.11.1
-requests==2.32.0
+requests==2.32.4
 python-telegram-bot==20.7
 chinese_converter==1.0.2
 python-dotenv==0.21.0
