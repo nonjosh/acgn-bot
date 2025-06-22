@@ -132,6 +132,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://mn4u.net/zgm-2149/",
         )
 
+    @unittest.skip("mangakl website is no longer available")
     def test_klmanga_checker(self) -> None:
         """Klmanga"""
         self.universal_checking(
