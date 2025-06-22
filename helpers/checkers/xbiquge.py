@@ -21,7 +21,9 @@ class XbiqugeChecker(AbstractChapterChecker):
         soup = self.get_latest_soup()
         if soup is None:
             return []
-        a_list: List[Tag] = list(soup.find("div", id="list").findAll("a"))
+        a_list: List[Tag] = list(
+            soup.find("ul", class_="section-list fix").findAll("a")
+        )
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text
@@ -29,7 +31,7 @@ class XbiqugeChecker(AbstractChapterChecker):
             chapter_url = urljoin(self.check_url, chapter_path)
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
-        # Remvoe duplicated
+        # Remove duplicated
         chapter_list = list(set(chapter_list))
 
         # Sort by chapter url
