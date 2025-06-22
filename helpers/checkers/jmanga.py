@@ -23,7 +23,7 @@ class JmangaChecker(AbstractChapterChecker):
         a_list: ResultSet[Tag] = soup.find_all("a", {"class": "item-link"})
         chapter_list = []
         for chapter_tag in a_list:
-            chapter_title = chapter_tag.text.strip()
+            chapter_title = chapter_tag["title"]
             chapter_url = chapter_tag["href"]
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 

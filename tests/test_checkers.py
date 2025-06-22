@@ -67,6 +67,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.69shuba.com/book/43616.htm",
         )
 
+    def test_linovelib_checker(self) -> None:
+        """linovelib"""
+        self.universal_checking(
+            test_checker=checkers.LinovelibChecker,
+            check_url="https://tw.linovelib.com/novel/3921/catalog",
+        )
+
     # Comic Checkers
     def test_manhuagui_checker(self) -> None:
         """Manhuagui"""
@@ -125,6 +132,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://mn4u.net/zgm-2149/",
         )
 
+    @unittest.skip("mangakl website is no longer available")
     def test_klmanga_checker(self) -> None:
         """Klmanga"""
         self.universal_checking(

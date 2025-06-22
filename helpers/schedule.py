@@ -123,12 +123,40 @@ class ScheduleHelper:
                 content_html_text = MessageHelper().get_update_chapters_html_message(
                     media_helper=media_helper,
                 )
+
+                async def send_with_retry():
+                    retries = 1
+                    while retries <= 3:
+                        try:
+                            await self.tg_helper.send_msg(content=content_html_text)
+                            return
+                        except Exception as err:
+                            wait = retries * 30
+                            logger.error(
+                                "Error occurs for %s %s updated!",
+                                media_helper.media_type,
+                                media_helper.name,
+                            )
+                            logger.error(err)
+                            logger.error(
+                                "Waiting %i secs and re-trying... (%i/%i)",
+                                wait,
+                                retries,
+                                3,
+                            )
+                            await asyncio.sleep(wait)
+                            retries += 1
+                    logger.error(
+                        "Failed to send message for %s %s after %i retries",
+                        media_helper.media_type,
+                        media_helper.name,
+                        3,
+                    )
+
                 try:
                     loop = asyncio.new_event_loop()
                     asyncio.set_event_loop(loop)
-                    loop.run_until_complete(
-                        self.tg_helper.send_msg(content=content_html_text)
-                    )
+                    loop.run_until_complete(send_with_retry())
                 except Exception as err:
                     logger.error("Error occurs: %s", err)
                 finally:

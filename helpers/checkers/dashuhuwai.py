@@ -1,5 +1,4 @@
 from typing import List
-from urllib.parse import urlparse, urlunparse
 
 from bs4.element import Tag
 
