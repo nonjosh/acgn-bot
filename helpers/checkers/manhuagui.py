@@ -55,12 +55,12 @@ class ManhuaguiChecker(AbstractChapterChecker):
         self._wait_for_rate_limit()
         return super().get_latest_response(url, apparent_encoding)
 
-    def get_lastest_post_response(
+    def get_latest_post_response(
         self, url: str = None, data: dict = None, apparent_encoding: bool = True
     ):
         """Override to add rate limiting before making POST requests"""
         self._wait_for_rate_limit()
-        return super().get_lastest_post_response(url, data, apparent_encoding)
+        return super().get_latest_post_response(url, data, apparent_encoding)
 
     @classmethod
     def set_rate_limit_interval(cls, interval_seconds: int) -> None:

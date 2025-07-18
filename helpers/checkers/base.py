@@ -96,7 +96,7 @@ class AbstractChapterChecker(ABC):
 
         return response
 
-    def get_lastest_post_response(
+    def get_latest_post_response(
         self,
         url: str = None,
         data: dict = None,

@@ -149,9 +149,9 @@ class TestManhuaguiRateLimiting(unittest.TestCase):
         self.assertEqual(result1, mock_response)
         self.assertEqual(result2, mock_response)
 
-    @patch("helpers.checkers.base.AbstractChapterChecker.get_lastest_post_response")
+    @patch("helpers.checkers.base.AbstractChapterChecker.get_latest_post_response")
     def test_get_post_response_rate_limited(self, mock_super_post):
-        """Test that get_lastest_post_response applies rate limiting"""
+        """Test that get_latest_post_response applies rate limiting"""
         mock_response = MagicMock()
         mock_super_post.return_value = mock_response
 
@@ -160,12 +160,12 @@ class TestManhuaguiRateLimiting(unittest.TestCase):
 
         # First call
         start_time = time.time()
-        result1 = checker.get_lastest_post_response()
+        result1 = checker.get_latest_post_response()
         first_duration = time.time() - start_time
 
         # Second call should be rate limited
         start_time = time.time()
-        result2 = checker.get_lastest_post_response()
+        result2 = checker.get_latest_post_response()
         second_duration = time.time() - start_time
 
         # Verify that the super method was called
