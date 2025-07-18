@@ -208,14 +208,12 @@ class TestManhuaguiRateLimiting(unittest.TestCase):
         # First call
         checker._wait_for_rate_limit()
 
-        # Wait longer than the rate limit interval
-        time.sleep(1.1)
-
-        # Second call should not be delayed
-        start_time = time.time()
-        checker._wait_for_rate_limit()
-        duration = time.time() - start_time
-
+        # Simulate waiting longer than the rate limit interval
+        with patch("time.time", side_effect=[0, 1.1, 1.1, 1.2]):
+            # Second call should not be delayed
+            start_time = time.time()
+            checker._wait_for_rate_limit()
+            duration = time.time() - start_time
         # Should be fast since enough time has passed
         self.assertLess(duration, 0.1)
 
