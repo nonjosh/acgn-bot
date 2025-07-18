@@ -29,7 +29,7 @@ class QimanChecker(AbstractChapterChecker):
 
         try:
             # Send with POST method
-            response = self.get_lastest_post_response(
+            response = self.get_latest_post_response(
                 url=api_url, data={"id": comic_id, "id2": 1}
             )
             """Sample response:
