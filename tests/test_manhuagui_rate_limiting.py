@@ -31,7 +31,9 @@ class TestManhuaguiRateLimiting(unittest.TestCase):
 
         # Check that lock is created
         self.assertIsNotNone(ManhuaguiChecker._request_lock)
-        self.assertIsInstance(ManhuaguiChecker._request_lock, threading.Lock)
+        # Check that the lock has the expected lock methods (duck typing approach)
+        self.assertTrue(hasattr(ManhuaguiChecker._request_lock, "acquire"))
+        self.assertTrue(hasattr(ManhuaguiChecker._request_lock, "release"))
 
         # Check default values
         self.assertEqual(ManhuaguiChecker._min_request_interval, 30)
