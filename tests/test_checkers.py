@@ -165,5 +165,5 @@ class TestCheckers(unittest.TestCase):
         """Laimanhua"""
         self.universal_checking(
             test_checker=checkers.LaimanhuaChecker,
-            check_url="https://www.laimanhua8.com/kanmanhua/quanzhiduzheshijiao/",
+            check_url="https://www.laimanhua88.com/kanmanhua/quanzhiduzheshijiao/",
         )
