@@ -42,7 +42,7 @@ class ManhuaguiChecker(AbstractChapterChecker):
                 wait_time = (
                     ManhuaguiChecker._min_request_interval - time_since_last_request
                 )
-                ManhuaguiChecker._logger.info(
+                ManhuaguiChecker._logger.debug(
                     "Rate limiting for manhuagui: waiting %.1f seconds before next request",
                     wait_time,
                 )
