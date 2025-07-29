@@ -1,5 +1,4 @@
 """Schedule helper module."""
-import asyncio
 import threading
 import time
 
@@ -124,11 +123,12 @@ class ScheduleHelper:
                     media_helper=media_helper,
                 )
 
-                async def send_with_retry():
+                def send_with_retry():
                     retries = 1
                     while retries <= 3:
                         try:
-                            await self.tg_helper.send_msg(content=content_html_text)
+                            # Try to send message using thread-safe approach
+                            self.tg_helper.send_msg_sync(content=content_html_text)
                             return
                         except Exception as err:
                             wait = retries * 30
@@ -144,7 +144,7 @@ class ScheduleHelper:
                                 retries,
                                 3,
                             )
-                            await asyncio.sleep(wait)
+                            time.sleep(wait)
                             retries += 1
                     logger.error(
                         "Failed to send message for %s %s after %i retries",
@@ -154,13 +154,9 @@ class ScheduleHelper:
                     )
 
                 try:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                    loop.run_until_complete(send_with_retry())
+                    send_with_retry()
                 except Exception as err:
                     logger.error("Error occurs: %s", err)
-                finally:
-                    loop.close()
             else:
                 # Print no update message for each chapter in terminal (if enabled)
                 if show_no_update_msg:
