@@ -127,13 +127,14 @@ class TgHelper:
                 finally:
                     try:
                         # Clean shutdown of the loop
-                        pending = asyncio.all_tasks(loop)
-                        for task in pending:
-                            task.cancel()
-                        if pending:
-                            loop.run_until_complete(
-                                asyncio.gather(*pending, return_exceptions=True)
-                            )
+                        if not loop.is_closed():
+                            pending = asyncio.all_tasks(loop)
+                            for task in pending:
+                                task.cancel()
+                            if pending:
+                                loop.run_until_complete(
+                                    asyncio.gather(*pending, return_exceptions=True)
+                                )
                     except Exception as cleanup_error:
                         logger.debug(
                             "Cleanup error during event loop shutdown: %s",
