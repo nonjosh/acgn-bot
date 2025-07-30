@@ -167,8 +167,8 @@ class TgHelper:
                             task.cancel()
                         if pending:
                             loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
-                    except Exception:
-                        pass  # Ignore cleanup errors
+                    except Exception as cleanup_error:
+                        logger.debug("Cleanup error during event loop shutdown: %s", cleanup_error)
                     finally:
                         loop.close()
             except Exception as fallback_error:
