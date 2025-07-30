@@ -1,5 +1,8 @@
 """Telegram Helper"""
+
+import asyncio
 import os
+import threading
 
 import telegram
 from dotenv import load_dotenv
@@ -43,14 +46,14 @@ class TgHelper:
         # Start the Bot
         self.application.run_polling()
 
-    async def send_msg(
+    def send_msg_sync(
         self,
         content="No input content",
         url_text: str = None,
         url: str = None,
         html: bool = True,
     ) -> None:
-        """Send message to channel
+        """Send message to channel synchronously (thread-safe)
 
         Args:
             content (str, optional): message content. Defaults to "No input content".
@@ -71,14 +74,77 @@ class TgHelper:
             )
             reply_markup = telegram.InlineKeyboardMarkup([[url_button]])
 
-        # Send message
-        bot = telegram.Bot(token=self.token)
-        await bot.send_message(
-            chat_id=self.chat_id,
-            text=content,
-            parse_mode=parse_mode,
-            reply_markup=reply_markup,
-        )
+        async def _send_message():
+            # Send message
+            bot = telegram.Bot(token=self.token)
+            await bot.send_message(
+                chat_id=self.chat_id,
+                text=content,
+                parse_mode=parse_mode,
+                reply_markup=reply_markup,
+            )
+
+        # Try to run the coroutine in the current thread's event loop
+        try:
+            # Check if we're in the main thread and there's a running event loop
+            current_loop = None
+            try:
+                current_loop = asyncio.get_running_loop()
+            except RuntimeError:
+                pass
+
+            if current_loop and not current_loop.is_closed():
+                # We have a running event loop, use run_coroutine_threadsafe
+                if threading.current_thread() != threading.main_thread():
+                    # We're in a different thread, use run_coroutine_threadsafe
+                    future = asyncio.run_coroutine_threadsafe(
+                        coro=_send_message(),
+                        loop=current_loop,
+                    )
+                    future.result()  # Wait for completion
+                else:
+                    # We're in the main thread with a running loop, can't use run_until_complete
+                    # This shouldn't happen in our use case, but handle it gracefully
+                    raise RuntimeError(
+                        "Cannot run sync method from the main thread with a running event loop. "
+                        "Ensure the event loop is properly managed or use this method in a context "
+                        "where no conflicting event loop is running."
+                    )
+            else:
+                # No running event loop, create a new one
+                # Use asyncio.run which properly handles loop lifecycle
+                asyncio.run(_send_message())
+
+        except Exception as e:
+            # If all else fails, try the robust fallback approach
+            logger.error("Primary async approach failed: %s", e)
+            try:
+                # Create a new event loop in a more robust way
+                loop = asyncio.new_event_loop()
+                try:
+                    asyncio.set_event_loop(loop)
+                    loop.run_until_complete(_send_message())
+                finally:
+                    try:
+                        # Clean shutdown of the loop
+                        if not loop.is_closed():
+                            pending = asyncio.all_tasks(loop)
+                            for task in pending:
+                                task.cancel()
+                            if pending:
+                                loop.run_until_complete(
+                                    asyncio.gather(*pending, return_exceptions=True)
+                                )
+                    except Exception as cleanup_error:
+                        logger.debug(
+                            "Cleanup error during event loop shutdown: %s",
+                            cleanup_error,
+                        )
+                    finally:
+                        loop.close()
+            except Exception as fallback_error:
+                logger.error("Fallback async approach also failed: %s", fallback_error)
+                raise
 
     async def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
