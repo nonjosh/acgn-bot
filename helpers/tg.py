@@ -150,8 +150,6 @@ class TgHelper:
                 
         except Exception as e:
             # If all else fails, try the robust fallback approach
-            from helpers.utils import get_logger
-            logger = get_logger(__name__)
             logger.error("Primary async approach failed: %s", e)
             try:
                 # Create a new event loop in a more robust way
