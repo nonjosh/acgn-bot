@@ -1,5 +1,8 @@
 """Telegram Helper"""
+
+import asyncio
 import os
+import threading
 
 import telegram
 from dotenv import load_dotenv
@@ -95,9 +98,7 @@ class TgHelper:
             url (str, optional): url. Defaults to None.
             html (bool, optional): is html. Defaults to True.
         """
-        import asyncio
-        import threading
-        
+
         # Set parse_mode to HTML if html is True
         parse_mode = telegram.constants.ParseMode.HTML if html else None
 
@@ -128,12 +129,15 @@ class TgHelper:
                 current_loop = asyncio.get_running_loop()
             except RuntimeError:
                 pass
-            
+
             if current_loop and not current_loop.is_closed():
                 # We have a running event loop, use run_coroutine_threadsafe
                 if threading.current_thread() != threading.main_thread():
                     # We're in a different thread, use run_coroutine_threadsafe
-                    future = asyncio.run_coroutine_threadsafe(_send_message(), current_loop)
+                    future = asyncio.run_coroutine_threadsafe(
+                        coro=_send_message(),
+                        loop=current_loop,
+                    )
                     future.result()  # Wait for completion
                 else:
                     # We're in the main thread with a running loop, can't use run_until_complete
@@ -147,7 +151,7 @@ class TgHelper:
                 # No running event loop, create a new one
                 # Use asyncio.run which properly handles loop lifecycle
                 asyncio.run(_send_message())
-                
+
         except Exception as e:
             # If all else fails, try the robust fallback approach
             logger.error("Primary async approach failed: %s", e)
@@ -164,14 +168,17 @@ class TgHelper:
                         for task in pending:
                             task.cancel()
                         if pending:
-                            loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+                            loop.run_until_complete(
+                                asyncio.gather(*pending, return_exceptions=True)
+                            )
                     except Exception as cleanup_error:
-                        logger.debug("Cleanup error during event loop shutdown: %s", cleanup_error)
+                        logger.debug(
+                            "Cleanup error during event loop shutdown: %s",
+                            cleanup_error,
+                        )
                     finally:
                         loop.close()
             except Exception as fallback_error:
-                from helpers.utils import get_logger
-                logger = get_logger(__name__)
                 logger.error("Fallback async approach also failed: %s", fallback_error)
                 raise
 
