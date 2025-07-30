@@ -106,9 +106,9 @@ class TgHelper:
                     # We're in the main thread with a running loop, can't use run_until_complete
                     # This shouldn't happen in our use case, but handle it gracefully
                     raise RuntimeError(
-                        "Cannot run sync method from main thread with a running event loop. "
-                        "Consider running this method in a separate thread or ensuring the event loop "
-                        "is properly managed to avoid conflicts."
+                        "Cannot run sync method from the main thread with a running event loop. "
+                        "Ensure the event loop is properly managed or use this method in a context "
+                        "where no conflicting event loop is running."
                     )
             else:
                 # No running event loop, create a new one
