@@ -46,43 +46,6 @@ class TgHelper:
         # Start the Bot
         self.application.run_polling()
 
-    async def send_msg(
-        self,
-        content="No input content",
-        url_text: str = None,
-        url: str = None,
-        html: bool = True,
-    ) -> None:
-        """Send message to channel
-
-        Args:
-            content (str, optional): message content. Defaults to "No input content".
-            url_text (str, optional): url text. Defaults to None.
-            url (str, optional): url. Defaults to None.
-            html (bool, optional): is html. Defaults to True.
-        """
-
-        # Set parse_mode to HTML if html is True
-        parse_mode = telegram.constants.ParseMode.HTML if html else None
-
-        # Construct reply button if url_text and url are given
-        reply_markup = None
-        if url is not None:
-            url_button = telegram.InlineKeyboardButton(
-                text=url_text,  # text that show to user
-                url=url,  # text that send to bot when user tap button
-            )
-            reply_markup = telegram.InlineKeyboardMarkup([[url_button]])
-
-        # Send message
-        bot = telegram.Bot(token=self.token)
-        await bot.send_message(
-            chat_id=self.chat_id,
-            text=content,
-            parse_mode=parse_mode,
-            reply_markup=reply_markup,
-        )
-
     def send_msg_sync(
         self,
         content="No input content",
