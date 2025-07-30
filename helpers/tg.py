@@ -138,7 +138,11 @@ class TgHelper:
                 else:
                     # We're in the main thread with a running loop, can't use run_until_complete
                     # This shouldn't happen in our use case, but handle it gracefully
-                    raise RuntimeError("Cannot run sync method from main thread with running loop")
+                    raise RuntimeError(
+                        "Cannot run sync method from main thread with a running event loop. "
+                        "Consider running this method in a separate thread or ensuring the event loop "
+                        "is properly managed to avoid conflicts."
+                    )
             else:
                 # No running event loop, create a new one
                 # Use asyncio.run which properly handles loop lifecycle
