@@ -27,19 +27,17 @@ class BaozimhChecker(AbstractChapterChecker):
 
         # Find which div contains chapter items
         for pure_g_div in pure_g_div_list:
-            if pure_g_div.find("a", {"class": "comics-chapters__item"}):
-                a_list = [
-                    a.findAll("a", {"class": "comics-chapters__item"})
-                    for a in pure_g_div
-                ]
+            chapter_links = pure_g_div.findAll("a", {"class": "comics-chapters__item"})
+            if chapter_links:
                 chapter_list = []
-                for chapter_tag in a_list:
-                    chapter_title = to_simplified(chapter_tag[0].text)
-                    chapter_path = chapter_tag[0]["href"]
+                for link in chapter_links:
+                    chapter_title = to_simplified(link.text)
+                    chapter_path = link["href"]
                     chapter_url = urlunparse(
                         urlparse(self.check_url)._replace(path=chapter_path)
                     )
                     chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
-                return chapter_list[::-1]
+                chapter_list.sort(key=lambda c: c.title)
+                return chapter_list
         return []
