@@ -7,6 +7,7 @@ from helpers.checkers.baozimh import BaozimhChecker
 from helpers.checkers.baozimh2 import Baozimh2Checker
 from helpers.checkers.base import AbstractChapterChecker
 from helpers.checkers.biqu import BiquChecker
+from helpers.checkers.comick import ComickChecker
 from helpers.checkers.dashuhuwai import DashumanhuaChecker
 from helpers.checkers.jmanga import JmangaChecker
 from helpers.checkers.klmanaga import KlmanagaChecker
@@ -34,6 +35,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     Baozimh2Checker,
     BiquChecker,
     DashumanhuaChecker,
+    ComickChecker,
     Mn4uChecker,
     XbiqugeChecker,
     KlmanagaChecker,
@@ -46,6 +48,15 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
 
 
 def get_checker_for_url(url):
+    """Return an initialized checker instance based on URL substring match.
+
+    Args:
+        url (str): URL of the comic/novel index page
+
+    Returns:
+        AbstractChapterChecker | None: Checker instance if matched; otherwise None
+    """
     for Checker in ALL_CHECKERS:
         if Checker.URL_SUBSTRING in url:
             return Checker(url)
+    return None

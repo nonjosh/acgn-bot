@@ -167,3 +167,10 @@ class TestCheckers(unittest.TestCase):
             test_checker=checkers.LaimanhuaChecker,
             check_url="https://www.laimanhua88.com/kanmanhua/quanzhiduzheshijiao/",
         )
+
+    def test_comick_checker(self) -> None:
+        """comick.live"""
+        self.universal_checking(
+            test_checker=checkers.ComickChecker,
+            check_url="https://comick.live/comic/03-omniscient-reader-s-viewpoint",
+        )
