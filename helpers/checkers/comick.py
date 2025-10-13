@@ -82,7 +82,7 @@ class ComickChecker(AbstractChapterChecker):
                 payload.get("data", []) if isinstance(payload, dict) else []
             )
 
-            # Deduplicate by chapter number, keeping the newest entry
+            # Deduplicate by chapter number, keeping the oldest entry
             best_by_chap: Dict[str, dict] = {}
             for it in data:
                 chap = it.get("chap")
@@ -93,7 +93,7 @@ class ComickChecker(AbstractChapterChecker):
                 if chap_key not in best_by_chap:
                     best_by_chap[chap_key] = it
                 else:
-                    if ComickChecker._item_rank(it) > ComickChecker._item_rank(
+                    if ComickChecker._item_rank(it) < ComickChecker._item_rank(
                         best_by_chap[chap_key]
                     ):
                         best_by_chap[chap_key] = it
