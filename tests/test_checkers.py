@@ -100,7 +100,7 @@ class TestCheckers(unittest.TestCase):
         """another Baozimh"""
         self.universal_checking(
             test_checker=checkers.Baozimh2Checker,
-            check_url="https://baozimh.org/manga/xiaoshimeimingmingchaoqiangqueguofenshadiao",
+            check_url="https://api-get-v3.mgsearcher.com/api/manga/get?mid=510&name=zhangmendidiaodian-yuewenmanhua",
         )
 
     def test_biqu_checker(self) -> None:

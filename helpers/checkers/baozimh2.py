@@ -1,5 +1,6 @@
 from typing import List
 
+import requests
 from bs4.element import Tag
 from chinese_converter import to_traditional
 
@@ -8,9 +9,13 @@ from helpers.checkers.base import AbstractChapterChecker
 
 
 class Baozimh2Checker(AbstractChapterChecker):
-    """Baozimh checker"""
+    """baozimh.org checker
+    sample API: https://api-get-v3.mgsearcher.com/api/manga/get?mid=510
+    sample comic page: https://baozimh.org/manga/zhangmendidiaodian-yuewenmanhua
+    expected format in config: https://api-get-v3.mgsearcher.com/api/manga/get?mid=510&name=zhangmendidiaodian-yuewenmanhua
+    """
 
-    URL_SUBSTRING = "baozimh.org"
+    URL_SUBSTRING = "mgsearcher"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from baozimh
@@ -18,19 +23,18 @@ class Baozimh2Checker(AbstractChapterChecker):
         Returns:
             List[Chapter]: latest chapter list
         """
-        soup = self.get_latest_soup()
-        if soup is None:
-            return []
+        response = requests.get(self.check_url)
 
-        li_list: List[Tag] = soup.find_all("div", {"class": "chapteritem"})
-        a_list = [li.find("a") for li in li_list]
-        chapter_list = []
-        for chapter_tag in a_list:
-            chapter_title = chapter_tag.find(
-                "span", {"class": "chaptertitle"}
-            ).text.strip()
+        chapters: list[dict] = response.json().get("data", {}).get("chapters", [])
+        comic_name = self.check_url.split("name=")[-1]
+
+        chapter_list: List[Chapter] = []
+        for chapter in chapters:
+
+            chapter_title = chapter["attributes"]["title"]
             chapter_title = to_traditional(chapter_title)
-            chapter_url = chapter_tag["href"]
+            chapter_slug = chapter["attributes"]["slug"]
+            chapter_url = f"https://baozimh.org/manga/{comic_name}/{chapter_slug}"
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
-        return chapter_list[::-1]
+        return chapter_list
