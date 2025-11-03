@@ -43,14 +43,16 @@ class MessageHelper:
         # qiman59 | cocomanga
         content_html_text += media_helper.get_urls_text()
 
-        # Updated 3 chapter(s): 第六百二十六章 挑戰鐘太丘, 第六百二十七章 虛珠, 第六百二十八章 巔峰對決
+        # Updated 3 chapter(s):
+        # • 第六百二十六章 挑戰鐘太丘
+        # • 第六百二十七章 虛珠
+        # • 第六百二十八章 巔峰對決
         updated_chapter_list = media_helper.checker.updated_chapter_list
-        content_html_text += f"Updated {len(updated_chapter_list)} chapter(s): "
-        chapter_texts = [
-            f"<a href='{updated_chapter.url}'>{updated_chapter.title}</a>"
-            for updated_chapter in updated_chapter_list
-        ]
-        content_html_text += ", ".join(chapter_texts)
+        content_html_text += f"Updated {len(updated_chapter_list)} chapter(s):\n"
+        for updated_chapter in updated_chapter_list:
+            content_html_text += (
+                f"• <a href='{updated_chapter.url}'>{updated_chapter.title}</a>\n"
+            )
 
         # Convert to traditional Chinese
         return chinese_converter.to_traditional(content_html_text)
