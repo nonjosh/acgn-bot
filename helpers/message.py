@@ -43,14 +43,28 @@ class MessageHelper:
         Returns:
             str: html message
         """
-
         html_response = (
             f"<b>Current Config (total {len(MediaListState.media_helper_list)})</b>\n"
         )
+
+        # Group all helpers (regardless of checker) by media type
+        groups: dict[str, list[MediaHelper]] = {"comic": [], "novel": []}
         for helper in MediaListState.media_helper_list:
-            html_response += (
-                f"{helper.media_type} {helper.name}: " + helper.get_urls_text()
-            )
+            if helper.media_type not in groups:
+                groups[helper.media_type] = []
+            groups[helper.media_type].append(helper)
+
+        # Render groups in a stable order: comics first, then novels
+        for media_type in ("comic", "novel"):
+            helpers = groups.get(media_type, [])
+            if not helpers:
+                continue
+            # Group header
+            html_response += f"\n<b>{media_type.title()}</b>\n"
+            # Items (omit media type on each line since grouped)
+            for helper in helpers:
+                html_response += f"{helper.name}: " + helper.get_urls_text()
+
         return html_response
 
     def get_latest_chapter_list_html_message(self) -> str:
@@ -62,13 +76,36 @@ class MessageHelper:
         html_response = (
             f"<b>Latest Chapters (total {len(MediaListState.media_helper_list)})</b>\n"
         )
+
+        # Group helpers by media type (only include those with a checker)
+        groups: dict[str, list[MediaHelper]] = {"comic": [], "novel": []}
         for helper in MediaListState.media_helper_list:
-            if helper.checker:
+            if not helper.checker:
+                continue
+            if helper.media_type not in groups:
+                groups[helper.media_type] = []
+            groups[helper.media_type].append(helper)
+
+        # Render groups in a stable order: comics first, then novels
+        for media_type in ("comic", "novel"):
+            helpers = groups.get(media_type, [])
+            if not helpers:
+                continue
+            # Group header
+            html_response += f"\n<b>{media_type.title()}</b>\n"
+            # Items (omit media type on each line since grouped)
+            for helper in helpers:
                 latest_chapter = helper.checker.get_latest_chapter()
                 if latest_chapter is not None:
-                    html_response += f"[{helper.media_type}] <a href='{helper.check_url}'>{helper.name}</a>: <a href='{latest_chapter.url}'>{latest_chapter.title}</a> (total: {len(helper.checker.chapter_list)}ch)\n"
+                    html_response += (
+                        f"<a href='{helper.check_url}'>{helper.name}</a>: "
+                        f"<a href='{latest_chapter.url}'>{latest_chapter.title}</a> "
+                        f"(total: {len(helper.checker.chapter_list)}ch)\n"
+                    )
                 else:
-                    html_response += f"[{helper.media_type}] <a href='{helper.check_url}'>{helper.name}</a>: N/A\n"
+                    html_response += (
+                        f"<a href='{helper.check_url}'>{helper.name}</a>: N/A\n"
+                    )
         return html_response
 
     def get_last_check_time_list_html_message(self) -> str:
