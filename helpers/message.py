@@ -1,4 +1,5 @@
 """Message helper module."""
+
 import chinese_converter
 
 from helpers.media import MediaHelper
@@ -79,7 +80,27 @@ class MessageHelper:
         html_response = (
             f"<b>Late Check Time (total {len(MediaListState.media_helper_list)})</b>\n"
         )
+
+        # Group helpers by media type
+        groups: dict[str, list[MediaHelper]] = {"comic": [], "novel": []}
         for helper in MediaListState.media_helper_list:
             if helper.checker:
-                html_response += f"{helper.checker.last_check_time}| {helper.media_type} <a href='{helper.check_url}'>{helper.name}</a>\n"
+                if helper.media_type not in groups:
+                    groups[helper.media_type] = []
+                groups[helper.media_type].append(helper)
+
+        # Render groups in a stable order: comics first, then novels
+        for media_type in ("comic", "novel"):
+            helpers = groups.get(media_type, [])
+            if not helpers:
+                continue
+            # Group header
+            html_response += f"\n<b>{media_type.title()}</b>\n"
+            # Items (omit media type on each line since grouped)
+            for helper in helpers:
+                html_response += (
+                    f"{helper.checker.last_check_time}| "
+                    f"<a href='{helper.check_url}'>{helper.name}</a>\n"
+                )
+
         return html_response
