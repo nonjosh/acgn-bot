@@ -12,10 +12,10 @@ class Baozimh2Checker(AbstractChapterChecker):
     """baozimh.org checker
     sample API: https://api-get-v3.mgsearcher.com/api/manga/get?mid=510
     sample comic page: https://baozimh.org/manga/zhangmendidiaodian-yuewenmanhua
-    expected format in config: https://api-get-v3.mgsearcher.com/api/manga/get?mid=510&name=zhangmendidiaodian-yuewenmanhua
+    expected format in config: https://baozimh.org/manga/zhangmendidiaodian-yuewenmanhua?mid=510
     """
 
-    URL_SUBSTRING = "mgsearcher"
+    URL_SUBSTRING = "baozimh.org"
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list from baozimh
@@ -23,10 +23,13 @@ class Baozimh2Checker(AbstractChapterChecker):
         Returns:
             List[Chapter]: latest chapter list
         """
-        response = requests.get(self.check_url)
+        mid = self.check_url.split("mid=")[-1]
+        comic_name = self.check_url.split("/manga/")[1].split("?")[0]
 
-        chapters: list[dict] = response.json().get("data", {}).get("chapters", [])
-        comic_name = self.check_url.split("name=")[-1]
+        api_url = f"https://api-get-v3.mgsearcher.com/api/manga/get?mid={mid}"
+        api_response = requests.get(api_url)
+
+        chapters: list[dict] = api_response.json().get("data", {}).get("chapters", [])
 
         chapter_list: List[Chapter] = []
         for chapter in chapters:
