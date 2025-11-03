@@ -3,6 +3,7 @@ import time
 from abc import ABC, abstractmethod
 from typing import List
 
+import backoff
 import requests
 from bs4 import BeautifulSoup
 
@@ -34,6 +35,12 @@ class AbstractChapterChecker(ABC):
 
         self.last_check_time = None
 
+    @backoff.on_exception(
+        backoff.expo,
+        (requests.exceptions.RequestException, json.decoder.JSONDecodeError),
+        max_tries=3,
+        jitter=backoff.full_jitter,
+    )
     def get_latest_response(
         self, url: str = None, apparent_encoding: bool = True
     ) -> requests.Response:
@@ -53,49 +60,44 @@ class AbstractChapterChecker(ABC):
         if url is None:
             url = self.check_url
 
-        request_sucess = False
-        retry_num = 0
-
-        while not request_sucess:
-            try:
-                # Send with GET method
-                response = requests.get(
-                    url=url,
-                    params=self.params,
-                    headers=self.headers,
-                    timeout=self.request_timeout,
+        try:
+            # Send with GET method
+            response = requests.get(
+                url=url,
+                params=self.params,
+                headers=self.headers,
+                timeout=self.request_timeout,
+            )
+            if response.status_code == 200:
+                # override encoding by real educated guess as provided by chardet
+                if apparent_encoding:
+                    response.encoding = response.apparent_encoding
+            else:
+                raise requests.exceptions.RequestException(
+                    f"Unexpected status code: {response.status_code}"
                 )
-                if response.status_code == 200:
-                    # override encoding by real educated guess as provided by chardet
-                    if apparent_encoding:
-                        response.encoding = response.apparent_encoding
-                    request_sucess = True
-                else:
-                    time.sleep(self.retry_interval)
 
-                # Check if response headers contains set-cookie PHPSESSID
-                # If yes, set the cookie to the request header for the next request
-                #
-                # now syosetu and mn4u both have `set-cookie` in response headers,
-                # but only mn4u have the string `PHPSESSID=` on first visit
-                if (
-                    "set-cookie" in response.headers
-                    and "PHPSESSID=" in response.headers["set-cookie"]
-                ):
-                    self.headers["Cookie"] = response.headers["set-cookie"]
-                    request_sucess = False
-            except requests.exceptions.ConnectionError:
-                return None
-            except requests.exceptions.RequestException:
-                time.sleep(self.retry_interval)
-            retry_num += 1
-
-            # break and return empty response if reach MAX_RETRY_NUM
-            if retry_num >= self.max_retry_num:
-                return None
+            # Check if response headers contains set-cookie PHPSESSID
+            # If yes, set the cookie to the request header for the next request
+            #
+            # now syosetu and mn4u both have `set-cookie` in response headers,
+            # but only mn4u have the string `PHPSESSID=` on first visit
+            if (
+                "set-cookie" in response.headers
+                and "PHPSESSID=" in response.headers["set-cookie"]
+            ):
+                self.headers["Cookie"] = response.headers["set-cookie"]
+        except requests.exceptions.ConnectionError:
+            return None
 
         return response
 
+    @backoff.on_exception(
+        backoff.expo,
+        (requests.exceptions.RequestException, json.decoder.JSONDecodeError),
+        max_tries=3,
+        jitter=backoff.full_jitter,
+    )
     def get_latest_post_response(
         self,
         url: str = None,
@@ -118,36 +120,25 @@ class AbstractChapterChecker(ABC):
         if url is None:
             url = self.check_url
 
-        request_sucess = False
-        retry_num = 0
-
-        while not request_sucess:
-            try:
-                # Send with POST method
-                response = requests.post(
-                    url=url,
-                    data=data,
-                    headers=self.headers,
-                    timeout=self.request_timeout,
+        try:
+            # Send with POST method
+            response = requests.post(
+                url=url,
+                data=data,
+                headers=self.headers,
+                timeout=self.request_timeout,
+            )
+            if response.status_code == 200:
+                # override encoding by real educated guess as provided by chardet
+                if apparent_encoding:
+                    response.encoding = response.apparent_encoding
+            else:
+                raise requests.exceptions.RequestException(
+                    f"Unexpected status code: {response.status_code}"
                 )
-                if response.status_code == 200:
-                    # override encoding by real educated guess as provided by chardet
-                    if apparent_encoding:
-                        response.encoding = response.apparent_encoding
-                    request_sucess = True
-                else:
-                    time.sleep(self.retry_interval)
-            except json.decoder.JSONDecodeError:
-                time.sleep(self.retry_interval)
-            except requests.exceptions.ConnectionError:
-                return []
-            except requests.exceptions.RequestException:
-                time.sleep(self.retry_interval)
-            retry_num += 1
+        except requests.exceptions.ConnectionError:
+            return []
 
-            # break and return empty response if reach MAX_RETRY_NUM
-            if retry_num >= self.max_retry_num:
-                return None
         return response
 
     def get_latest_soup(self, apparent_encoding: bool = True) -> BeautifulSoup:
