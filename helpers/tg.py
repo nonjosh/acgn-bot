@@ -1,4 +1,5 @@
 """Telegram Helper"""
+
 import os
 
 import telegram
@@ -83,18 +84,27 @@ class TgHelper:
     async def list_config(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_config is issued."""
 
-        logger.info("The /list_config command is issued")
+        logger.info(
+            "The /list_config command is issued in chat_id %s",
+            update.effective_chat.id,
+        )
         html_response = MessageHelper().get_config_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
 
     async def list_latest(self, update: Update, _: CallbackContext) -> None:
         """Send a message when the command /list_latest is issued."""
-        logger.info("The /list_latest command is issued")
+        logger.info(
+            "The /list_latest command is issued in chat_id %s",
+            update.effective_chat.id,
+        )
         html_response = MessageHelper().get_latest_chapter_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
 
     async def list_last_check(self, update: Update, _: CallbackContext) -> None:
         """List last check time of each helper when the command /list_last_check is issued."""
-        logger.info("The /list_last_check command is issued")
+        logger.info(
+            "The /list_last_check command is issued in chat_id %s",
+            update.effective_chat.id,
+        )
         html_response = MessageHelper().get_last_check_time_list_html_message()
         await update.message.reply_html(html_response, disable_web_page_preview=True)
