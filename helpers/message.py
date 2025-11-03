@@ -9,6 +9,24 @@ from helpers.media_list_state import MediaListState
 class MessageHelper:
     """Message helper class"""
 
+    def _group_media_helpers(self, include_without_checker: bool = True):
+        """Group helpers by media type.
+
+        Args:
+            include_without_checker (bool): When False, exclude helpers without a checker.
+
+        Returns:
+            dict[str, list[MediaHelper]]: Mapping of media type to helpers in original order.
+        """
+        groups = {"comic": [], "novel": []}
+        for helper in MediaListState.media_helper_list:
+            if not include_without_checker and not helper.checker:
+                continue
+            if helper.media_type not in groups:
+                groups[helper.media_type] = []
+            groups[helper.media_type].append(helper)
+        return groups
+
     def get_update_chapters_html_message(self, media_helper: MediaHelper) -> str:
         """Get update chapters as html message string
 
@@ -48,11 +66,7 @@ class MessageHelper:
         )
 
         # Group all helpers (regardless of checker) by media type
-        groups: dict[str, list[MediaHelper]] = {"comic": [], "novel": []}
-        for helper in MediaListState.media_helper_list:
-            if helper.media_type not in groups:
-                groups[helper.media_type] = []
-            groups[helper.media_type].append(helper)
+        groups = self._group_media_helpers(include_without_checker=True)
 
         # Render groups in a stable order: comics first, then novels
         for media_type in ("comic", "novel"):
@@ -78,13 +92,7 @@ class MessageHelper:
         )
 
         # Group helpers by media type (only include those with a checker)
-        groups: dict[str, list[MediaHelper]] = {"comic": [], "novel": []}
-        for helper in MediaListState.media_helper_list:
-            if not helper.checker:
-                continue
-            if helper.media_type not in groups:
-                groups[helper.media_type] = []
-            groups[helper.media_type].append(helper)
+        groups = self._group_media_helpers(include_without_checker=False)
 
         # Render groups in a stable order: comics first, then novels
         for media_type in ("comic", "novel"):
@@ -118,13 +126,8 @@ class MessageHelper:
             f"<b>Late Check Time (total {len(MediaListState.media_helper_list)})</b>\n"
         )
 
-        # Group helpers by media type
-        groups: dict[str, list[MediaHelper]] = {"comic": [], "novel": []}
-        for helper in MediaListState.media_helper_list:
-            if helper.checker:
-                if helper.media_type not in groups:
-                    groups[helper.media_type] = []
-                groups[helper.media_type].append(helper)
+        # Group helpers by media type (only include those with a checker)
+        groups = self._group_media_helpers(include_without_checker=False)
 
         # Render groups in a stable order: comics first, then novels
         for media_type in ("comic", "novel"):
