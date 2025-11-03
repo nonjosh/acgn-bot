@@ -9,7 +9,9 @@ from helpers.media_list_state import MediaListState
 class MessageHelper:
     """Message helper class"""
 
-    def _group_media_helpers(self, include_without_checker: bool = True):
+    def _group_media_helpers(
+        self, include_without_checker: bool = True
+    ) -> dict[str, list[MediaHelper]]:
         """Group helpers by media type.
 
         Args:
