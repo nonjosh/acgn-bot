@@ -25,6 +25,9 @@ class Baozimh2Checker(AbstractChapterChecker):
         comic_name = self.check_url.split("/manga/")[1].split("?")[0]
 
         api_url = f"https://api-get-v3.mgsearcher.com/api/manga/get?mid={mid}"
+        self.headers.update(
+            {"Origin": "https://baozimh.org"}
+        )  # This is needed for fetching latest chapters...
         api_response = self.get_latest_response(url=api_url, apparent_encoding=False)
 
         chapters: list[dict] = api_response.json().get("data", {}).get("chapters", [])
