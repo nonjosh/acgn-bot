@@ -60,6 +60,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.99wx.cc/wanxiangzhiwang/",
         )
 
+    @unittest.skip("Website now requires JS - crawler cannot fetch")
     def test_69shuba_checker(self) -> None:
         """69shu"""
         self.universal_checking(
@@ -82,6 +83,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://m.manhuagui.com/comic/17165/",
         )
 
+    @unittest.skip("Website broken - cannot access")
     def test_qiman_checker(self) -> None:
         """Qiman"""
         self.universal_checking(
@@ -126,6 +128,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.dashumanhua.com/comic/fangkainagenvwu/",
         )
 
+    @unittest.skip("Website now requires PHPSESSID cookie - crawler cannot fetch")
     def test_mn4u_checker(self) -> None:
         """Mn4u"""
         self.universal_checking(
@@ -141,6 +144,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://mangakl.su/tensei-shitara-dai-nana-ouji-dattanode-kimamani-majutsu-o-kiwamemasu-raw",
         )
 
+    @unittest.skip("Website now protected by Cloudflare")
     def test_kunmanga_checker(self) -> None:
         """Kunmanga"""
         self.universal_checking(
@@ -152,7 +156,7 @@ class TestCheckers(unittest.TestCase):
         """jmanga"""
         self.universal_checking(
             test_checker=checkers.JmangaChecker,
-            check_url="https://jmanga.so/read/%E3%83%A4%E3%83%B3%E3%83%87%E3%83%AC%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AF%E7%9F%B3%E5%83%8F%E3%81%AE%E4%B9%99%E5%A5%B3%E3%81%97%E3%81%8B%E6%84%9B%E3%81%9B%E3%81%AA%E3%81%84-%E9%AD%94%E5%A5%B3%E3%81%AF%E6%84%9B%E5%BC%9F%E5%AD%90%E3%81%AE%E7%86%B1%E3%81%84%E5%8F%A3%E3%81%A5%E3%81%91%E3%81%A7%E3%81%A8%E3%81%91%E3%82%8B-raw/",
+            check_url="https://jmanga.ltd/read/%E3%83%A4%E3%83%B3%E3%83%87%E3%83%AC%E9%AD%94%E6%B3%95%E4%BD%BF%E3%81%84%E3%81%AF%E7%9F%B3%E5%83%8F%E3%81%AE%E4%B9%99%E5%A5%B3%E3%81%97%E3%81%8B%E6%84%9B%E3%81%9B%E3%81%AA%E3%81%84-%E9%AD%94%E5%A5%B3%E3%81%AF%E6%84%9B%E5%BC%9F%E5%AD%90%E3%81%AE%E7%86%B1%E3%81%84%E5%8F%A3%E3%81%A5%E3%81%91%E3%81%A7%E3%81%A8%E3%81%91%E3%82%8B-raw/",
         )
 
     def test_weixin_checker(self) -> None:
