@@ -22,7 +22,7 @@ class XbiqugeChecker(AbstractChapterChecker):
         if soup is None:
             return []
         a_list: List[Tag] = list(
-            soup.find("ul", class_="section-list fix").findAll("a")
+            soup.find("ul", class_="section-list fix").find_all("a")
         )
         chapter_list = []
         for chapter_tag in a_list:

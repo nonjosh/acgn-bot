@@ -23,7 +23,7 @@ class BiquChecker(AbstractChapterChecker):
             return []
 
         ul = soup.find("ul", {"class": "chapter"})
-        a_list = ul.findAll("a")
+        a_list = ul.find_all("a")
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = to_traditional(chapter_tag.text)

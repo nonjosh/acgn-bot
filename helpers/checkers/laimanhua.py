@@ -21,7 +21,7 @@ class LaimanhuaChecker(AbstractChapterChecker):
         soup = self.get_latest_soup()
         if soup is None:
             return []
-        a_list: List[Tag] = list(soup.find("div", id="play_0").findAll("a"))
+        a_list: List[Tag] = list(soup.find("div", id="play_0").find_all("a"))
         chapter_list = []
         for chapter_tag in a_list:
             if chapter_tag.get("title"):

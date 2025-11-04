@@ -91,7 +91,7 @@ class ManhuaguiChecker(AbstractChapterChecker):
 
         comic_path = urlparse(self.check_url).path
 
-        a_tags = soup.findAll("a")
+        a_tags = soup.find_all("a")
 
         chapter_list = []
         for i in range(0, len(a_tags) - 1):  # 'a' tags are for links

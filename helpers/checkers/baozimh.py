@@ -23,11 +23,11 @@ class BaozimhChecker(AbstractChapterChecker):
         if soup is None:
             return []
 
-        pure_g_div_list: List[Tag] = soup.findAll("div", {"class": "pure-g"})
+        pure_g_div_list: List[Tag] = soup.find_all("div", {"class": "pure-g"})
 
         # Find which div contains chapter items
         for pure_g_div in pure_g_div_list:
-            chapter_links = pure_g_div.findAll("a", {"class": "comics-chapters__item"})
+            chapter_links = pure_g_div.find_all("a", {"class": "comics-chapters__item"})
             if chapter_links:
                 chapter_list = []
                 for link in chapter_links:

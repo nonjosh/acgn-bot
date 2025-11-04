@@ -29,7 +29,7 @@ class Mn4uChecker(AbstractChapterChecker):
         if soup is None:
             return []
         a_list: List[Tag] = list(
-            soup.find("ul", {"class": "list-chapters"}).findAll("a")
+            soup.find("ul", {"class": "list-chapters"}).find_all("a")
         )
         chapter_list = []
         for chapter_tag in a_list:

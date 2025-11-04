@@ -22,7 +22,7 @@ class PiaotianChecker(AbstractChapterChecker):
         if not soup:
             return []
 
-        dl_list: List[Tag] = list(soup.find("div", {"class": "centent"}).findAll("a"))
+        dl_list: List[Tag] = list(soup.find("div", {"class": "centent"}).find_all("a"))
         chapter_list = []
         for chapter_tag in dl_list:
             chapter_title = chapter_tag.text

@@ -22,7 +22,7 @@ class WxChecker(AbstractChapterChecker):
         if not soup:
             return []
 
-        a_list: List[Tag] = list(soup.find("div", id="play_0").findAll("a"))
+        a_list: List[Tag] = list(soup.find("div", id="play_0").find_all("a"))
         chapter_list = []
         for chapter_tag in a_list:
             chapter_title = chapter_tag.text

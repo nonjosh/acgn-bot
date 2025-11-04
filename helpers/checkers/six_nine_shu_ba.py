@@ -21,7 +21,7 @@ class SixNineShuBaChecker(AbstractChapterChecker):
         if not soup:
             return []
 
-        dl_list: List[Tag] = list(soup.find("div", {"class": "qustime"}).findAll("a"))
+        dl_list: List[Tag] = list(soup.find("div", {"class": "qustime"}).find_all("a"))
         chapter_list = []
         for chapter_tag in dl_list:
             chapter_title = chapter_tag.find("span").text
