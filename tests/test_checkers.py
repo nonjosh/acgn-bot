@@ -118,6 +118,7 @@ class TestCheckers(unittest.TestCase):
         )
 
     # FIXME: Need JS cookies but postman can access?
+    @unittest.skip("Failing in GitHub Actions - GitHub IP might be banned?")
     def test_dashumanhua_checker(self) -> None:
         """Dashumanhua"""
         self.universal_checking(
