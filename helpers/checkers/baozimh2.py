@@ -1,7 +1,5 @@
 from typing import List
 
-import requests
-from bs4.element import Tag
 from chinese_converter import to_traditional
 
 from helpers.chapter import Chapter
@@ -27,7 +25,7 @@ class Baozimh2Checker(AbstractChapterChecker):
         comic_name = self.check_url.split("/manga/")[1].split("?")[0]
 
         api_url = f"https://api-get-v3.mgsearcher.com/api/manga/get?mid={mid}"
-        api_response = requests.get(api_url)
+        api_response = self.get_latest_response(url=api_url, apparent_encoding=False)
 
         chapters: list[dict] = api_response.json().get("data", {}).get("chapters", [])
 

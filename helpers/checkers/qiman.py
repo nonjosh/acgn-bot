@@ -1,5 +1,4 @@
 import json
-import time
 from typing import List
 from urllib.parse import urlparse, urlunparse
 
@@ -18,9 +17,6 @@ class QimanChecker(AbstractChapterChecker):
         Returns:
             List[Chapter]: latest chapter list
         """
-        # Update last check time
-        self.last_check_time = time.strftime("%Y-%m-%dT%H:%M:%S%z")
-
         # Construct api url
         url_parse = urlparse(self.check_url)
         api_url = urlunparse(url_parse._replace(path="/bookchapter/"))
