@@ -73,9 +73,6 @@ class KakuyomuChecker(AbstractChapterChecker):
                 if title_tag
                 else a_tag.get_text(" ", strip=True)
             )
-            # Kakuyomu commonly uses the ideographic space (U+3000) between
-            # episode number and title; normalize it for consistent diffs/alerts.
-            title = title.replace("\u3000", " ").strip()
             if not title or not href:
                 continue
 
