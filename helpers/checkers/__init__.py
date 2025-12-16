@@ -9,6 +9,7 @@ from helpers.checkers.base import AbstractChapterChecker
 from helpers.checkers.biqu import BiquChecker
 from helpers.checkers.comick import ComickChecker
 from helpers.checkers.jmanga import JmangaChecker
+from helpers.checkers.kakuyomu import KakuyomuChecker
 from helpers.checkers.laimanhua import LaimanhuaChecker
 from helpers.checkers.linovelib import LinovelibChecker
 from helpers.checkers.manhuagui import ManhuaguiChecker
@@ -21,6 +22,7 @@ from helpers.checkers.xbiquge import XbiqugeChecker
 ALL_CHECKERS: List[AbstractChapterChecker] = [
     WxChecker,
     SyosetuChecker,
+    KakuyomuChecker,
     PiaotianChecker,
     ManhuaguiChecker,
     BaozimhChecker,
