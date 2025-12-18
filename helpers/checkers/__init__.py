@@ -20,6 +20,7 @@ from helpers.checkers.wx import WxChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
 
 ALL_CHECKERS: List[AbstractChapterChecker] = [
+    BilibiliArticlesChecker,
     WxChecker,
     SyosetuChecker,
     KakuyomuChecker,

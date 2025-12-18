@@ -186,3 +186,10 @@ class TestCheckers(unittest.TestCase):
             test_checker=checkers.KakuyomuChecker,
             check_url="https://kakuyomu.jp/works/16817330658027210412/episodes/16817330658029426899/episode_sidebar",
         )
+
+    def test_bilibili_articles_checker(self) -> None:
+        """Bilibili article list"""
+        self.universal_checking(
+            test_checker=checkers.BilibiliArticlesChecker,
+            check_url="https://www.bilibili.com/read/readlist/rl812409",
+        )
