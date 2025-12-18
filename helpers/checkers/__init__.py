@@ -6,8 +6,10 @@ from helpers.chapter import Chapter
 from helpers.checkers.baozimh import BaozimhChecker
 from helpers.checkers.baozimh2 import Baozimh2Checker
 from helpers.checkers.base import AbstractChapterChecker
+from helpers.checkers.bilibili_articles import BilibiliArticlesChecker
 from helpers.checkers.biqu import BiquChecker
 from helpers.checkers.comick import ComickChecker
+from helpers.checkers.dashuhuwai import DashumanhuaChecker
 from helpers.checkers.jmanga import JmangaChecker
 from helpers.checkers.kakuyomu import KakuyomuChecker
 from helpers.checkers.laimanhua import LaimanhuaChecker
@@ -26,6 +28,7 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     KakuyomuChecker,
     PiaotianChecker,
     ManhuaguiChecker,
+    DashumanhuaChecker,
     BaozimhChecker,
     Baozimh2Checker,
     BiquChecker,
