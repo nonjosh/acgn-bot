@@ -193,3 +193,10 @@ class TestCheckers(unittest.TestCase):
             test_checker=checkers.BilibiliArticlesChecker,
             check_url="https://www.bilibili.com/read/readlist/rl812409",
         )
+
+    def test_pickmeupgacha_checker(self) -> None:
+        """Pickmeupgacha"""
+        self.universal_checking(
+            test_checker=checkers.PickmeupgachaChecker,
+            check_url="https://w6.pickmeupgacha.com/",
+        )

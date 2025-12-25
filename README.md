@@ -45,6 +45,7 @@ This bot scans anime/comic/game/novel websites, and send telegram message to spe
 | laimanhua | <https://www.laimanhua8.com/kanmanhua/quanzhiduzheshijiao/>                                                                                                                                                                                                                                                                                                         | comic      |
 | bilibili  | <https://www.bilibili.com/read/readlist/rl812409>                                                                                                                                                                                                                                                                                                                   | novel      |
 | weixin    | <https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&album_id=2989381295912878080&__biz=MzI5MjMwNjQxMw==#wechat_redirect>                                                                                                                                                                                                                                       | others     |
+| pickmeupgacha | <https://w6.pickmeupgacha.com/> | comic |
 
 ### Default Settings
 
