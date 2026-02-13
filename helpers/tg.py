@@ -5,6 +5,7 @@ import os
 import telegram
 from dotenv import load_dotenv
 from telegram import Bot, Update
+from telegram.error import NetworkError, TimedOut
 from telegram.ext import ApplicationBuilder, CallbackContext, CommandHandler
 
 from helpers.message import MessageHelper
@@ -39,10 +40,29 @@ class TgHelper:
             CommandHandler("list_last_check", self.list_last_check)
         )
 
+        # Register error handler for transient network errors
+        self.application.add_error_handler(self.error_handler)
+
     def run(self) -> None:
         """Start the bot."""
         # Start the Bot
         self.application.run_polling()
+
+    @staticmethod
+    async def error_handler(update: object, context: CallbackContext) -> None:
+        """Handle errors from the telegram bot polling loop.
+
+        Transient network errors (NetworkError, TimedOut) are logged as warnings
+        since the library automatically retries. Other errors are logged at error level.
+        """
+        error = context.error
+
+        if isinstance(error, (NetworkError, TimedOut)):
+            logger.warning("Transient network error (will retry): %s", error)
+        else:
+            logger.error(
+                "Unhandled exception in telegram bot: %s", error, exc_info=error
+            )
 
     async def send_msg(
         self,
