@@ -3,6 +3,9 @@ will skip if the url is not available."""
 
 import unittest
 from typing import List, Type
+from unittest.mock import patch
+
+from bs4 import BeautifulSoup
 
 from helpers import checkers
 from helpers.chapter import Chapter
@@ -199,4 +202,10 @@ class TestCheckers(unittest.TestCase):
         self.universal_checking(
             test_checker=checkers.PickmeupgachaChecker,
             check_url="https://w6.pickmeupgacha.com/",
+        )
+
+    def test_asurascans_integration(self) -> None:
+        self.universal_checking(
+            test_checker=checkers.AsurascansChecker,
+            check_url="https://asurascans.com/comics/genius-archers-streaming-26f76d6d",
         )

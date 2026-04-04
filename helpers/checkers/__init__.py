@@ -3,6 +3,7 @@
 from typing import List
 
 from helpers.chapter import Chapter
+from helpers.checkers.asurascans import AsurascansChecker
 from helpers.checkers.baozimh import BaozimhChecker
 from helpers.checkers.baozimh2 import Baozimh2Checker
 from helpers.checkers.base import AbstractChapterChecker
@@ -23,6 +24,7 @@ from helpers.checkers.wx import WxChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
 
 ALL_CHECKERS: List[AbstractChapterChecker] = [
+    AsurascansChecker,
     BilibiliArticlesChecker,
     WxChecker,
     SyosetuChecker,
