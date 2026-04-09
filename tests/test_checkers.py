@@ -108,6 +108,7 @@ class TestCheckers(unittest.TestCase):
             check_url="https://baozimh.org/manga/zhangmendidiaodian-yuewenmanhua?mid=510",
         )
 
+    @unittest.skip("Website broken - cannot access")
     def test_biqu_checker(self) -> None:
         """Biqu"""
         self.universal_checking(
