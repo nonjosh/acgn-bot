@@ -1,9 +1,10 @@
 """Test basic flow of each job"""
+
 import unittest
 
 from helpers.chapter import Chapter
 from helpers.media import MediaHelper
-from helpers.utils import check_url_valid
+from helpers.utils import check_url_valid, get_chapter_list_diff
 
 
 class TestMediaHelper(unittest.TestCase):
@@ -48,3 +49,37 @@ class TestMediaHelper(unittest.TestCase):
         my_helper.checker.chapter_list.insert(0, new_chapter)
         updated_chapter_list = my_helper.checker.get_updated_chapter_list()
         self.assertEqual(len(updated_chapter_list), 1)
+
+
+class TestChapterListDiff(unittest.TestCase):
+    """Test chapter diff edge cases."""
+
+    def test_ignore_existing_chapter_url_rewrites(self) -> None:
+        """Existing chapters should not look new when a site rewrites chapter URLs."""
+
+        old_list = [
+            Chapter(title="Chapter 1", url="https://old.example/1"),
+            Chapter(title="Chapter 2", url="https://old.example/2"),
+        ]
+        new_list = [
+            Chapter(title="Chapter 1", url="https://new.example/1"),
+            Chapter(title="Chapter 2", url="https://new.example/2"),
+        ]
+
+        self.assertEqual(get_chapter_list_diff(new_list, old_list), [])
+
+    def test_keep_only_truly_new_titles_when_urls_rewrite(self) -> None:
+        """New chapters should still be detected when old chapter URLs also change."""
+
+        old_list = [
+            Chapter(title="Chapter 1", url="https://old.example/1"),
+            Chapter(title="Chapter 2", url="https://old.example/2"),
+        ]
+        new_chapter = Chapter(title="Chapter 3", url="https://new.example/3")
+        new_list = [
+            Chapter(title=" Chapter   1 ", url="https://new.example/1"),
+            Chapter(title="chapter 2", url="https://new.example/2"),
+            new_chapter,
+        ]
+
+        self.assertEqual(get_chapter_list_diff(new_list, old_list), [new_chapter])

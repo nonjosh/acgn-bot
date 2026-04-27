@@ -1,6 +1,7 @@
 """Utility functions"""
 
 import logging
+from collections import Counter
 from datetime import datetime
 from logging.handlers import TimedRotatingFileHandler
 from typing import List
@@ -159,4 +160,39 @@ def get_chapter_list_diff(
     """
     old_urls = {item.url for item in old_list}
     diff_list = [item for item in new_list if item.url not in old_urls]
+
+    if not diff_list or not old_list:
+        return diff_list
+
+    old_title_counts = Counter(
+        _normalize_chapter_title(item.title) for item in old_list
+    )
+    title_diff_list = []
+    rewritten_url_count = 0
+
+    for item in new_list:
+        normalized_title = _normalize_chapter_title(item.title)
+
+        if old_title_counts[normalized_title] > 0:
+            old_title_counts[normalized_title] -= 1
+            if item.url not in old_urls:
+                rewritten_url_count += 1
+            continue
+
+        title_diff_list.append(item)
+
+    if rewritten_url_count > 0:
+        logging.getLogger(__name__).warning(
+            "Detected %d chapter URL changes; falling back to title-based diff and keeping %d new chapters",
+            rewritten_url_count,
+            len(title_diff_list),
+        )
+        return title_diff_list
+
     return diff_list
+
+
+def _normalize_chapter_title(title: str) -> str:
+    """Normalize chapter titles so minor site formatting changes do not look new."""
+
+    return " ".join(title.split()).casefold()
