@@ -1,12 +1,18 @@
 FROM python:3.13.5-slim-bullseye
 
-ENV TZ=Asia/Hong_Kong
+ENV TZ=Asia/Hong_Kong \
+	UV_COMPILE_BYTECODE=1 \
+	UV_LINK_MODE=copy \
+	UV_PROJECT_ENVIRONMENT=/app/.venv \
+	PATH="/app/.venv/bin:$PATH"
 
-COPY requirements.txt /app/requirements.txt
+COPY --from=ghcr.io/astral-sh/uv:0.7.3 /uv /uvx /usr/local/bin/
 
-RUN pip install -r /app/requirements.txt
-
-COPY . /app
 WORKDIR /app
 
-CMD ["python", "-u", "main.py"]
+COPY pyproject.toml uv.lock /app/
+RUN uv sync --frozen --no-dev
+
+COPY . /app
+
+CMD ["uv", "run", "main.py"]

@@ -87,11 +87,13 @@ Choose either option below to run the application
     CHAT_ID=<your chat_id>
     ```
 
-2. Start the application with the following command:
+2. Install `uv` if it is not already available on your machine.
+
+3. Sync dependencies and start the application with the following commands:
 
     ```sh
-    pip install -r requirements.txt
-    python main.py
+    uv sync
+    uv run main.py
     ```
 
 #### Option 2: Docker Compose

@@ -19,7 +19,7 @@
     },
     {
       "label": "pylint: whole project",
-      "command": "pylint $(git ls-files '*.py')",
+      "command": "uv run pylint $(git ls-files '*.py')",
       "type": "shell",
       "presentation": {
         "reveal": "always",
@@ -46,9 +46,10 @@
         "kind": "test",
         "isDefault": true
       },
-      "command": "python",
+      "command": "uv",
       "type": "shell",
       "args": [
+        "run",
         "-m",
         "unittest"
       ],
@@ -82,8 +83,9 @@
     {
       "label": "Run Python",
       "type": "shell",
-      "command": "python",
+      "command": "uv",
       "args": [
+        "run",
         "${file}"
       ],
       "problemMatcher": [],

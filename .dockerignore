@@ -17,6 +17,7 @@ docker-compose.yml
 .dockerignore
 
 .env
+.venv/
 logs/*.log*
 test_*
 **/__pycache__
