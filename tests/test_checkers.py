@@ -1,6 +1,7 @@
 """Test webscrapping function of the checker classes,
 will skip if the url is not available."""
 
+import os
 import unittest
 from typing import List, Type
 from unittest.mock import patch
@@ -11,6 +12,11 @@ from helpers import checkers
 from helpers.chapter import Chapter
 from helpers.checkers import AbstractChapterChecker
 from helpers.utils import check_url_valid
+
+
+def github_actions_skip(reason: str):
+    """Skip only when running in GitHub Actions."""
+    return unittest.skipIf(os.getenv("GITHUB_ACTIONS") == "true", reason)
 
 
 class TestCheckers(unittest.TestCase):
@@ -123,8 +129,9 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.xbiquge.bz/book/53099/",
         )
 
-    # FIXME: Need JS cookies but postman can access?
-    @unittest.skip("Failing in GitHub Actions - GitHub IP might be banned?")
+    @github_actions_skip(
+        "Validation 2026-04: site access is restricted in GitHub Actions"
+    )
     def test_dashumanhua_checker(self) -> None:
         """Dashumanhua"""
         self.universal_checking(

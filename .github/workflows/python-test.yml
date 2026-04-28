@@ -1,10 +1,24 @@
 name: Python Unit Test
-on: [push]
+
+on:
+  push:
+  pull_request:
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Prepare repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --frozen --group dev
       - name: Test
-        uses: onichandame/python-test-action@master
+        run: uv run python -m unittest
