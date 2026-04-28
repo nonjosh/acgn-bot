@@ -87,7 +87,10 @@ class AbstractChapterChecker(ABC):
                 and "PHPSESSID=" in response.headers["set-cookie"]
             ):
                 self.headers["Cookie"] = response.headers["set-cookie"]
-        except requests.exceptions.ConnectionError:
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+        ):
             return None
 
         return response
@@ -136,7 +139,10 @@ class AbstractChapterChecker(ABC):
                 raise requests.exceptions.RequestException(
                     f"Unexpected status code: {response.status_code}"
                 )
-        except requests.exceptions.ConnectionError:
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+        ):
             return []
 
         return response
