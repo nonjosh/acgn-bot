@@ -191,6 +191,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://comick.live/comic/03-omniscient-reader-s-viewpoint",
         )
 
+    def test_mangaraw_checker(self) -> None:
+        """Mangaraw"""
+        self.universal_checking(
+            test_checker=checkers.MangarawChecker,
+            check_url="https://mangaraw.co.uk/manga/2439",
+        )
+
     def test_kakuyomu_checker(self) -> None:
         """Kakuyomu"""
         self.universal_checking(
