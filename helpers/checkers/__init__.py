@@ -1,8 +1,5 @@
 """Checkers"""
 
-from typing import List
-
-from helpers.chapter import Chapter
 from helpers.checkers.asurascans import AsurascansChecker
 from helpers.checkers.baozimh import BaozimhChecker
 from helpers.checkers.baozimh2 import Baozimh2Checker
@@ -15,6 +12,7 @@ from helpers.checkers.jmanga import JmangaChecker
 from helpers.checkers.kakuyomu import KakuyomuChecker
 from helpers.checkers.laimanhua import LaimanhuaChecker
 from helpers.checkers.linovelib import LinovelibChecker
+from helpers.checkers.mangakatana import MangakatanaChecker
 from helpers.checkers.mangaraw import MangarawChecker
 from helpers.checkers.manhuagui import ManhuaguiChecker
 from helpers.checkers.piaotian import PiaotianChecker
@@ -24,7 +22,7 @@ from helpers.checkers.weixin import WeixinChecker
 from helpers.checkers.wx import WxChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
 
-ALL_CHECKERS: List[AbstractChapterChecker] = [
+ALL_CHECKERS: list[type[AbstractChapterChecker]] = [
     AsurascansChecker,
     BilibiliArticlesChecker,
     WxChecker,
@@ -42,12 +40,13 @@ ALL_CHECKERS: List[AbstractChapterChecker] = [
     WeixinChecker,
     LaimanhuaChecker,
     LinovelibChecker,
+    MangakatanaChecker,
     MangarawChecker,
     PickmeupgachaChecker,
 ]
 
 
-def get_checker_for_url(url):
+def get_checker_for_url(url: str) -> AbstractChapterChecker | None:
     """Return an initialized checker instance based on URL substring match.
 
     Args:

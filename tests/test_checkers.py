@@ -198,6 +198,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://mangaraw.co.uk/manga/2439",
         )
 
+    def test_mangakatana_checker(self) -> None:
+        """Mangakatana"""
+        self.universal_checking(
+            test_checker=checkers.MangakatanaChecker,
+            check_url="https://mangakatana.com/manga/brutal-daughter-nia-liston-a-splendid-matchless-record-of-a-god-slaying-warrior-reincarnated-as-a-sickly-daughter.27292",
+        )
+
     def test_kakuyomu_checker(self) -> None:
         """Kakuyomu"""
         self.universal_checking(
