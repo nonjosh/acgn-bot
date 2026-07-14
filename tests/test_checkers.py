@@ -219,6 +219,13 @@ class TestCheckers(unittest.TestCase):
             check_url="https://www.bilibili.com/read/readlist/rl812409",
         )
 
+    def test_bilibili_channel_series_checker(self) -> None:
+        """Bilibili channel list"""
+        self.universal_checking(
+            test_checker=checkers.BilibiliChannelSeriesChecker,
+            check_url="https://space.bilibili.com/690151424/lists/8495686?type=season",
+        )
+
     def test_pickmeupgacha_checker(self) -> None:
         """Pickmeupgacha"""
         self.universal_checking(

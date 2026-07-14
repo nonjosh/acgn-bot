@@ -5,7 +5,13 @@ from helpers.checkers import get_checker_for_url
 from helpers.checkers.base import AbstractChapterChecker
 from helpers.utils import check_url_valid, get_logger, get_main_domain_name
 
-MediaTypes = Literal["novel", "comic"]
+MediaTypes = Literal["comic", "novel", "anime"]
+SUPPORTED_MEDIA_TYPES: tuple[MediaTypes, ...] = ("comic", "novel", "anime")
+MEDIA_URL_FIELDS: tuple[tuple[str, MediaTypes], ...] = (
+    ("novel_urls", "novel"),
+    ("comic_urls", "comic"),
+    ("anime_urls", "anime"),
+)
 
 logger = get_logger(__name__)
 
@@ -22,7 +28,11 @@ class MediaHelper:
         self.name = name
         self.urls = urls
         self.media_type = media_type
-        assert self.media_type in ["novel", "comic"]
+        if self.media_type not in SUPPORTED_MEDIA_TYPES:
+            raise ValueError(
+                f"Unsupported media_type {self.media_type!r}; "
+                f"expected one of {SUPPORTED_MEDIA_TYPES}"
+            )
 
         self.checker: AbstractChapterChecker = None
 

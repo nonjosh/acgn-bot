@@ -6,7 +6,7 @@ import time
 import schedule
 
 from helpers.checkers import ManhuaguiChecker
-from helpers.media import MediaHelper
+from helpers.media import MEDIA_URL_FIELDS, MediaHelper
 from helpers.media_list_state import MediaListState
 from helpers.message import MessageHelper
 from helpers.tg import TgHelper
@@ -28,22 +28,17 @@ class ScheduleHelper:
 
         # Initialize MediaHelper list
         for item_obj in yml_data:
-            # Create helper object and add to list
-            if "novel_urls" in item_obj:
-                novel_helper = MediaHelper(
-                    name=item_obj["name"],
-                    urls=item_obj["novel_urls"],
-                    media_type="novel",
-                )
-                MediaListState.media_helper_list.append(novel_helper)
+            # Create helper objects for each supported media url field.
+            for url_field, media_type in MEDIA_URL_FIELDS:
+                if url_field not in item_obj:
+                    continue
 
-            if "comic_urls" in item_obj:
-                comic_helper = MediaHelper(
+                media_helper = MediaHelper(
                     name=item_obj["name"],
-                    urls=item_obj["comic_urls"],
-                    media_type="comic",
+                    urls=item_obj[url_field],
+                    media_type=media_type,
                 )
-                MediaListState.media_helper_list.append(comic_helper)
+                MediaListState.media_helper_list.append(media_helper)
 
         # Add schedules
         if len(MediaListState.media_helper_list) > 0:

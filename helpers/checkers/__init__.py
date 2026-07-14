@@ -5,6 +5,7 @@ from helpers.checkers.baozimh import BaozimhChecker
 from helpers.checkers.baozimh2 import Baozimh2Checker
 from helpers.checkers.base import AbstractChapterChecker
 from helpers.checkers.bilibili_articles import BilibiliArticlesChecker
+from helpers.checkers.bilibili_channel_series import BilibiliChannelSeriesChecker
 from helpers.checkers.biqu import BiquChecker
 from helpers.checkers.comick import ComickChecker
 from helpers.checkers.dashuhuwai import DashumanhuaChecker
@@ -25,6 +26,7 @@ from helpers.checkers.xbiquge import XbiqugeChecker
 ALL_CHECKERS: list[type[AbstractChapterChecker]] = [
     AsurascansChecker,
     BilibiliArticlesChecker,
+    BilibiliChannelSeriesChecker,
     WxChecker,
     SyosetuChecker,
     KakuyomuChecker,

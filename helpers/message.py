@@ -2,12 +2,23 @@
 
 import chinese_converter
 
-from helpers.media import MediaHelper
+from helpers.media import MediaHelper, SUPPORTED_MEDIA_TYPES
 from helpers.media_list_state import MediaListState
 
 
 class MessageHelper:
     """Message helper class"""
+
+    @staticmethod
+    def _ordered_media_types(groups: dict[str, list[MediaHelper]]) -> list[str]:
+        """Return media types in configured order, followed by unknown extras."""
+        ordered = [media_type for media_type in SUPPORTED_MEDIA_TYPES if groups.get(media_type)]
+        ordered.extend(
+            media_type
+            for media_type, helpers in groups.items()
+            if helpers and media_type not in SUPPORTED_MEDIA_TYPES
+        )
+        return ordered
 
     def _group_media_helpers(
         self, include_without_checker: bool = True
@@ -20,7 +31,7 @@ class MessageHelper:
         Returns:
             dict[str, list[MediaHelper]]: Mapping of media type to helpers in original order.
         """
-        groups = {"comic": [], "novel": []}
+        groups = {media_type: [] for media_type in SUPPORTED_MEDIA_TYPES}
         for helper in MediaListState.media_helper_list:
             if not include_without_checker and not helper.checker:
                 continue
@@ -72,8 +83,8 @@ class MessageHelper:
         # Group all helpers (regardless of checker) by media type
         groups = self._group_media_helpers(include_without_checker=True)
 
-        # Render groups in a stable order: comics first, then novels
-        for media_type in ("comic", "novel"):
+        # Render groups in a stable configured order.
+        for media_type in self._ordered_media_types(groups):
             helpers = groups.get(media_type, [])
             if not helpers:
                 continue
@@ -98,8 +109,8 @@ class MessageHelper:
         # Group helpers by media type (only include those with a checker)
         groups = self._group_media_helpers(include_without_checker=False)
 
-        # Render groups in a stable order: comics first, then novels
-        for media_type in ("comic", "novel"):
+        # Render groups in a stable configured order.
+        for media_type in self._ordered_media_types(groups):
             helpers = groups.get(media_type, [])
             if not helpers:
                 continue
@@ -133,8 +144,8 @@ class MessageHelper:
         # Group helpers by media type (only include those with a checker)
         groups = self._group_media_helpers(include_without_checker=False)
 
-        # Render groups in a stable order: comics first, then novels
-        for media_type in ("comic", "novel"):
+        # Render groups in a stable configured order.
+        for media_type in self._ordered_media_types(groups):
             helpers = groups.get(media_type, [])
             if not helpers:
                 continue
