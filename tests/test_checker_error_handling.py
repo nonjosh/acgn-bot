@@ -1,11 +1,12 @@
-"""Regression tests for checker network error handling."""
+"""Regression tests for checker and schedule error handling."""
 
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import requests
 
 from helpers.checkers.base import AbstractChapterChecker
+from helpers.schedule import ScheduleHelper
 
 
 class NoopChecker(AbstractChapterChecker):
@@ -51,3 +52,66 @@ class TestCheckerErrorHandling(unittest.TestCase):
             self.fail(f"get_latest_post_response should not raise ReadTimeout: {err}")
 
         self.assertEqual(response, [])
+
+    class RaiseChecker(AbstractChapterChecker):
+        """Checker that always raises in list retrieval."""
+
+        def get_latest_chapter_list(self):
+            raise requests.exceptions.RequestException("Unexpected status code: 404")
+
+    def test_get_updated_chapter_list_returns_empty_on_checker_exception(self) -> None:
+        checker = self.RaiseChecker("https://example.com")
+
+        try:
+            response = checker.get_updated_chapter_list()
+        except requests.exceptions.RequestException as err:
+            self.fail(
+                "get_updated_chapter_list should not raise RequestException: "
+                f"{err}"
+            )
+
+        self.assertEqual(response, [])
+
+
+class TestScheduleErrorHandling(unittest.TestCase):
+    """Ensure schedule job boundary catches checker failures."""
+
+    @patch("helpers.schedule.schedule.every")
+    @patch("helpers.schedule.threading.Thread")
+    def test_add_schedule_does_not_crash_on_checker_exception(
+        self, mock_thread: Mock, mock_every: Mock
+    ) -> None:
+        schedule_helper = ScheduleHelper.__new__(ScheduleHelper)
+        schedule_helper.tg_helper = Mock()
+
+        media_helper = Mock()
+        media_helper.media_type = "comic"
+        media_helper.name = "Broken checker"
+        media_helper.urls = ["https://example.com/broken"]
+        media_helper.check_url = "https://example.com/broken"
+        media_helper.checker = Mock()
+        media_helper.checker.chapter_list = []
+        media_helper.checker.get_updated_chapter_list.side_effect = (
+            requests.exceptions.RequestException("Unexpected status code: 404")
+        )
+
+        mock_job = Mock()
+        mock_job.minutes = Mock()
+        mock_job.minutes.do = Mock()
+        mock_every.return_value.to.return_value = mock_job
+
+        captured_target = {}
+
+        def fake_thread(*, target):
+            captured_target["target"] = target
+            fake = Mock()
+            fake.start = Mock()
+            return fake
+
+        mock_thread.side_effect = fake_thread
+
+        schedule_helper.add_schedule(media_helper)
+
+        # Simulate first immediate run in thread.
+        self.assertIn("target", captured_target)
+        captured_target["target"]()

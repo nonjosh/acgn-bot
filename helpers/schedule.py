@@ -1,10 +1,13 @@
 """Schedule helper module."""
 
 import asyncio
+import json
 import threading
 import time
 
+import requests
 import schedule
+from telegram.error import TelegramError
 
 from helpers.checkers import ManhuaguiChecker
 from helpers.media import MEDIA_URL_FIELDS, MediaHelper
@@ -14,6 +17,21 @@ from helpers.tg import TgHelper
 from helpers.utils import get_logger
 
 logger = get_logger(__name__)
+
+CHECKER_RUN_EXCEPTIONS = (
+    requests.exceptions.RequestException,
+    json.decoder.JSONDecodeError,
+    ValueError,
+    TypeError,
+    AttributeError,
+    KeyError,
+    IndexError,
+)
+
+SCHEDULER_JOB_EXCEPTIONS = CHECKER_RUN_EXCEPTIONS + (
+    RuntimeError,
+    TelegramError,
+)
 
 
 class ScheduleHelper:
@@ -53,7 +71,7 @@ class ScheduleHelper:
                 logger.info("Scheduled %s checker(s) successfully.", len(schedule.jobs))
             else:
                 logger.error("No checker scheduled.")
-                raise Exception("No checker scheduled.")
+                raise RuntimeError("No checker scheduled.")
 
     def add_schedule(
         self,
@@ -64,6 +82,25 @@ class ScheduleHelper:
         Args:
             media_helper (MediaHelper): [description]
         """
+
+        def get_updated_chapter_list_safe(media_helper: MediaHelper) -> list:
+            """Run checker safely and return updated chapters.
+
+            Any checker exception (e.g. transient HTTP errors / 404) is logged and
+            treated as no-update so the scheduler thread keeps running.
+            """
+
+            try:
+                return media_helper.checker.get_updated_chapter_list()
+            except CHECKER_RUN_EXCEPTIONS as err:
+                logger.exception(
+                    "Checker failed for %s %s (%s): %s",
+                    media_helper.media_type,
+                    media_helper.name,
+                    getattr(media_helper, "check_url", media_helper.urls),
+                    err,
+                )
+                return []
 
         def job(
             media_helper: MediaHelper,
@@ -78,7 +115,7 @@ class ScheduleHelper:
             # Initialize checker chapter list if list is empty originally
             if len(media_helper.checker.chapter_list) == 0:
                 # Initialize checker chapter list
-                updated_chapter_list = media_helper.checker.get_updated_chapter_list()
+                updated_chapter_list = get_updated_chapter_list_safe(media_helper)
 
                 # Print latest chapter if success
                 if len(updated_chapter_list) > 0:
@@ -103,7 +140,7 @@ class ScheduleHelper:
                 return
 
             # Check for update
-            updated_chapter_list = media_helper.checker.get_updated_chapter_list()
+            updated_chapter_list = get_updated_chapter_list_safe(media_helper)
             if len(updated_chapter_list) > 0:
                 # Print update message for each chapter in terminal
                 for updated_chapter in updated_chapter_list:
@@ -126,7 +163,7 @@ class ScheduleHelper:
                         try:
                             await self.tg_helper.send_msg(content=content_html_text)
                             return
-                        except Exception as err:
+                        except TelegramError as err:
                             wait = retries * 30
                             logger.error(
                                 "Error occurs for %s %s updated!",
@@ -149,14 +186,16 @@ class ScheduleHelper:
                         3,
                     )
 
+                loop = None
                 try:
                     loop = asyncio.new_event_loop()
                     asyncio.set_event_loop(loop)
                     loop.run_until_complete(send_with_retry())
-                except Exception as err:
+                except RuntimeError as err:
                     logger.error("Error occurs: %s", err)
                 finally:
-                    loop.close()
+                    if loop is not None:
+                        loop.close()
             else:
                 # Print no update message for each chapter in terminal (if enabled)
                 if show_no_update_msg:
@@ -168,7 +207,18 @@ class ScheduleHelper:
 
         # Define lambda function for job
         def job_func() -> None:
-            return job(media_helper)
+            try:
+                job(media_helper)
+                return None
+            except SCHEDULER_JOB_EXCEPTIONS as err:
+                logger.exception(
+                    "Unexpected scheduler job error for %s %s (%s): %s",
+                    media_helper.media_type,
+                    media_helper.name,
+                    getattr(media_helper, "check_url", media_helper.urls),
+                    err,
+                )
+                return None
 
         def run_threaded(job_func: callable) -> None:
             """Run job in thread

@@ -12,6 +12,19 @@ from helpers.utils import (
     DEFAULT_HEADERS,
     DEFAULT_REQUEST_TIMEOUT,
     get_chapter_list_diff,
+    get_logger,
+)
+
+logger = get_logger(__name__)
+
+CHECKER_FETCH_EXCEPTIONS = (
+    requests.exceptions.RequestException,
+    json.decoder.JSONDecodeError,
+    AttributeError,
+    KeyError,
+    IndexError,
+    TypeError,
+    ValueError,
 )
 
 
@@ -27,7 +40,7 @@ class AbstractChapterChecker(ABC):
         self.check_url = check_url
         self.params = {}
         self.request_timeout = DEFAULT_REQUEST_TIMEOUT
-        self.headers = DEFAULT_HEADERS
+        self.headers = DEFAULT_HEADERS.copy()
         self.retry_interval = 5
         self.max_retry_num = 3
         self.chapter_list = []
@@ -170,7 +183,15 @@ class AbstractChapterChecker(ABC):
         self.updated_chapter_list = []
 
         # Get latest chapter list
-        latest_chapter_list = self.get_latest_chapter_list()
+        try:
+            latest_chapter_list = self.get_latest_chapter_list()
+        except CHECKER_FETCH_EXCEPTIONS as err:
+            logger.exception(
+                "Checker failed for url %s: %s",
+                self.check_url,
+                err,
+            )
+            return []
 
         # Get list of updated chapters if new chapter list is valid (not empty)
         if len(latest_chapter_list) > 0:

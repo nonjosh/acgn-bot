@@ -236,5 +236,5 @@ class TestCheckers(unittest.TestCase):
     def test_asurascans_integration(self) -> None:
         self.universal_checking(
             test_checker=checkers.AsurascansChecker,
-            check_url="https://asurascans.com/comics/genius-archers-streaming-26f76d6d",
+            check_url="https://asurascans.com/comics/genius-archers-streaming",
         )
