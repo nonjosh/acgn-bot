@@ -1,4 +1,5 @@
 """YML Parser"""
+
 import requests
 import yaml
 

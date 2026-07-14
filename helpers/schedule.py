@@ -1,4 +1,5 @@
 """Schedule helper module."""
+
 import asyncio
 import threading
 import time

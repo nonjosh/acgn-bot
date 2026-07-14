@@ -1,4 +1,5 @@
 """Media Helper class"""
+
 from typing import List, Literal
 
 from helpers.checkers import get_checker_for_url

@@ -84,7 +84,9 @@ class BilibiliChannelSeriesChecker(AbstractChapterChecker):
 
         return None
 
-    def _build_api_url(self, mid: str, list_id: str, list_type: str, page_num: int) -> str:
+    def _build_api_url(
+        self, mid: str, list_id: str, list_type: str, page_num: int
+    ) -> str:
         if list_type == self.SEASON_TYPE:
             return (
                 f"{self.SEASON_API_URL}?mid={mid}&season_id={list_id}"

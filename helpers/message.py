@@ -2,7 +2,7 @@
 
 import chinese_converter
 
-from helpers.media import MediaHelper, SUPPORTED_MEDIA_TYPES
+from helpers.media import SUPPORTED_MEDIA_TYPES, MediaHelper
 from helpers.media_list_state import MediaListState
 
 
@@ -12,7 +12,9 @@ class MessageHelper:
     @staticmethod
     def _ordered_media_types(groups: dict[str, list[MediaHelper]]) -> list[str]:
         """Return media types in configured order, followed by unknown extras."""
-        ordered = [media_type for media_type in SUPPORTED_MEDIA_TYPES if groups.get(media_type)]
+        ordered = [
+            media_type for media_type in SUPPORTED_MEDIA_TYPES if groups.get(media_type)
+        ]
         ordered.extend(
             media_type
             for media_type, helpers in groups.items()
