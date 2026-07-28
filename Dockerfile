@@ -11,8 +11,9 @@ COPY --from=ghcr.io/astral-sh/uv:0.7.3 /uv /uvx /usr/local/bin/
 WORKDIR /app
 
 COPY pyproject.toml uv.lock /app/
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev --no-install-project
 
 COPY . /app
+RUN uv sync --frozen --no-dev
 
 CMD ["uv", "run", "main.py"]
