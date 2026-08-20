@@ -1,3 +1,4 @@
+import time
 from typing import List
 
 from chinese_converter import to_traditional
@@ -28,16 +29,37 @@ class Baozimh2Checker(AbstractChapterChecker):
         self.headers.update(
             {"Origin": "https://baozimh.org"}
         )  # This is needed for fetching latest chapters...
-        api_response = self.get_latest_response(url=api_url, apparent_encoding=False)
+        api_response = None
+        for attempt in range(self.max_retry_num):
+            api_response = self.get_latest_response(url=api_url, apparent_encoding=False)
+            if api_response is not None:
+                break
+            if attempt < self.max_retry_num - 1:
+                time.sleep(self.retry_interval)
 
-        chapters: list[dict] = api_response.json().get("data", {}).get("chapters", [])
+        if api_response is None:
+            return []
+
+        try:
+            payload = api_response.json()
+        except ValueError:
+            return []
+
+        if not isinstance(payload, dict):
+            return []
+
+        chapters: list[dict] = payload.get("data", {}).get("chapters", [])
+        if not isinstance(chapters, list):
+            return []
 
         chapter_list: List[Chapter] = []
         for chapter in chapters:
-
-            chapter_title = chapter["attributes"]["title"]
+            attributes = chapter.get("attributes", {}) if isinstance(chapter, dict) else {}
+            chapter_title = attributes.get("title")
+            chapter_slug = attributes.get("slug")
+            if not chapter_title or not chapter_slug:
+                continue
             chapter_title = to_traditional(chapter_title)
-            chapter_slug = chapter["attributes"]["slug"]
             chapter_url = f"https://baozimh.org/manga/{comic_name}/{chapter_slug}"
             chapter_list.append(Chapter(title=chapter_title, url=chapter_url))
 
