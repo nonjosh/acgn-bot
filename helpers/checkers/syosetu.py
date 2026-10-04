@@ -1,17 +1,53 @@
+import os
 from typing import List
 from urllib.parse import urlparse, urlunparse
 
+import requests
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
+from helpers.utils import get_logger
+
+logger = get_logger(__name__)
 
 
 class SyosetuChecker(AbstractChapterChecker):
     """Syosetu checker class"""
 
     URL_SUBSTRING = "syosetu"
+
+    def __init__(self, check_url: str) -> None:
+        super().__init__(check_url)
+        # Syosetu blocks datacenter IPs (GCP etc.) with 403; route through a
+        # proxy (e.g. Tailscale exit node SOCKS5) when provided.
+        proxy = os.getenv("SYOSETU_PROXY")
+        if proxy:
+            self.proxies = {"http": proxy, "https": proxy}
+
+    def get_latest_response(self, url: str = None, apparent_encoding: bool = True):
+        # Deterministic failures (403 from datacenter IP / blocked UA) are not
+        # retried: log a concise error instead of raising with a traceback.
+        try:
+            return super().get_latest_response(url=url, apparent_encoding=apparent_encoding)
+        except requests.exceptions.RequestException as err:
+            logger.error(
+                "syosetu request failed (via proxy: %s): %s", bool(self.proxies), err
+            )
+            return None
+
+    def get_latest_soup(self, apparent_encoding: bool = True):
+        # Proxy down (e.g. home desktop off) surfaces here as a silent None;
+        # log one concise line instead.
+        soup = super().get_latest_soup(apparent_encoding=apparent_encoding)
+        if not soup:
+            logger.error(
+                "syosetu unreachable (via proxy: %s): %s",
+                bool(self.proxies),
+                self.check_url,
+            )
+        return soup
 
     def get_latest_chapter_list(self) -> List[Chapter]:
         """Get latest chapter list

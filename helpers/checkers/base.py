@@ -41,6 +41,7 @@ class AbstractChapterChecker(ABC):
         self.params = {}
         self.request_timeout = DEFAULT_REQUEST_TIMEOUT
         self.headers = DEFAULT_HEADERS.copy()
+        self.proxies: dict = {}
         self.retry_interval = 5
         self.max_retry_num = 3
         self.chapter_list = []
@@ -80,6 +81,7 @@ class AbstractChapterChecker(ABC):
                 params=self.params,
                 headers=self.headers,
                 timeout=self.request_timeout,
+                proxies=self.proxies or None,
             )
             if response.status_code == 200:
                 # override encoding by real educated guess as provided by chardet
@@ -143,6 +145,7 @@ class AbstractChapterChecker(ABC):
                 data=data,
                 headers=self.headers,
                 timeout=self.request_timeout,
+                proxies=self.proxies or None,
             )
             if response.status_code == 200:
                 # override encoding by real educated guess as provided by chardet
