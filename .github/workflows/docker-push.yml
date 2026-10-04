@@ -56,6 +56,9 @@ jobs:
           umask 077
           printf '%s' "$GCP_SA_KEY" > /tmp/gcloud-key.json
           gcloud auth activate-service-account --key-file=/tmp/gcloud-key.json
+          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+          sudo apt-get update -qq
           sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
           gcloud container clusters get-credentials "$CLUSTER" --region "$REGION" --project "$PROJECT_ID"
           kubectl -n default set image deployment/acgn-bot acgn-bot=${{ github.repository }}@${{ steps.docker_build.outputs.digest }}
