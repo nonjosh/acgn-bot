@@ -44,3 +44,22 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Deploy to GKE (master/develop)
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+        env:
+          PROJECT_ID: astute-nuance-286909
+          REGION: us-central1
+          CLUSTER: homelab
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          umask 077
+          printf '%s' "$GCP_SA_KEY" > /tmp/gcloud-key.json
+          gcloud auth activate-service-account --key-file=/tmp/gcloud-key.json
+          gcloud container clusters get-credentials "$CLUSTER" --region "$REGION" --project "$PROJECT_ID"
+          kubectl -n default set image deployment/acgn-bot acgn-bot=${{ github.repository }}@${{ steps.docker_build.outputs.digest }}
+          kubectl -n default rollout status deployment/acgn-bot --timeout=300s
+
+      - name: Remove cloud credentials
+        if: always()
+        run: rm -f /tmp/gcloud-key.json
