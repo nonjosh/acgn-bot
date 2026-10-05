@@ -75,8 +75,19 @@ class SyosetuChecker(AbstractChapterChecker):
                 )
             )
             response = self.get_latest_response(url=last_page_url)
-            if response:
-                soup = BeautifulSoup(response.text, "html.parser")
+            if not response:
+                # Fetching the last page failed. The base soup still holds page
+                # 1 (the OLDEST chapters): parsing it and storing its list would
+                # make every known chapter look "new" on the next successful
+                # fetch and spam the full shelf as updates. Treat the whole
+                # fetch as failed instead - caller keeps the previous state.
+                logger.error(
+                    "syosetu last-page fetch failed (via proxy: %s): %s",
+                    bool(self.proxies),
+                    last_page_url,
+                )
+                return []
+            soup = BeautifulSoup(response.text, "html.parser")
 
         dl_list: List[Tag] = list(soup.find_all("a", {"class": "p-eplist__subtitle"}))
         chapter_list = []
