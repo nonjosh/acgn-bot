@@ -1,5 +1,11 @@
 # AGENTS.md
 
+## Watch list (config/list.yaml)
+
+The chapter watch list is gitignored. Any change to `config/list.yaml` must be
+saved to BOTH the local file and the gist, then deployed: run
+`sh config/update-list.sh` (details in `config/AGENTS.md`).
+
 ## Tool-call hygiene in opencode TUI
 
 - Never make unbounded `kubectl` calls: wrap with `timeout 30 kubectl ... > /tmp/opencode/file.log 2>&1`, then grep the file. A hanging `kubectl logs` blocks the TUI session.
