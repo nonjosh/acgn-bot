@@ -9,13 +9,18 @@ APIs used:
 """
 
 import re
+import time
 from typing import List, Optional, Tuple
 from urllib.parse import parse_qs, quote, urlparse
 
+import requests
 from chinese_converter import to_simplified
 
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
+from helpers.utils import get_logger
+
+logger = get_logger(__name__)
 
 
 class BilibiliUploaderChecker(AbstractChapterChecker):
@@ -24,6 +29,11 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
     URL_SUBSTRING = "/upload/video"
     SEARCH_API_URL = "https://api.bilibili.com/x/web-interface/search/type"
     HOME_URL = "https://www.bilibili.com/"
+    FINGER_SPI_URL = "https://api.bilibili.com/x/frontend/finger/spi"
+    # ponytail: class-level cookie cache = one shared "device" for all checkers;
+    # re-seeding a fresh anonymous identity per run maximizes 412 risk-control flags.
+    _cookie_cache: dict = {}
+    COOKIE_TTL_SECONDS = 24 * 3600
     PAGE_SIZE = 20
     MAX_PAGES = 2
     EM_TAG_PATTERN = re.compile(r"<[^>]+>")
@@ -62,19 +72,43 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
         return mid, to_simplified(keyword.strip())
 
     def _sync_bilibili_cookies(self) -> None:
-        """Seed buvid3 cookie required by the search API."""
-        response = self.get_latest_response(url=self.HOME_URL)
-        if response is None:
+        """Seed buvid3/buvid4/b_nut cookies, reused across runs so the search
+        API sees one stable device instead of a fresh anonymous client each run.
+
+        The search API requires buvid3+buvid4 (finger/spi issues both) and
+        b_nut; an incomplete jar on a datacenter IP triggers 412 risk control.
+        """
+        cached = BilibiliUploaderChecker._cookie_cache
+        if cached and time.time() - cached["ts"] < self.COOKIE_TTL_SECONDS:
+            self.headers["Cookie"] = cached["cookie"]
             return
 
-        set_cookie = response.headers.get("set-cookie", "")
-        cookies = [
-            fragment.split(";")[0].strip()
-            for fragment in set_cookie.split(",")
-        ]
-        cookies = [c for c in cookies if c.startswith(("buvid3=", "b_nut="))]
-        if cookies:
-            self.headers["Cookie"] = "; ".join(cookies)
+        cookies: dict = {}
+        response = self.get_latest_response(url=self.HOME_URL)
+        if response is not None:
+            for fragment in response.headers.get("set-cookie", "").split(","):
+                pair = fragment.split(";")[0].strip()
+                if "=" in pair and pair.split("=", 1)[0] in ("buvid3", "buvid4", "b_nut"):
+                    key, value = pair.split("=", 1)
+                    cookies[key] = value
+
+        response = self.get_latest_response(url=self.FINGER_SPI_URL)
+        if response is not None:
+            try:
+                data = response.json().get("data") or {}
+                cookies["buvid3"] = data.get("b_3") or cookies.get("buvid3", "")
+                cookies["buvid4"] = data.get("b_4") or cookies.get("buvid4", "")
+            except ValueError:
+                pass
+
+        cookie = "; ".join(f"{key}={value}" for key, value in sorted(cookies.items()) if value)
+        # cache only complete jars: spi is the only reliable buvid4 source, and
+        # caching an incomplete jar would persist the 412-prone fingerprint
+        if cookie and cookies.get("buvid3") and cookies.get("buvid4"):
+            self.headers["Cookie"] = cookie
+            BilibiliUploaderChecker._cookie_cache = {"cookie": cookie, "ts": time.time()}
+        elif cookie:
+            self.headers["Cookie"] = cookie
 
     def _search_page(self, keyword: str, page_num: int) -> List[dict]:
         url = (
@@ -150,5 +184,16 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
             return []
 
         mid, keyword = info
-        self._sync_bilibili_cookies()
-        return self._build_chapter_list(mid=mid, keyword=keyword)
+        try:
+            # inside the try: home/spi cookie fetches also 412 when the IP is flagged
+            self._sync_bilibili_cookies()
+            return self._build_chapter_list(mid=mid, keyword=keyword)
+        except requests.exceptions.RequestException as err:
+            # HTTP 412 = bilibili flagged the egress IP (risk control); it
+            # decays on its own — log one line instead of a traceback.
+            logger.warning(
+                "bilibili search blocked (IP risk control, retries later): %s (%s)",
+                self.check_url,
+                err,
+            )
+            return []
