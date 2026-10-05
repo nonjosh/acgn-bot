@@ -16,4 +16,4 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY . /app
 RUN uv sync --frozen --no-dev
 
-CMD ["uv", "run", "main.py"]
+CMD ["uv", "run", "--no-sync", "main.py"]
