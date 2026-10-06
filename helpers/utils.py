@@ -5,7 +5,7 @@ from collections import Counter
 from datetime import datetime
 from logging.handlers import TimedRotatingFileHandler
 from typing import List
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 import requests
 
@@ -126,8 +126,8 @@ def check_url_valid(url: str, request: bool = True, verbose: bool = False) -> bo
         )
         if response.status_code != 200:
             return False
-        # Handle redirect
-        if response.url != url:
+        # Handle redirect (compare decoded: sites percent-encode non-ASCII queries)
+        if unquote(response.url) != unquote(url):
             return False
     except requests.exceptions.HTTPError as errh:
         if verbose:

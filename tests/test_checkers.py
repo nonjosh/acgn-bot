@@ -31,11 +31,12 @@ class TestCheckers(unittest.TestCase):
         self.assertGreater(len(chapter_list), 0)
 
     def universal_checking(
-        self, test_checker: Type[AbstractChapterChecker], check_url: str
+        self, test_checker: Type[AbstractChapterChecker], check_url: str,
+        check_request: bool = True,
     ) -> None:
         """Universal checker"""
         # Pass if the website is not healthy
-        if not check_url_valid(url=check_url, verbose=True):
+        if not check_url_valid(url=check_url, request=check_request, verbose=True):
             self.skipTest(f"{check_url} is not healthy")
         # Initialize checker
         _checker = test_checker(check_url)
@@ -224,6 +225,16 @@ class TestCheckers(unittest.TestCase):
         self.universal_checking(
             test_checker=checkers.BilibiliChannelSeriesChecker,
             check_url="https://space.bilibili.com/690151424/lists/8495686?type=season",
+        )
+
+    def test_bilibili_uploader_checker(self) -> None:
+        """Bilibili uploader keyword search"""
+        # Skip the HTTP probe: bilibili bounces plain GETs to a promo page,
+        # and this checker uses the search API, not the page itself
+        self.universal_checking(
+            test_checker=checkers.BilibiliUploaderChecker,
+            check_url="https://space.bilibili.com/690151424/upload/video?keyword=亂世千金",
+            check_request=False,
         )
 
     def test_pickmeupgacha_checker(self) -> None:
