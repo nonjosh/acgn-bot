@@ -83,11 +83,15 @@ class ScheduleHelper:
             media_helper (MediaHelper): [description]
         """
 
-        def get_updated_chapter_list_safe(media_helper: MediaHelper) -> list:
+        def get_updated_chapter_list_safe(media_helper: MediaHelper) -> list | None:
             """Run checker safely and return updated chapters.
 
             Any checker exception (e.g. transient HTTP errors / 404) is logged and
-            treated as no-update so the scheduler thread keeps running.
+            treated as a fetch failure (None) so the scheduler thread keeps running.
+
+            Returns:
+                list: updated chapters, [] when the fetch succeeded but found
+                none, None when the fetch failed (never treat as empty)
             """
 
             try:
@@ -100,11 +104,11 @@ class ScheduleHelper:
                     getattr(media_helper, "check_url", media_helper.urls),
                     err,
                 )
-                return []
+                return None
 
         def job(
             media_helper: MediaHelper,
-            show_no_update_msg=False,
+            show_no_update_msg: bool = False,
         ) -> None:
             """job for schedule
 
@@ -112,91 +116,61 @@ class ScheduleHelper:
                 media_helper (MediaHelper): helper
                 show_no_update_msg (bool, optional): print no update msg. Defaults to False.
             """
-            # Initialize checker chapter list if list is empty originally
-            if len(media_helper.checker.chapter_list) == 0:
-                # Initialize checker chapter list
-                updated_chapter_list = get_updated_chapter_list_safe(media_helper)
+            # Snapshot before fetching: get_updated_chapter_list replaces
+            # checker.chapter_list while running, so emptiness must be
+            # captured before the fetch, not when choosing the branch
+            chapter_list_was_empty = len(media_helper.checker.chapter_list) == 0
 
-                # Print latest chapter if success
-                if len(updated_chapter_list) > 0:
+            updated_chapter_list = get_updated_chapter_list_safe(media_helper)
+
+            # The checker fails, the fetch fails: keep the chapter list untouched
+            if updated_chapter_list is None:
+                if show_no_update_msg:
+                    logger.info(
+                        "Cannot get chapter list for %s %s",
+                        media_helper.media_type,
+                        media_helper.name,
+                    )
+                return
+
+            if chapter_list_was_empty:
+                # Initialize checker chapter list if list is empty originally
+                if len(updated_chapter_list) == 0:
+                    # Successful but empty fetch = the producer genuinely has
+                    # no episode yet, remember it so the episode that appears
+                    # next is announced as news instead of being swallowed
+                    # as restart backfill
+                    media_helper.checker.observed_empty = True
+                    if show_no_update_msg:
+                        logger.info(
+                            "No episodes yet for %s %s (born empty)",
+                            media_helper.media_type,
+                            media_helper.name,
+                        )
+                    return
+
+                if not media_helper.checker.observed_empty:
+                    # Chapter list populated right after process start: whole
+                    # list is startup backfill, baseline it without announcing
                     latest_chapter_obj = updated_chapter_list[-1]
-                    latest_chapter_title = latest_chapter_obj.title
-                    latest_chapter_url = latest_chapter_obj.url
                     logger.info(
                         "%d chapters found for %s %s - latest: %s (%s)",
                         len(updated_chapter_list),
                         media_helper.media_type,
                         media_helper.name,
-                        latest_chapter_title,
-                        latest_chapter_url,
+                        latest_chapter_obj.title,
+                        latest_chapter_obj.url,
                     )
-                else:
-                    if show_no_update_msg:
-                        logger.info(
-                            "Cannot get chapter list for %s %s",
-                            media_helper.media_type,
-                            media_helper.name,
-                        )
-                return
+                    return
 
-            # Check for update
-            updated_chapter_list = get_updated_chapter_list_safe(media_helper)
-            if len(updated_chapter_list) > 0:
-                # Print update message for each chapter in terminal
-                for updated_chapter in updated_chapter_list:
-                    logger.info(
-                        "Update found for %s %s: %s (%s)",
-                        media_helper.media_type,
-                        media_helper.name,
-                        updated_chapter.title,
-                        updated_chapter.url,
-                    )
-
-                # Send update message to telegram
-                content_html_text = MessageHelper().get_update_chapters_html_message(
-                    media_helper=media_helper,
+                # Episodes appeared after a confirmed-empty period: real news
+                logger.info(
+                    "%d episode(s) appeared for %s %s (first fetch was empty)",
+                    len(updated_chapter_list),
+                    media_helper.media_type,
+                    media_helper.name,
                 )
-
-                async def send_with_retry():
-                    retries = 1
-                    while retries <= 3:
-                        try:
-                            await self.tg_helper.send_msg(content=content_html_text)
-                            return
-                        except TelegramError as err:
-                            wait = retries * 30
-                            logger.error(
-                                "Error occurs for %s %s updated!",
-                                media_helper.media_type,
-                                media_helper.name,
-                            )
-                            logger.error(err)
-                            logger.error(
-                                "Waiting %i secs and re-trying... (%i/%i)",
-                                wait,
-                                retries,
-                                3,
-                            )
-                            await asyncio.sleep(wait)
-                            retries += 1
-                    logger.error(
-                        "Failed to send message for %s %s after %i retries",
-                        media_helper.media_type,
-                        media_helper.name,
-                        3,
-                    )
-
-                loop = None
-                try:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                    loop.run_until_complete(send_with_retry())
-                except RuntimeError as err:
-                    logger.error("Error occurs: %s", err)
-                finally:
-                    if loop is not None:
-                        loop.close()
-            else:
+            elif len(updated_chapter_list) == 0:
                 # Print no update message for each chapter in terminal (if enabled)
                 if show_no_update_msg:
                     logger.info(
@@ -204,6 +178,62 @@ class ScheduleHelper:
                         media_helper.media_type,
                         media_helper.name,
                     )
+                return
+
+            # Print update message for each chapter in terminal
+            for updated_chapter in updated_chapter_list:
+                logger.info(
+                    "Update found for %s %s: %s (%s)",
+                    media_helper.media_type,
+                    media_helper.name,
+                    updated_chapter.title,
+                    updated_chapter.url,
+                )
+
+            # Send update message to telegram
+            content_html_text = MessageHelper().get_update_chapters_html_message(
+                media_helper=media_helper,
+            )
+
+            async def send_with_retry():
+                retries = 1
+                while retries <= 3:
+                    try:
+                        await self.tg_helper.send_msg(content=content_html_text)
+                        return
+                    except TelegramError as err:
+                        wait = retries * 30
+                        logger.error(
+                            "Error occurs for %s %s updated!",
+                            media_helper.media_type,
+                            media_helper.name,
+                        )
+                        logger.error(err)
+                        logger.error(
+                            "Waiting %i secs and re-trying... (%i/%i)",
+                            wait,
+                            retries,
+                            3,
+                        )
+                        await asyncio.sleep(wait)
+                        retries += 1
+                logger.error(
+                    "Failed to send message for %s %s after %i retries",
+                    media_helper.media_type,
+                    media_helper.name,
+                    3,
+                )
+
+            loop = None
+            try:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                loop.run_until_complete(send_with_retry())
+            except RuntimeError as err:
+                logger.error("Error occurs: %s", err)
+            finally:
+                if loop is not None:
+                    loop.close()
 
         # Define lambda function for job
         def job_func() -> None:

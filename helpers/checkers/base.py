@@ -46,6 +46,10 @@ class AbstractChapterChecker(ABC):
         self.max_retry_num = 3
         self.chapter_list = []
         self.updated_chapter_list = []
+        # True once a fetch succeeded but returned zero chapters: the producer
+        # (e.g. a bilibili uploader) had no episode when the checker was added,
+        # so the first episode to appear later is news, not restart backfill
+        self.observed_empty = False
 
         self.last_check_time = None
 
@@ -168,11 +172,12 @@ class AbstractChapterChecker(ABC):
             return None
         return BeautifulSoup(response.text, "html.parser")
 
-    def get_updated_chapter_list(self) -> List[Chapter]:
+    def get_updated_chapter_list(self) -> List[Chapter] | None:
         """Get list of updated chapter objects
 
         Returns:
-            List[Chapter]: list of Chapter objects
+            List[Chapter]: list of Chapter objects,
+            or None when the fetch failed (chapter_list left untouched)
         """
         self.updated_chapter_list = []
 
@@ -185,7 +190,7 @@ class AbstractChapterChecker(ABC):
                 self.check_url,
                 err,
             )
-            return []
+            return None
 
         # Get list of updated chapters if new chapter list is valid (not empty)
         if len(latest_chapter_list) > 0:

@@ -59,7 +59,7 @@ class TestCheckerErrorHandling(unittest.TestCase):
         def get_latest_chapter_list(self):
             raise requests.exceptions.RequestException("Unexpected status code: 404")
 
-    def test_get_updated_chapter_list_returns_empty_on_checker_exception(self) -> None:
+    def test_get_updated_chapter_list_returns_none_on_checker_exception(self) -> None:
         checker = self.RaiseChecker("https://example.com")
 
         try:
@@ -70,7 +70,9 @@ class TestCheckerErrorHandling(unittest.TestCase):
                 f"{err}"
             )
 
-        self.assertEqual(response, [])
+        # Empty list means a successful fetch found nothing; None means the
+        # fetch failed so the scheduler must not mark `observed_empty`
+        self.assertIsNone(response)
 
 
 class TestSyosetuPartialFetchRegression(unittest.TestCase):
