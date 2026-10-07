@@ -33,8 +33,39 @@ def search_response() -> Mock:
         "code": 0,
         "data": {
             "result": [
-                {"mid": 690151424, "bvid": "BV1TEST00001", "title": "ep1", "pubdate": 2},
-                {"mid": 111111, "bvid": "BVOTHER", "title": "other", "pubdate": 3},
+                {
+                    "mid": 690151424,
+                    "bvid": "BV1TEST00001",
+                    "title": "ep1",
+                    "pubdate": 2,
+                    "hit_columns": ["title"],
+                },
+                {
+                    "mid": 111111,
+                    "bvid": "BVOTHER",
+                    "title": "other",
+                    "pubdate": 3,
+                },
+            ]
+        },
+    }
+    return response
+
+
+def filler_search_response() -> Mock:
+    """Keyword search tail: same uploader, but the keyword matched nothing."""
+    response = Mock()
+    response.json.return_value = {
+        "code": 0,
+        "data": {
+            "result": [
+                {
+                    "mid": 690151424,
+                    "bvid": "BV1FILLER01",
+                    "title": "4K简中【颠公与圣母 开局就撕衣爆头】全12话（未删减）",
+                    "pubdate": 5,
+                    "hit_columns": [],
+                }
             ]
         },
     }
@@ -96,6 +127,51 @@ class TestBilibiliUploaderChecker(unittest.TestCase):
 
         checker = BilibiliUploaderChecker(CHECK_URL)
         self.assertEqual(checker.get_latest_chapter_list(), [])
+
+    @patch.object(BilibiliUploaderChecker, "get_latest_response")
+    def test_keyword_filler_results_dropped(self, mock_get: Mock) -> None:
+        # keyword matched no field (hit_columns empty) = bilibili fuzzy filler;
+        # must not become a chapter even though the uploader matches
+        mock_get.side_effect = [
+            home_response(),
+            spi_response(),
+            filler_search_response(),
+        ]
+
+        checker = BilibiliUploaderChecker(CHECK_URL)
+        self.assertEqual(checker.get_latest_chapter_list(), [])
+
+    @patch.object(BilibiliUploaderChecker, "get_latest_response")
+    def test_ranking_drift_does_not_reannounce(self, mock_get: Mock) -> None:
+        # run 1 sees ep1; run 2's search drifts it out and back in via filler
+        mock_get.side_effect = [
+            home_response(),
+            spi_response(),
+            search_response(),
+            home_response(),
+            spi_response(),
+            filler_search_response(),
+            search_response(),
+        ]
+
+        checker = BilibiliUploaderChecker(CHECK_URL)
+        first = checker.get_latest_chapter_list()
+        self.assertEqual(
+            [c.url for c in first], ["https://www.bilibili.com/video/BV1TEST00001"]
+        )
+
+        # ep1 dropped out (filler only): list must still keep it, so the base
+        # diff cannot treat it as new again
+        no_hit_run = checker.get_latest_chapter_list()
+        self.assertEqual(
+            [c.url for c in no_hit_run], ["https://www.bilibili.com/video/BV1TEST00001"]
+        )
+
+        drift_back_run = checker.get_latest_chapter_list()
+        self.assertEqual(
+            [c.url for c in drift_back_run],
+            ["https://www.bilibili.com/video/BV1TEST00001"],
+        )
 
 
 if __name__ == "__main__":

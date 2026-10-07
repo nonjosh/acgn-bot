@@ -40,6 +40,12 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
 
     def __init__(self, check_url: str) -> None:
         super().__init__(check_url)
+        # ever-seen results: bilibili search ranking drifts between runs, so an
+        # already-announced video can leave and re-enter the top pages (it was
+        # raised as an update twice); keeping it in the union makes the
+        # URL-based diff in the base checker never re-report it
+        self._known_chapters: dict[str, Chapter] = {}
+        self._known_pubdates: dict[str, int] = {}
         self.headers = {
             **self.headers,
             "User-Agent": (
@@ -160,6 +166,11 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
         ):
             if str(item.get("mid") or item.get("account_id")) != mid:
                 continue
+            # empty hit_columns = keyword matched no field: bilibili pads the
+            # tail of results with fuzzy "related" filler whose ranking drifts
+            # in and out of the top pages between runs -> false update spikes
+            if not item.get("hit_columns"):
+                continue
 
             bvid = item.get("bvid")
             if bvid:
@@ -174,6 +185,7 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
             seen_urls.add(chapter_url)
             title = self._clean_title(item.get("title"))
             chapters.append(Chapter(title=title or chapter_url, url=chapter_url))
+            self._known_pubdates.setdefault(chapter_url, item.get("pubdate") or 0)
 
         return chapters
 
@@ -187,7 +199,7 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
         try:
             # inside the try: home/spi cookie fetches also 412 when the IP is flagged
             self._sync_bilibili_cookies()
-            return self._build_chapter_list(mid=mid, keyword=keyword)
+            chapters = self._build_chapter_list(mid=mid, keyword=keyword)
         except requests.exceptions.RequestException as err:
             # HTTP 412 = bilibili flagged the egress IP (risk control); it
             # decays on its own — log one line instead of a traceback.
@@ -197,3 +209,17 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
                 err,
             )
             return []
+
+        # Bilibili search ranking drifts between runs, so an already-announced
+        # video can leave and re-enter the top pages (bug: same update raised
+        # twice). Keep seen chapters in the list forever; the URL-based diff in
+        # the base checker then never re-reports them. New chapters keep their
+        # pubdate order; dropped-but-recallable ones keep their remembered order.
+        fresh_urls = {chapter.url for chapter in chapters}
+        for chapter_url, chapter in self._known_chapters.items():
+            if chapter_url not in fresh_urls:
+                chapters.append(chapter)
+        for chapter in chapters:
+            self._known_chapters.setdefault(chapter.url, chapter)
+        chapters.sort(key=lambda chapter: self._known_pubdates.get(chapter.url, 0))
+        return chapters
