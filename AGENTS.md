@@ -6,6 +6,31 @@ The chapter watch list is gitignored. Any change to `config/list.yaml` must be
 saved to BOTH the local file and the gist, then deployed: run
 `sh config/update-list.sh` (details in `config/AGENTS.md`).
 
+## Local verification (avoid running the app with the full config/list.yaml by default)
+
+To verify checker/app changes locally, default to the shortlist
+`config/list_test.yaml` (gitignored, 2-3 media spanning media types plus the
+target media under verification) via the existing `CONFIG_YML_FILEPATH`
+override, not the full watch list:
+
+```sh
+CONFIG_YML_FILEPATH=config/list_test.yaml TOKEN=... CHAT_ID=... .venv/bin/python main.py
+```
+
+- Running with the full `config/list.yaml` is fine occasionally (e.g. a final
+  end-to-end sanity run), but not as the default: it fans out into 45+ live
+  checkers running in background threads, and heavy repeated traffic from a
+  desktop IP can trigger sign-up/risk-control on sites that rate-limit (some
+  ban the IP), plus it sends ~40 real messages to the Telegram channel.
+- Shortlist should contain the target media plus one or two other media types
+  so checker selection and scheduling still get covered.
+- Prefer smaller steps first: unit tests (`.venv/bin/python -m unittest discover
+  tests`), then a standalone probe script in `/tmp/opencode/` replicating the
+  closest checker's request flow, then the shortlisted app run.
+- For single-checker iteration without TgHelper, a tiny script instantiating
+  just the checker (`BilibiliUploaderChecker(url).get_latest_chapter_list()`)
+  is enough — Telegram env vars are only needed when running `main.py`.
+
 ## Tool-call hygiene in opencode TUI
 
 - Never make unbounded `kubectl` calls: wrap with `timeout 30 kubectl ... > /tmp/opencode/file.log 2>&1`, then grep the file. A hanging `kubectl logs` blocks the TUI session.

@@ -130,5 +130,6 @@ dmypy.json
 
 # Watch list: private, lives locally + gist only (see config/AGENTS.md)
 config/list.yaml
+config/list_test.yaml
 config/AGENTS.md
 config/update-list.sh
