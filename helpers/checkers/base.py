@@ -192,6 +192,13 @@ class AbstractChapterChecker(ABC):
             )
             return None
 
+        # A checker may signal a failed fetch without raising (e.g. syosetu
+        # logs its own concise error): None must never be read as a genuine
+        # empty result, or the scheduler would treat the producer as born
+        # empty and later announce the whole list as new.
+        if latest_chapter_list is None:
+            return None
+
         # Get list of updated chapters if new chapter list is valid (not empty)
         if len(latest_chapter_list) > 0:
             self.updated_chapter_list = get_chapter_list_diff(
@@ -205,11 +212,11 @@ class AbstractChapterChecker(ABC):
         return []
 
     @abstractmethod
-    def get_latest_chapter_list(self) -> List[Chapter]:
+    def get_latest_chapter_list(self) -> List[Chapter] | None:
         """Get latest chapter list
 
         Returns:
-            List[Chapter]: latest chapter list
+            List[Chapter]: latest chapter list, or None when the fetch failed
         """
         raise NotImplementedError
 

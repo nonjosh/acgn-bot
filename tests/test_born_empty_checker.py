@@ -25,12 +25,17 @@ class StubChecker(AbstractChapterChecker):
         super().__init__(check_url)
         self.results = []
         self.fail_next = False
+        self.none_next = False
 
     def get_latest_chapter_list(self):
         if self.fail_next:
             self.fail_next = False
             # routes through the safe wrapper's None path
             raise requests.exceptions.ConnectionError("transient network failure")
+        if self.none_next:
+            self.none_next = False
+            # a checker that signals failure WITHOUT raising, like syosetu
+            return None
         return self.results
 
 
@@ -123,6 +128,24 @@ class TestBornEmptyAnime(unittest.TestCase):
         schedule_lib.jobs[0].job_func()
         self.assertFalse(helper.checker.observed_empty)
         self.assertEqual(self.tg.sent, [])
+
+    def test_none_signalled_failure_is_not_observed_empty(self) -> None:
+        """A None-signalled fetch failure must not mark observed_empty."""
+        helper = MediaListState.media_helper_list[0]
+        helper.checker.observed_empty = False
+        helper.checker.none_next = True
+        schedule_lib.jobs[0].job_func()
+        self.assertFalse(helper.checker.observed_empty)
+        self.assertEqual(self.tg.sent, [])
+
+        # The next successful fetch is startup backfill, announced to nobody
+        helper.checker.results = [
+            Chapter("第1話", "https://v/BV1"),
+            Chapter("第2話", "https://v/BV2"),
+        ]
+        schedule_lib.jobs[0].job_func()
+        self.assertEqual(self.tg.sent, [])
+        self.assertEqual(len(helper.checker.chapter_list), 2)
 
 
 if __name__ == "__main__":

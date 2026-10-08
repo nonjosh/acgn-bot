@@ -108,7 +108,8 @@ class TestBilibiliUploaderChecker(unittest.TestCase):
         self.assertEqual(checker.headers["Cookie"], BilibiliUploaderChecker._cookie_cache["cookie"])
 
     @patch.object(BilibiliUploaderChecker, "get_latest_response")
-    def test_search_412_returns_empty_list(self, mock_get: Mock) -> None:
+    def test_search_412_returns_none(self, mock_get: Mock) -> None:
+        """412 is a fetch failure: None, never a genuine empty list."""
         mock_get.side_effect = [
             home_response(),
             spi_response(),
@@ -116,17 +117,17 @@ class TestBilibiliUploaderChecker(unittest.TestCase):
         ]
 
         checker = BilibiliUploaderChecker(CHECK_URL)
-        self.assertEqual(checker.get_latest_chapter_list(), [])
+        self.assertIsNone(checker.get_latest_chapter_list())
 
     @patch.object(BilibiliUploaderChecker, "get_latest_response")
-    def test_cookie_sync_412_returns_empty_list(self, mock_get: Mock) -> None:
-        # flagged IP: the home/spi cookie fetch itself 412s
+    def test_cookie_sync_412_returns_none(self, mock_get: Mock) -> None:
+        """Flagged IP: the home/spi cookie fetch itself 412s (failure)."""
         mock_get.side_effect = requests.exceptions.RequestException(
             "Unexpected status code: 412"
         )
 
         checker = BilibiliUploaderChecker(CHECK_URL)
-        self.assertEqual(checker.get_latest_chapter_list(), [])
+        self.assertIsNone(checker.get_latest_chapter_list())
 
     @patch.object(BilibiliUploaderChecker, "get_latest_response")
     def test_keyword_filler_results_dropped(self, mock_get: Mock) -> None:

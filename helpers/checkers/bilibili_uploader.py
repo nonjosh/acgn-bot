@@ -189,7 +189,7 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
 
         return chapters
 
-    def get_latest_chapter_list(self) -> List[Chapter]:
+    def get_latest_chapter_list(self) -> List[Chapter] | None:
         """Get latest chapter list from Bilibili search API."""
         info = self._extract_info(self.check_url)
         if info is None:
@@ -208,7 +208,10 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
                 self.check_url,
                 err,
             )
-            return []
+            # Signal a failed fetch: [] would read as a genuine empty list and
+            # make the scheduler treat the producer as born empty, announcing
+            # the whole shelf on the next success.
+            return None
 
         # Bilibili search ranking drifts between runs, so an already-announced
         # video can leave and re-enter the top pages (bug: same update raised

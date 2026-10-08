@@ -108,7 +108,7 @@ class TestSyosetuPartialFetchRegression(unittest.TestCase):
 
     @patch("backoff._sync.time.sleep", return_value=None)
     @patch("helpers.checkers.base.requests.get")
-    def test_last_page_failure_returns_empty_list(self, mock_get, _mock_sleep) -> None:
+    def test_last_page_failure_returns_none(self, mock_get, _mock_sleep) -> None:
         def fake_get(**_kwargs):
             if mock_get.call_count == 1:
                 return self.make_response(self.PAGE1_HTML)
@@ -117,8 +117,9 @@ class TestSyosetuPartialFetchRegression(unittest.TestCase):
         mock_get.side_effect = fake_get
         checker = SyosetuChecker(self.CHECK_URL)
 
-        # Empty list means "fetch failed" to base: no diff, no notification.
-        self.assertEqual(checker.get_latest_chapter_list(), [])
+        # None means "fetch failed" to base: no diff, no notification, and
+        # (unlike []) it must never be read as a genuine empty list.
+        self.assertIsNone(checker.get_latest_chapter_list())
 
         # The last page was requested exactly once (after backoff retries).
         self.assertEqual(mock_get.call_count, 4)
@@ -126,6 +127,17 @@ class TestSyosetuPartialFetchRegression(unittest.TestCase):
             mock_get.call_args_list[1].kwargs["url"],
             "https://ncode.syosetu.com/n4449cj/?p=2",
         )
+
+    @patch("backoff._sync.time.sleep", return_value=None)
+    @patch("helpers.checkers.base.requests.get")
+    def test_base_page_failure_returns_none(self, mock_get, _mock_sleep) -> None:
+        """Failed base fetch must read as None, not a genuine empty list."""
+        mock_get.side_effect = requests.exceptions.ConnectionError("proxy down")
+        checker = SyosetuChecker(self.CHECK_URL)
+
+        self.assertIsNone(checker.get_latest_chapter_list())
+        # Base page itself retried 3x by backoff before giving up.
+        self.assertEqual(mock_get.call_count, 3)
 
     @patch("backoff._sync.time.sleep", return_value=None)
     @patch("helpers.checkers.base.requests.get")
@@ -168,7 +180,7 @@ class TestSyosetuPartialFetchRegression(unittest.TestCase):
         updated = checker.get_updated_chapter_list()
 
         # No phantom updates and the known-good list is kept for the next cycle.
-        self.assertEqual(updated, [])
+        self.assertIsNone(updated)
         self.assertEqual(checker.chapter_list, old_list)
 
 

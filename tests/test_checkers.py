@@ -43,7 +43,7 @@ class TestCheckers(unittest.TestCase):
 
         # Check if can get chapter list
         chapter_list = _checker.get_latest_chapter_list()
-        if len(chapter_list) == 0:
+        if chapter_list is None or len(chapter_list) == 0:
             self.skipTest(f"{check_url} is not healthy")
         self.validate_chapter_list(chapter_list)
 

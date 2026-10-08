@@ -135,14 +135,16 @@ class BilibiliChannelSeriesChecker(AbstractChapterChecker):
 
     def _get_chapter_list_for_type(
         self, mid: str, list_id: str, list_type: str
-    ) -> List[Chapter]:
+    ) -> List[Chapter] | None:
         all_archives: List[dict] = []
         page_num = 1
 
         while True:
             page_data = self._fetch_archives_page(mid, list_id, list_type, page_num)
             if page_data is None:
-                return []
+                # API error on this page (incl. 200-OK risk control): signal
+                # failure instead of a genuine empty list.
+                return None
 
             archives, total_items = page_data
             if not archives:
@@ -170,7 +172,7 @@ class BilibiliChannelSeriesChecker(AbstractChapterChecker):
 
         return chapter_list
 
-    def get_latest_chapter_list(self) -> List[Chapter]:
+    def get_latest_chapter_list(self) -> List[Chapter] | None:
         """Get latest chapter list from Bilibili channel list APIs."""
         channel_info = self._extract_channel_info(self.check_url)
         if channel_info is None:
@@ -183,13 +185,18 @@ class BilibiliChannelSeriesChecker(AbstractChapterChecker):
             else [self.SEASON_TYPE, self.SERIES_TYPE]
         )
 
+        last_result: List[Chapter] | None = []
         for candidate_type in candidate_types:
             chapter_list = self._get_chapter_list_for_type(
                 mid=mid,
                 list_id=list_id,
                 list_type=candidate_type,
             )
+            last_result = chapter_list
             if chapter_list or list_type is not None:
                 return chapter_list
 
-        return []
+        # Both candidate types exhausted without a result: None if the API
+        # calls failed (never read as born-empty), [] only if a genuinely
+        # successful response was empty.
+        return last_result

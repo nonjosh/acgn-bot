@@ -54,7 +54,7 @@ class ComickChecker(AbstractChapterChecker):
         except Exception:  # pylint: disable=broad-except
             return (1, ch)
 
-    def get_latest_chapter_list(self) -> List[Chapter]:
+    def get_latest_chapter_list(self) -> List[Chapter] | None:
         """Get latest chapter list from comick.live
 
         Returns:
@@ -121,4 +121,5 @@ class ComickChecker(AbstractChapterChecker):
 
             return result
         except Exception:  # pylint: disable=broad-except
-            return []
+            # Failure must read as None, not as a genuine empty list.
+            return None

@@ -52,7 +52,7 @@ class BilibiliArticlesChecker(AbstractChapterChecker):
             "Accept": "application/json, text/plain, */*",
         }
 
-    def get_latest_chapter_list(self) -> List[Chapter]:
+    def get_latest_chapter_list(self) -> List[Chapter] | None:
         """Fetch chapter list from Bilibili readlist API.
 
         Returns:
@@ -102,4 +102,5 @@ class BilibiliArticlesChecker(AbstractChapterChecker):
 
             return chapter_list
         except Exception:  # pylint: disable=broad-except
-            return []
+            # Failure must read as None, not as a genuine empty list.
+            return None

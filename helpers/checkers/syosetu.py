@@ -49,7 +49,7 @@ class SyosetuChecker(AbstractChapterChecker):
             )
         return soup
 
-    def get_latest_chapter_list(self) -> List[Chapter]:
+    def get_latest_chapter_list(self) -> List[Chapter] | None:
         """Get latest chapter list
 
         Automatically follows the last-page pagination link so the base URL
@@ -57,11 +57,14 @@ class SyosetuChecker(AbstractChapterChecker):
         to manually specify a ``?p=N`` query parameter.
 
         Returns:
-            List[Chapter]: latest chapter list
+            List[Chapter]: latest chapter list, or None when the fetch failed
         """
         soup = self.get_latest_soup()
         if not soup:
-            return []
+            # Fetch failure (proxy down / 403). [] would read as a genuine
+            # empty list and make the scheduler treat the producer as born
+            # empty, announcing the whole shelf on the next success.
+            return None
 
         # If there are multiple pages, follow the "last page" link so we always
         # parse the most recent chapters regardless of how many pages exist.
@@ -79,14 +82,14 @@ class SyosetuChecker(AbstractChapterChecker):
                 # Fetching the last page failed. The base soup still holds page
                 # 1 (the OLDEST chapters): parsing it and storing its list would
                 # make every known chapter look "new" on the next successful
-                # fetch and spam the full shelf as updates. Treat the whole
-                # fetch as failed instead - caller keeps the previous state.
+                # fetch and spam the full shelf as updates. Signal a failed
+                # fetch instead - caller keeps the previous state.
                 logger.error(
                     "syosetu last-page fetch failed (via proxy: %s): %s",
                     bool(self.proxies),
                     last_page_url,
                 )
-                return []
+                return None
             soup = BeautifulSoup(response.text, "html.parser")
 
         dl_list: List[Tag] = list(soup.find_all("a", {"class": "p-eplist__subtitle"}))
