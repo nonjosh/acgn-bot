@@ -72,6 +72,46 @@ def filler_search_response() -> Mock:
     return response
 
 
+def tag_only_search_response() -> Mock:
+    """Same uploader, keyword matched only tag/description (alt-title series)."""
+    response = Mock()
+    response.json.return_value = {
+        "code": 0,
+        "data": {
+            "result": [
+                {
+                    "mid": 690151424,
+                    "bvid": "BV1TAGONLY1",
+                    "title": "【拟股喵喵】全12集 (未删减版) 周更【超清中字】",
+                    "pubdate": 7,
+                    "hit_columns": ["description", "tag"],
+                }
+            ]
+        },
+    }
+    return response
+
+
+def title_hit_response() -> Mock:
+    """Same uploader, keyword matched the title itself (genuine episode)."""
+    response = Mock()
+    response.json.return_value = {
+        "code": 0,
+        "data": {
+            "result": [
+                {
+                    "mid": 690151424,
+                    "bvid": "BV1TITLEOK1",
+                    "title": "【FX战士久留美】第2话【中文字幕】",
+                    "pubdate": 9,
+                    "hit_columns": ["title", "tag"],
+                }
+            ]
+        },
+    }
+    return response
+
+
 class TestBilibiliUploaderChecker(unittest.TestCase):
     """Validate cookie seeding (buvid3/buvid4 via finger/spi) and 412 handling."""
 
@@ -173,6 +213,56 @@ class TestBilibiliUploaderChecker(unittest.TestCase):
             [c.url for c in drift_back_run],
             ["https://www.bilibili.com/video/BV1TEST00001"],
         )
+
+    @patch.object(BilibiliUploaderChecker, "get_latest_response")
+    def test_tag_only_matches_dropped(self, mock_get: Mock) -> None:
+        # keyword matched only tag/description = the uploader's other series
+        # sharing the media's alt-title tags; must not become a chapter
+        mock_get.side_effect = [
+            home_response(),
+            spi_response(),
+            tag_only_search_response(),
+        ]
+
+        checker = BilibiliUploaderChecker(CHECK_URL)
+        self.assertEqual(checker.get_latest_chapter_list(), [])
+
+    @patch.object(BilibiliUploaderChecker, "get_latest_response")
+    def test_title_match_kept(self, mock_get: Mock) -> None:
+        mock_get.side_effect = [
+            home_response(),
+            spi_response(),
+            title_hit_response(),
+        ]
+
+        checker = BilibiliUploaderChecker(CHECK_URL)
+        urls = [c.url for c in checker.get_latest_chapter_list()]
+        self.assertEqual(urls, ["https://www.bilibili.com/video/BV1TITLEOK1"])
+
+    def test_mixed_search_keeps_only_title_hits(self) -> None:
+        # one batch containing filler + tag-only + title-hit: exactly one kept
+        checker = BilibiliUploaderChecker(CHECK_URL)
+        mixed = {
+            "code": 0,
+            "data": {
+                "result": [
+                    {"mid": 690151424, "bvid": "BV1FILLER01", "title": "f", "hit_columns": []},
+                    {"mid": 690151424, "bvid": "BV1TAGONLY1", "title": "t", "hit_columns": ["tag"]},
+                    {"mid": 690151424, "bvid": "BV1TITLEOK1", "title": "ep", "hit_columns": ["title"]},
+                    {"mid": 222222, "bvid": "BV1OTHERVID", "title": "ep", "hit_columns": ["title"]},
+                ]
+            },
+        }
+        response = Mock()
+        response.json.return_value = mixed
+        with patch.object(
+            BilibiliUploaderChecker, "get_latest_response"
+        ) as mock_get, patch.object(
+            BilibiliUploaderChecker, "_sync_bilibili_cookies"
+        ):
+            mock_get.side_effect = [response]
+            urls = [c.url for c in checker.get_latest_chapter_list()]
+        self.assertEqual(urls, ["https://www.bilibili.com/video/BV1TITLEOK1"])
 
 
 if __name__ == "__main__":

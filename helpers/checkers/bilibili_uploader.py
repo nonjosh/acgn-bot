@@ -5,7 +5,10 @@ Example URL:
 
 APIs used:
     https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=...
-    Results are filtered to the uploader's mid after fetching.
+    Results are filtered to the uploader's mid after fetching, keeping only
+    videos whose title itself matched the keyword (hit_columns contains
+    'title'): tag/description-only matches belong to the uploader's other
+    series and unfetched fuzzy filler alike.
 """
 
 import re
@@ -166,10 +169,13 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
         ):
             if str(item.get("mid") or item.get("account_id")) != mid:
                 continue
-            # empty hit_columns = keyword matched no field: bilibili pads the
-            # tail of results with fuzzy "related" filler whose ranking drifts
-            # in and out of the top pages between runs -> false update spikes
-            if not item.get("hit_columns"):
+            # Require a TITLE-level keyword match: bilibili reports which
+            # fields hit (title/description/tag) in hit_columns. Tag-only or
+            # description-only matches resolve same-uploaders' other series
+            # that merely share a tag (e.g. a media's alt-title rip), and
+            # empty hit_columns results are fuzzy "related" filler whose
+            # ranking drifts in and out of the top pages between runs.
+            if "title" not in (item.get("hit_columns") or []):
                 continue
 
             bvid = item.get("bvid")
