@@ -177,6 +177,17 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
             # ranking drifts in and out of the top pages between runs.
             if "title" not in (item.get("hit_columns") or []):
                 continue
+            # Additional guard: bilibili's hit_columns uses prefix matching;
+            # e.g. keyword "转生重骑士" matches title "转生为成人游戏..." because
+            # "转生" is a prefix. Require at least one character from the keyword
+            # beyond the first 2 (the prefix bilibili matches on) to appear in
+            # the title. This filters out unrelated series sharing only the prefix.
+            raw_title = str(item.get("title") or "")
+            clean_title = self._clean_title(raw_title)
+            if len(keyword) > 2:
+                # keyword[2:] = characters beyond the prefix bilibili matches on
+                if not any(ch in clean_title for ch in keyword[2:]):
+                    continue
 
             bvid = item.get("bvid")
             if bvid:
