@@ -24,12 +24,24 @@ CONFIG_YML_FILEPATH=config/list_test.yaml TOKEN=... CHAT_ID=... .venv/bin/python
   ban the IP), plus it sends ~40 real messages to the Telegram channel.
 - Shortlist should contain the target media plus one or two other media types
   so checker selection and scheduling still get covered.
-- Prefer smaller steps first: unit tests (`.venv/bin/python -m unittest discover
-  tests`), then a standalone probe script in `/tmp/opencode/` replicating the
-  closest checker's request flow, then the shortlisted app run.
+- Prefer smaller steps first: the e2e checker test in `tests/test_checkers.py`
+  (`.venv/bin/python -m unittest tests.test_checkers`), then a standalone probe
+  script in `/tmp/opencode/` replicating the closest checker's request flow,
+  then the shortlisted app run.
 - For single-checker iteration without TgHelper, a tiny script instantiating
   just the checker (`BilibiliUploaderChecker(url).get_latest_chapter_list()`)
   is enough — Telegram env vars are only needed when running `main.py`.
+
+## Testing priorities
+
+- E2E first: add and maintain checker coverage in `tests/test_checkers.py`
+  (one representative URL per checker). Prefer it over per-checker unit tests.
+- Do not add unit tests built on volatile third-party content (e.g. uploader
+  videos that get deleted, live listings). Those tests rot and fail CI for
+  reasons unrelated to our code; use the e2e entry instead.
+- Small offline unit tests are still fine for pure logic that e2e cannot
+  reliably exercise (chapter diff/backfill, error handling, parsing), but keep
+  them stable and minimal.
 
 ## Tool-call hygiene in opencode TUI
 
