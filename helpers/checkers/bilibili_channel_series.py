@@ -14,6 +14,7 @@ from urllib.parse import parse_qs, urlparse
 
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
+from helpers.checkers.bilibili_common import is_noise_title
 
 
 class BilibiliChannelSeriesChecker(AbstractChapterChecker):
@@ -168,6 +169,8 @@ class BilibiliChannelSeriesChecker(AbstractChapterChecker):
 
             seen_urls.add(chapter_url)
             title = str(chapter_obj.get("title") or "").strip()
+            if is_noise_title(title):
+                continue
             chapter_list.append(Chapter(title=title or chapter_url, url=chapter_url))
 
         return chapter_list

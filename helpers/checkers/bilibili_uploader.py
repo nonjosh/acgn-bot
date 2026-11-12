@@ -21,6 +21,7 @@ from chinese_converter import to_simplified
 
 from helpers.chapter import Chapter
 from helpers.checkers.base import AbstractChapterChecker
+from helpers.checkers.bilibili_common import is_noise_title
 from helpers.utils import get_logger
 
 logger = get_logger(__name__)
@@ -184,10 +185,13 @@ class BilibiliUploaderChecker(AbstractChapterChecker):
             # the title. This filters out unrelated series sharing only the prefix.
             raw_title = str(item.get("title") or "")
             clean_title = self._clean_title(raw_title)
-            if len(keyword) > 2:
-                # keyword[2:] = characters beyond the prefix bilibili matches on
-                if not any(ch in clean_title for ch in keyword[2:]):
-                    continue
+            if is_noise_title(clean_title):
+                continue
+            # keyword[2:] = characters beyond the prefix bilibili matches on
+            if len(keyword) > 2 and not any(
+                ch in clean_title for ch in keyword[2:]
+            ):
+                continue
 
             bvid = item.get("bvid")
             if bvid:
