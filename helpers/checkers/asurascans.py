@@ -16,22 +16,34 @@ class AsurascansChecker(AbstractChapterChecker):
 
     URL_SUBSTRING = "asurascans.com"
 
-    def get_latest_chapter_list(self) -> List[Chapter]:
+    def __init__(self, check_url: str) -> None:
+        super().__init__(check_url)
+        # Cloudflare answers 403 "Just a moment..." to requests whose Accept is
+        # the default "*/*" (UA does not matter), so send a browser-like Accept
+        self.headers["Accept"] = (
+            "text/html,application/xhtml+xml,application/xml;q=0.9,"
+            "image/avif,image/webp,*/*;q=0.8"
+        )
+
+    def get_latest_chapter_list(self) -> List[Chapter] | None:
         """Get latest chapter list from asurascans.com
 
         Returns:
-            List[Chapter]: latest chapter list
+            List[Chapter]: latest chapter list, or None when the fetch failed
         """
         soup = self.get_latest_soup(apparent_encoding=False)
         if soup is None:
-            return []
+            return None
 
         # Chapter links live inside a scrollable div (max-h-[500px] overflow-y-auto)
         # containing a child div with class "divide-y divide-white/5".
         # Each <a> inside that div links to /comics/<slug>/chapter/<num>.
         container = soup.find("div", class_="overflow-y-auto")
         if container is None:
-            return []
+            # A selector regression must not read as "no chapters": the base
+            # checker treats [] as a genuine empty result and would announce
+            # the whole list as new on the next good fetch
+            return None
 
         chapter_list = []
         for a_tag in container.find_all("a", href=True):
