@@ -20,6 +20,7 @@ from helpers.checkers.manhuagui import ManhuaguiChecker
 from helpers.checkers.piaotian import PiaotianChecker
 from helpers.checkers.pickmeupgacha import PickmeupgachaChecker
 from helpers.checkers.syosetu import SyosetuChecker
+from helpers.checkers.webtoons import WebtoonsChecker
 from helpers.checkers.weixin import WeixinChecker
 from helpers.checkers.wx import WxChecker
 from helpers.checkers.xbiquge import XbiqugeChecker
@@ -47,6 +48,7 @@ ALL_CHECKERS: list[type[AbstractChapterChecker]] = [
     MangakatanaChecker,
     MangarawChecker,
     PickmeupgachaChecker,
+    WebtoonsChecker,
 ]
 
 

@@ -249,3 +249,10 @@ class TestCheckers(unittest.TestCase):
             test_checker=checkers.AsurascansChecker,
             check_url="https://asurascans.com/comics/genius-archers-streaming",
         )
+
+    def test_webtoons_checker(self) -> None:
+        """Webtoons episode list page"""
+        self.universal_checking(
+            test_checker=checkers.WebtoonsChecker,
+            check_url="https://www.webtoons.com/zh-hant/martial-arts/the-martial-genius-who-remembers-everything/list?title_no=10666",
+        )
