@@ -244,9 +244,6 @@ class TestCheckers(unittest.TestCase):
             check_url="https://w6.pickmeupgacha.com/",
         )
 
-    @github_actions_skip(
-        "Validation 2026-11: Cloudflare 403s GitHub Actions datacenter IPs"
-    )
     def test_asurascans_integration(self) -> None:
         # Skip the preflight: the shared default headers in helpers/utils.py
         # get Cloudflare's 403 "Just a moment..." page, so the health check
