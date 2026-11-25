@@ -20,6 +20,8 @@ class TestBilibiliNoiseTitleFilter(unittest.TestCase):
             "先行圖公開",
             "先行图",
             "先行図",
+            "【11月26日】FX戰士久留美 第9話「就照利率上限算喔」預告【MCE漢化組】",
+            "第9話 预告",
         ):
             self.assertTrue(is_noise_title(title), title)
 
